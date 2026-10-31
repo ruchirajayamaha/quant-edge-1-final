@@ -21,6 +21,7 @@ has approved it, and the team has yet to evaluate and own it.
 | Full test suite | 144 passed; `pip check` clean | Run after the final code and report edits |
 | App sweep: 6 views x 3 portfolios x 3 confidence levels x 5 risk methods, plus recent/full, rolling model, short and empty ranges | 287 runs, 0 exceptions or errors; all expected states seen | `app_exercise.json`, `exercise_app.py` |
 | Controls | A 5 bp macro change and a changed table cell were both detected. The legacy script refuses to run without its flag | `app_exercise.json`, `tests/test_d_presentation.py` |
+| Fresh clone with no TeX or Matplotlib | 143 passed, 1 skipped (the PDF test needs optional `pypdf`); launch returned HTTP 200 | `clean_install.json` |
 | Cloud entrypoint | `streamlit_app.py` runs the redesigned app under AppTest | `tests/test_d_presentation.py` |
 
 The sweep first reported two states as false. That was a bug in the sweep's text helper, which skipped
