@@ -137,7 +137,8 @@ def css() -> str:
     [data-testid="stMetricLabel"] p {{color:{MUTED};font-size:.79rem;font-weight:600;line-height:1.3;}}
     [data-testid="stMetricValue"] {{font-family:{SERIF};color:{INK};font-size:1.72rem;font-variant-numeric:lining-nums;}}
     [data-testid="stMetricDelta"] {{font-size:.78rem;border-radius:8px;}}
-    [data-testid="stMetricLabel"],[data-testid="stMetricLabel"] *,[data-testid="stMetricDelta"],[data-testid="stMetricDelta"] *
+    [data-testid="stMetricLabel"],[data-testid="stMetricLabel"] *,[data-testid="stMetricDelta"],[data-testid="stMetricDelta"] *,
+    [data-testid="stMetricValue"],[data-testid="stMetricValue"] *
     {{white-space:normal !important;overflow:visible !important;text-overflow:clip !important;height:auto;}}
     [data-testid="stCaptionContainer"] {{opacity:1 !important;}}
     [data-testid="stCaptionContainer"] p {{color:{MUTED};font-size:.82rem;line-height:1.5;}}

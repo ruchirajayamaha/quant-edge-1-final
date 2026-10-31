@@ -377,7 +377,7 @@ def tail_risk_view(context, portfolio: str, confidence: float, model: str) -> No
                      usd(item.es_loss * nav if pd.notna(item.es_loss) else None), pill(item.status.capitalize(), tone)])
         if item.model == model:
             focus = index
-    left, right = st.columns([1.15, 1], gap="large")
+    left, right = st.columns([1.5, 1], gap="large")
     with left:
         st.markdown(f"### VaR, ES and EVT at {confidence:.0%}")
         st.markdown(ui.html_table(["Method", "VaR", "ES", "VaR USD", "ES USD", "Status"], rows, numeric=(1, 2, 3, 4),
