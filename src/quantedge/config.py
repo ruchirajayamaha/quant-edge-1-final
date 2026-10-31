@@ -8,11 +8,13 @@ provisional governance fields that still require human team review and sign-off.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from datetime import time
 import hashlib
 import json
 import math
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 import yaml
 
@@ -60,7 +62,7 @@ class MandateConfig:
 
 @dataclass(frozen=True)
 class DataConfig:
-    """Market and risk-free data acquisition, adjustment, and caching settings."""
+    """Market and risk-free data acquisition, adjustment, boundary-guard, and RF cutoff settings."""
 
     requested_start: str
     end_date_policy: str
@@ -68,12 +70,18 @@ class DataConfig:
     price_source: str
     price_adjustment: str
     no_implicit_forward_fill: bool
+    unexpected_session_policy: str
+    require_requested_boundary_coverage: bool
     fred_rf_series: str
     fred_csv_url: str
     rf_quote_basis: str
     rf_conversion_formula: str
     rf_trading_days_per_year: int
+    rf_alignment_policy: str
     rf_availability_lag_sessions: int
+    rf_decision_timezone: str
+    rf_decision_cutoff_time: str
+    rf_release_time: str
     rf_no_backfill: bool
     raw_dir: str
     processed_dir: str
@@ -338,6 +346,36 @@ def _validate_raw_config(raw: dict[str, Any]) -> AppConfig:
     if rf_days <= 0 or rf_lag < 0:
         raise ValueError("rf_trading_days_per_year must be > 0 and rf_availability_lag_sessions >= 0.")
 
+    unexpected_policy = str(data_raw.get("unexpected_session_policy", "quarantine"))
+    if unexpected_policy not in ("quarantine", "error"):
+        raise ValueError(
+            f"data.unexpected_session_policy must be 'quarantine' or 'error'; got {unexpected_policy!r}."
+        )
+    require_boundary = bool(data_raw.get("require_requested_boundary_coverage", True))
+
+    rf_policy = str(
+        data_raw.get(
+            "rf_alignment_policy",
+            "h15_schedule_1615_ny_before_prev_nyse_close_1600_ny",
+        )
+    )
+    allowed_rf_policies = {
+        "h15_schedule_1615_ny_before_prev_nyse_close_1600_ny",
+        "ex_post_same_date",
+        "legacy_bday_lag",
+    }
+    if rf_policy not in allowed_rf_policies:
+        raise ValueError(
+            f"Unsupported data.rf_alignment_policy {rf_policy!r}; expected one of {sorted(allowed_rf_policies)}."
+        )
+
+    rf_tz = str(data_raw.get("rf_decision_timezone", "America/New_York"))
+    ZoneInfo(rf_tz)  # fail fast if invalid IANA timezone
+    rf_cutoff_time = str(data_raw.get("rf_decision_cutoff_time", "16:00:00"))
+    rf_release_time = str(data_raw.get("rf_release_time", "16:15:00"))
+    time.fromisoformat(rf_cutoff_time)
+    time.fromisoformat(rf_release_time)
+
     frozen_end = data_raw.get("frozen_end_date")
     data_cfg = DataConfig(
         requested_start=str(data_raw["requested_start"]),
@@ -346,12 +384,18 @@ def _validate_raw_config(raw: dict[str, Any]) -> AppConfig:
         price_source=str(data_raw["price_source"]),
         price_adjustment=str(data_raw["price_adjustment"]),
         no_implicit_forward_fill=bool(data_raw["no_implicit_forward_fill"]),
+        unexpected_session_policy=unexpected_policy,
+        require_requested_boundary_coverage=require_boundary,
         fred_rf_series=str(data_raw["fred_rf_series"]),
         fred_csv_url=str(data_raw["fred_csv_url"]),
         rf_quote_basis=str(data_raw["rf_quote_basis"]),
         rf_conversion_formula=str(data_raw["rf_conversion_formula"]),
         rf_trading_days_per_year=rf_days,
+        rf_alignment_policy=rf_policy,
         rf_availability_lag_sessions=rf_lag,
+        rf_decision_timezone=rf_tz,
+        rf_decision_cutoff_time=rf_cutoff_time,
+        rf_release_time=rf_release_time,
         rf_no_backfill=bool(data_raw["rf_no_backfill"]),
         raw_dir=str(data_raw["raw_dir"]),
         processed_dir=str(data_raw["processed_dir"]),

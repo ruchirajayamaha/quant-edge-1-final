@@ -15,19 +15,27 @@ Mathematical & Data-Hygiene Conventions:
   ``t -> t+1`` one-session returns; incomplete rows are excluded and counted only AFTER
   return calculation so multi-session moves are never mislabelled as one-day returns.
 - FRED ``DTB3`` quotes (annual percent, discount basis) are converted via the documented
-  daily proxy ``(rate_pct / 100.0) / trading_days_per_year`` and aligned strictly from
-  past available observations using ``availability_lag_sessions`` (never backfilled).
+  daily proxy ``(rate_pct / 100.0) / trading_days_per_year``. Forward-decision alignment
+  models the actual decision cutoff (preceding NYSE close, ``16:00:00 America/New_York``)
+  against verified release timestamps or the conservative Federal Reserve H.15 publication
+  schedule (``16:15:00 America/New_York`` on the next Federal Reserve business day,
+  requiring ``available_at <= decision_time`` with zero backfill), explicitly distinct
+  from the contemporaneous ex-post daily proxy (``mode='ex_post'``).
 """
 
 from __future__ import annotations
 
-from datetime import date, timedelta
+from collections.abc import Mapping
+from datetime import date, time, timedelta
 import inspect
-from typing import Literal
+from typing import Any, Literal
+from zoneinfo import ZoneInfo
 
 import numpy as np
 import pandas as pd
 from statsmodels.tsa.stattools import adfuller
+
+RFAlignmentMode = Literal["forward_decision", "ex_post", "legacy_bday_lag"]
 
 _ADFULLER_SUPPORTS_RESULT_OBJECT: bool = "result_object" in inspect.signature(adfuller).parameters
 
@@ -190,6 +198,95 @@ def expected_nyse_sessions(
     return sessions
 
 
+def _observe_federal_fixed_holiday(holiday: date) -> date:
+    """Apply US OPM (5 U.S.C. 6103) weekend observance for federal holidays (Sat->Fri, Sun->Mon)."""
+    if holiday.weekday() == 5:
+        return holiday - timedelta(days=1)
+    if holiday.weekday() == 6:
+        return holiday + timedelta(days=1)
+    return holiday
+
+
+def _federal_holidays_for_year(year: int) -> set[date]:
+    """Return US Federal Reserve / OPM non-publication holidays plus conservative market closures.
+
+    Covers all 11 US federal holidays (including Columbus Day and Veterans Day when NYSE is open
+    but the Federal Reserve Board H.15 release does not publish, as well as Friday Dec 31 when
+    New Year's Day falls on Saturday and Juneteenth starting in 2021), plus Good Friday and
+    documented special national closures so H.15 publication availability is never assumed early.
+    """
+    holidays: set[date] = set()
+
+    # 1. New Year's Day (OPM rule: Saturday Jan 1 of year+1 is observed on Friday Dec 31 of year)
+    nyd_curr = _observe_federal_fixed_holiday(date(year, 1, 1))
+    if nyd_curr.year == year:
+        holidays.add(nyd_curr)
+    nyd_next = _observe_federal_fixed_holiday(date(year + 1, 1, 1))
+    if nyd_next.year == year:
+        holidays.add(nyd_next)
+
+    # 2. Martin Luther King, Jr. Day (3rd Monday in January)
+    holidays.add(_nth_weekday_of_month(year, 1, 0, 3))
+
+    # 3. Washington's Birthday (3rd Monday in February)
+    holidays.add(_nth_weekday_of_month(year, 2, 0, 3))
+
+    # 4. Good Friday (conservative SIFMA/Treasury market closure guard)
+    holidays.add(_easter_sunday(year) - timedelta(days=2))
+
+    # 5. Memorial Day (last Monday in May)
+    holidays.add(_last_weekday_of_month(year, 5, 0))
+
+    # 6. Juneteenth National Independence Day (federal holiday starting in June 2021)
+    if year >= 2021:
+        holidays.add(_observe_federal_fixed_holiday(date(year, 6, 19)))
+
+    # 7. Independence Day (July 4)
+    holidays.add(_observe_federal_fixed_holiday(date(year, 7, 4)))
+
+    # 8. Labor Day (1st Monday in September)
+    holidays.add(_nth_weekday_of_month(year, 9, 0, 1))
+
+    # 9. Columbus Day (2nd Monday in October — NYSE open, Federal Reserve Board H.15 closed)
+    holidays.add(_nth_weekday_of_month(year, 10, 0, 2))
+
+    # 10. Veterans Day (November 11 — NYSE open, Federal Reserve Board H.15 closed)
+    holidays.add(_observe_federal_fixed_holiday(date(year, 11, 11)))
+
+    # 11. Thanksgiving Day (4th Thursday in November)
+    holidays.add(_nth_weekday_of_month(year, 11, 3, 4))
+
+    # 12. Christmas Day (December 25)
+    holidays.add(_observe_federal_fixed_holiday(date(year, 12, 25)))
+
+    for closure in NYSE_SPECIAL_CLOSURES:
+        if closure.year == year:
+            holidays.add(closure)
+
+    return holidays
+
+
+def expected_federal_reserve_business_days(
+    start_date: str | pd.Timestamp,
+    end_date: str | pd.Timestamp,
+) -> pd.DatetimeIndex:
+    """Construct conservative Federal Reserve H.15 publication business days over ``[start_date, end_date]``."""
+    start_ts = pd.Timestamp(start_date).normalize()
+    end_ts = pd.Timestamp(end_date).normalize()
+    if end_ts < start_ts:
+        raise ValueError(f"end_date ({end_ts}) must be >= start_date ({start_ts}).")
+
+    weekdays = pd.bdate_range(start=start_ts, end=end_ts, freq="B")
+    holidays: set[pd.Timestamp] = set()
+    for yr in range(start_ts.year, end_ts.year + 1):
+        for h in _federal_holidays_for_year(yr):
+            holidays.add(pd.Timestamp(h))
+
+    pub_days = weekdays[~weekdays.isin(holidays)]
+    pub_days.name = "date"
+    return pub_days
+
+
 def compute_session_returns(
     prices: pd.DataFrame,
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -296,18 +393,45 @@ def align_risk_free_rate(
     *,
     availability_lag_sessions: int = 1,
     trading_days_per_year: int = 252,
+    mode: RFAlignmentMode = "forward_decision",
+    price_sessions: pd.DatetimeIndex | None = None,
+    decision_timezone: str = "America/New_York",
+    decision_cutoff_time_ny: str = "16:00:00",
+    release_time_ny: str = "16:15:00",
+    release_timestamps: pd.Series | Mapping[Any, Any] | None = None,
+    decision_timestamps: pd.Series | pd.DatetimeIndex | None = None,
+    require_verified_releases: bool = False,
 ) -> pd.Series:
     """Align raw annual-percent DTB3 quotes to return dates using past-only values.
 
-    Formula & Lag Convention:
+    Formula & Release-Cutoff Conventions:
     - Daily fractional approximation: ``rf_daily = (rate_annual_pct / 100.0) / trading_days_per_year``.
       ``DTB3`` is quoted in annual percent on a 360-day bank-discount basis; dividing by
       ``252`` is an explicitly disclosed trading-day risk-free proxy, not an exact realized
       Treasury-bill holding-period return.
-    - Each valid observation dated ``d`` becomes usable at ``available_date = d + L * BDay``
-      where ``L = availability_lag_sessions`` (``available_date = d`` when ``L == 0``).
-    - Return date ``t`` receives the most recent valid observation with ``available_date <= t``.
-      Initial return dates prior to the earliest ``available_date`` remain ``NaN`` (never backfilled).
+    - ``mode='forward_decision'`` (default):
+      Models the actual portfolio/forecast decision cutoff for return date ``t``, which is the
+      preceding NYSE session close strictly ``< t`` at ``decision_cutoff_time_ny`` (default
+      ``16:00:00 America/New_York``), or explicit timezone-aware ``decision_timestamps``.
+      Each valid ``DTB3`` observation dated ``d`` becomes usable at ``available_at``:
+      * If ``release_timestamps`` provides a verified timezone-aware timestamp for ``d``, that
+        exact release timestamp is used.
+      * Otherwise (unless ``require_verified_releases=True``), ``available_at`` is conservatively
+        set to the ``availability_lag_sessions``-th Federal Reserve H.15 publication business day
+        strictly after ``d`` (skipping all 11 US federal holidays including Columbus Day and
+        Veterans Day, Good Friday, documented special closures, and any explicit ``NaN`` holiday
+        dates in ``raw_dtb3_annual_pct``) at ``release_time_ny`` (default ``16:15:00 America/New_York``).
+        Because ``16:15 ET > 16:00 ET``, an observation published on decision day ``t_{-1}`` at
+        ``16:15 ET`` is NOT available before the ``16:00 ET`` close of ``t_{-1}``.
+      Return date ``t`` receives the most recent valid observation satisfying
+      ``available_at <= decision_time`` with zero backfill.
+    - ``mode='ex_post'``:
+      Contemporaneous ex-post daily proxy matching ``obs_date <= t`` (zero backfill). Explicitly
+      tagged ``ex_post_contemporaneous_proxy_not_for_forward_decisions`` so it is never confused
+      with release-time-available decision inputs.
+    - ``mode='legacy_bday_lag'``:
+      Date-only ``obs_date + BDay(L) <= t`` calculation retained solely for audit comparison;
+      tagged ``legacy_bday_date_only_not_publication_verified``.
     """
     if not isinstance(return_dates, pd.DatetimeIndex):
         raise ValueError("return_dates must be a pandas DatetimeIndex.")
@@ -317,57 +441,264 @@ def align_risk_free_rate(
         raise ValueError(f"availability_lag_sessions must be >= 0; got {availability_lag_sessions}")
     if trading_days_per_year <= 0:
         raise ValueError(f"trading_days_per_year must be > 0; got {trading_days_per_year}")
+    if mode not in ("forward_decision", "ex_post", "legacy_bday_lag"):
+        raise ValueError(
+            f"Unsupported RF alignment mode {mode!r}; expected 'forward_decision', 'ex_post', or 'legacy_bday_lag'."
+        )
 
-    normalized_targets = return_dates.tz_localize(None) if return_dates.tz is not None else return_dates
-    normalized_targets = normalized_targets.normalize()
+    tz = ZoneInfo(decision_timezone)
+    cutoff_t = time.fromisoformat(decision_cutoff_time_ny)
+    release_t = time.fromisoformat(release_time_ny)
+
+    series_name = "rf_daily_ex_post" if mode == "ex_post" else "rf_daily"
+    rf_mode_tag = (
+        "forward_decision_cutoff_proxy"
+        if mode == "forward_decision"
+        else (
+            "ex_post_contemporaneous_proxy_not_for_forward_decisions"
+            if mode == "ex_post"
+            else "legacy_bday_date_only_not_publication_verified"
+        )
+    )
+
+    normalized_targets = (
+        return_dates.tz_convert(decision_timezone).tz_localize(None)
+        if return_dates.tz is not None
+        else return_dates
+    ).normalize()
 
     if raw_dtb3_annual_pct is None or raw_dtb3_annual_pct.empty or len(normalized_targets) == 0:
-        return pd.Series(np.nan, index=return_dates, name="rf_daily", dtype=float)
+        empty_s = pd.Series(np.nan, index=return_dates.copy(), name=series_name, dtype=float)
+        empty_s.attrs["rf_mode"] = rf_mode_tag
+        return empty_s
 
     raw_series = pd.to_numeric(raw_dtb3_annual_pct, errors="coerce")
     obs_idx = pd.to_datetime(raw_series.index)
     if obs_idx.tz is not None:
-        obs_idx = obs_idx.tz_convert("America/New_York").tz_localize(None)
-    obs_idx = obs_idx.normalize()
+        obs_idx = obs_idx.tz_convert(decision_timezone).tz_localize(None)
+    obs_idx = pd.DatetimeIndex(obs_idx).normalize()
 
-    obs_df = pd.DataFrame(
-        {
-            "obs_date": obs_idx,
-            "rate_pct": raw_series.to_numpy(dtype=float),
-        }
-    ).dropna(subset=["rate_pct"])
+    all_raw_df = (
+        pd.DataFrame(
+            {
+                "obs_date": obs_idx,
+                "rate_pct": raw_series.to_numpy(dtype=float),
+            }
+        )
+        .sort_values("obs_date", kind="mergesort")
+        .drop_duplicates(subset=["obs_date"], keep="last")
+    )
+    explicit_nan_dates = pd.DatetimeIndex(
+        all_raw_df.loc[all_raw_df["rate_pct"].isna(), "obs_date"]
+    )
+    obs_df = all_raw_df.dropna(subset=["rate_pct"]).copy()
 
     if obs_df.empty:
-        return pd.Series(np.nan, index=return_dates, name="rf_daily", dtype=float)
+        empty_s = pd.Series(np.nan, index=return_dates.copy(), name=series_name, dtype=float)
+        empty_s.attrs["rf_mode"] = rf_mode_tag
+        return empty_s
 
-    obs_df = obs_df.sort_values("obs_date", kind="mergesort")
-    obs_df = obs_df.drop_duplicates(subset=["obs_date"], keep="last")
     obs_df["rf_daily"] = (obs_df["rate_pct"] / 100.0) / float(trading_days_per_year)
 
-    if availability_lag_sessions == 0:
-        obs_df["available_date"] = obs_df["obs_date"]
+    if mode == "ex_post":
+        target_df = pd.DataFrame({"target_date": normalized_targets})
+        merged = pd.merge_asof(
+            target_df,
+            obs_df[["obs_date", "rf_daily"]],
+            left_on="target_date",
+            right_on="obs_date",
+            direction="backward",
+            allow_exact_matches=True,
+        )
+        aligned = pd.Series(
+            merged["rf_daily"].to_numpy(dtype=float),
+            index=return_dates.copy(),
+            name=series_name,
+            dtype=float,
+        )
+        aligned.attrs["rf_mode"] = rf_mode_tag
+        return aligned
+
+    if mode == "legacy_bday_lag":
+        if availability_lag_sessions == 0:
+            obs_df["available_date"] = obs_df["obs_date"]
+        else:
+            obs_df["available_date"] = obs_df["obs_date"] + pd.offsets.BDay(
+                availability_lag_sessions
+            )
+        obs_df = obs_df.sort_values(["available_date", "obs_date"], kind="mergesort")
+        obs_df = obs_df.drop_duplicates(subset=["available_date"], keep="last")
+        target_df = pd.DataFrame({"target_date": normalized_targets})
+        merged = pd.merge_asof(
+            target_df,
+            obs_df[["available_date", "rf_daily"]],
+            left_on="target_date",
+            right_on="available_date",
+            direction="backward",
+            allow_exact_matches=True,
+        )
+        aligned = pd.Series(
+            merged["rf_daily"].to_numpy(dtype=float),
+            index=return_dates.copy(),
+            name=series_name,
+            dtype=float,
+        )
+        aligned.attrs["rf_mode"] = rf_mode_tag
+        return aligned
+
+    # mode == "forward_decision": enforce available_at <= decision_time in UTC
+    if decision_timestamps is not None:
+        if isinstance(decision_timestamps, pd.Series):
+            if decision_timestamps.index.equals(return_dates) or decision_timestamps.index.equals(
+                normalized_targets
+            ):
+                dec_idx = pd.DatetimeIndex(decision_timestamps)
+            else:
+                raise ValueError("decision_timestamps Series index must match return_dates.")
+        elif isinstance(decision_timestamps, pd.DatetimeIndex):
+            if len(decision_timestamps) != len(return_dates):
+                raise ValueError(
+                    f"decision_timestamps length ({len(decision_timestamps)}) must match "
+                    f"return_dates length ({len(return_dates)})."
+                )
+            dec_idx = decision_timestamps
+        else:
+            raise TypeError("decision_timestamps must be a pandas Series or DatetimeIndex.")
+
+        if dec_idx.tz is None or bool(dec_idx.isna().any()):
+            raise ValueError("decision_timestamps must contain non-null timezone-aware timestamps.")
+        decision_utc = dec_idx.tz_convert("UTC")
     else:
-        obs_df["available_date"] = obs_df["obs_date"] + pd.offsets.BDay(availability_lag_sessions)
+        base_nyse = expected_nyse_sessions(
+            normalized_targets[0] - pd.Timedelta(days=20),
+            normalized_targets[-1],
+        )
+        if price_sessions is not None:
+            if not isinstance(price_sessions, pd.DatetimeIndex) or len(price_sessions) == 0:
+                raise ValueError("price_sessions, when supplied, must be a non-empty DatetimeIndex.")
+            norm_ps = (
+                price_sessions.tz_convert(decision_timezone).tz_localize(None)
+                if price_sessions.tz is not None
+                else price_sessions
+            ).normalize()
+            norm_ps = pd.DatetimeIndex(norm_ps).sort_values().unique()
+            session_pool = base_nyse[base_nyse < norm_ps[0]].append(norm_ps)
+        else:
+            session_pool = base_nyse
 
-    obs_df = obs_df.sort_values(["available_date", "obs_date"], kind="mergesort")
-    obs_df = obs_df.drop_duplicates(subset=["available_date"], keep="last")
+        prev_pos = (
+            np.searchsorted(session_pool.to_numpy(), normalized_targets.to_numpy(), side="left") - 1
+        )
+        if np.any(prev_pos < 0):
+            raise ValueError(
+                "Could not determine preceding NYSE trading session prior to earliest return date."
+            )
+        prev_dates = session_pool[prev_pos]
+        cutoff_delta = pd.Timedelta(
+            hours=cutoff_t.hour,
+            minutes=cutoff_t.minute,
+            seconds=cutoff_t.second,
+            microseconds=cutoff_t.microsecond,
+        )
+        decision_utc = (prev_dates + cutoff_delta).tz_localize(tz).tz_convert("UTC")
 
-    target_df = pd.DataFrame({"target_date": normalized_targets})
+    cal_start = obs_df["obs_date"].min()
+    cal_end = max(obs_df["obs_date"].max(), normalized_targets.max()) + pd.Timedelta(
+        days=35 + 7 * max(availability_lag_sessions, 1)
+    )
+    fed_bdays = expected_federal_reserve_business_days(cal_start, cal_end)
+    pub_days = fed_bdays[~fed_bdays.isin(explicit_nan_dates)]
+    if len(pub_days) == 0:
+        raise ValueError("No candidate Federal Reserve H.15 publication business days available.")
+
+    if availability_lag_sessions == 0:
+        pub_pos = np.searchsorted(pub_days.to_numpy(), obs_df["obs_date"].to_numpy(), side="left")
+    else:
+        pub_pos = np.searchsorted(
+            pub_days.to_numpy(),
+            obs_df["obs_date"].to_numpy(),
+            side="right",
+        ) + (availability_lag_sessions - 1)
+
+    if np.any(pub_pos >= len(pub_days)):
+        raise ValueError("Insufficient future publication calendar horizon for RF availability.")
+
+    sched_pub_dates = pub_days[pub_pos]
+    release_delta = pd.Timedelta(
+        hours=release_t.hour,
+        minutes=release_t.minute,
+        seconds=release_t.second,
+        microseconds=release_t.microsecond,
+    )
+    sched_avail_utc = (sched_pub_dates + release_delta).tz_localize(tz).tz_convert("UTC")
+
+    verified_map: dict[pd.Timestamp, pd.Timestamp] = {}
+    if release_timestamps is not None:
+        items_iter = (
+            release_timestamps.items()
+            if isinstance(release_timestamps, (pd.Series, Mapping))
+            else None
+        )
+        if items_iter is None:
+            raise TypeError("release_timestamps must be a pandas Series or Mapping.")
+        for raw_k, raw_v in items_iter:
+            if pd.isna(raw_v):
+                continue
+            k_ts = pd.Timestamp(raw_k)
+            if k_ts.tzinfo is not None:
+                k_ts = k_ts.tz_convert(tz).tz_localize(None)
+            k_norm = k_ts.normalize()
+
+            v_ts = pd.Timestamp(raw_v)
+            if v_ts.tzinfo is None:
+                raise ValueError(
+                    f"release_timestamps[{raw_k!r}] = {raw_v!r} is timezone-naive; "
+                    f"verified release timestamps must be timezone-aware."
+                )
+            verified_map[k_norm] = v_ts.tz_convert("UTC")
+
+    avail_list: list[pd.Timestamp] = []
+    for obs_d, sched_ts in zip(obs_df["obs_date"], sched_avail_utc, strict=True):
+        if obs_d in verified_map:
+            avail_list.append(verified_map[obs_d])
+        elif require_verified_releases:
+            avail_list.append(pd.NaT)
+        else:
+            avail_list.append(sched_ts)
+
+    obs_df["available_utc"] = pd.DatetimeIndex(avail_list, tz="UTC")
+    obs_df = obs_df.dropna(subset=["available_utc"]).copy()
+    if obs_df.empty:
+        empty_s = pd.Series(np.nan, index=return_dates.copy(), name=series_name, dtype=float)
+        empty_s.attrs["rf_mode"] = rf_mode_tag
+        return empty_s
+
+    obs_df = obs_df.sort_values(["available_utc", "obs_date"], kind="mergesort")
+    obs_df = obs_df.drop_duplicates(subset=["available_utc"], keep="last")
+
+    target_df = pd.DataFrame(
+        {
+            "orig_pos": np.arange(len(normalized_targets), dtype=int),
+            "decision_utc": decision_utc,
+        }
+    ).sort_values("decision_utc", kind="mergesort")
+
     merged = pd.merge_asof(
         target_df,
-        obs_df[["available_date", "rf_daily"]],
-        left_on="target_date",
-        right_on="available_date",
+        obs_df[["available_utc", "rf_daily"]],
+        left_on="decision_utc",
+        right_on="available_utc",
         direction="backward",
         allow_exact_matches=True,
-    )
+    ).sort_values("orig_pos", kind="mergesort")
 
     aligned = pd.Series(
         merged["rf_daily"].to_numpy(dtype=float),
         index=return_dates.copy(),
-        name="rf_daily",
+        name=series_name,
         dtype=float,
     )
+    aligned.attrs["rf_mode"] = rf_mode_tag
     return aligned
 
 

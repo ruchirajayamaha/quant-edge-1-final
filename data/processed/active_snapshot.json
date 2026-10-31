@@ -1,8 +1,11 @@
 {
   "actual_end": "2026-10-30",
   "actual_start": "2005-01-03",
-  "dataset_id": "qe1_20050101_20261030_afb9ce5694",
-  "manifest_relpath": "qe1_20050101_20261030_afb9ce5694/manifest.json",
-  "retrieved_at_utc": "2026-10-31T06:41:10Z",
-  "schema_version": "1.0.0"
+  "dataset_id": "qe1_20050101_20261030_r2_cd2904443b",
+  "manifest_relpath": "qe1_20050101_20261030_r2_cd2904443b/manifest.json",
+  "parent_dataset_id": "qe1_20050101_20261030_afb9ce5694",
+  "policy_revision": "r2_hardened",
+  "retrieved_at_utc": "2026-10-31T07:32:17Z",
+  "rf_alignment_policy": "h15_schedule_1615_ny_before_prev_nyse_close_1600_ny",
+  "schema_version": "1.1.0"
 }

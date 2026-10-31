@@ -43,8 +43,8 @@ from quantedge import (
 
 
 def test_canonical_constants_and_schema_version() -> None:
-    """Canonical 7-ETF order, USD 10M NAV, and schema version 1.0.0 are frozen."""
-    assert CONTRACT_SCHEMA_VERSION == "1.0.0"
+    """Canonical 7-ETF order, USD 10M NAV, and hardened schema version 1.1.0 are frozen."""
+    assert CONTRACT_SCHEMA_VERSION == "1.1.0"
     assert CANONICAL_TICKERS == ("SPY", "EFA", "EEM", "AGG", "GLD", "XLE", "XLK")
     assert MANDATE_NAV_USD == 10_000_000.0
 
@@ -79,6 +79,15 @@ def test_config_loads_offline_and_hashes_deterministically(
     assert baseline_config.mandate.nav_usd == 10_000_000.0
     assert baseline_config.data.requested_start == "2005-01-01"
     assert baseline_config.data.no_implicit_forward_fill is True
+    assert baseline_config.data.unexpected_session_policy == "quarantine"
+    assert baseline_config.data.require_requested_boundary_coverage is True
+    assert (
+        baseline_config.data.rf_alignment_policy
+        == "h15_schedule_1615_ny_before_prev_nyse_close_1600_ny"
+    )
+    assert baseline_config.data.rf_decision_timezone == "America/New_York"
+    assert baseline_config.data.rf_decision_cutoff_time == "16:00:00"
+    assert baseline_config.data.rf_release_time == "16:15:00"
     assert baseline_config.data.rf_no_backfill is True
     assert baseline_config.risk.confidence_levels == (0.90, 0.95, 0.99)
     assert baseline_config.risk.primary_backtest_model == "historical"

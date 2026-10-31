@@ -1,9 +1,9 @@
-# Quant Edge 1.0 — Shared Baseline Configuration (D0 / SOLO STEP 1)
-# Contract schema version: 1.0.0
+# Quant Edge 1.0 — Shared Baseline Configuration (D0 / SOLO STEP 2 Hardened)
+# Contract schema version: 1.1.0
 # Governance choices marked PROVISIONAL_* or PENDING_* are explicit placeholders
 # and must be reviewed, justified, and signed off by the human team.
 
-schema_version: "1.0.0"
+schema_version: "1.1.0"
 project_name: "Quant Edge 1.0 - Conservative University Endowment"
 
 mandate:
@@ -52,12 +52,18 @@ data:
   price_source: "yfinance"
   price_adjustment: "auto_adjust_true_close"
   no_implicit_forward_fill: true
+  unexpected_session_policy: "quarantine"
+  require_requested_boundary_coverage: true
   fred_rf_series: "DTB3"
   fred_csv_url: "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTB3"
   rf_quote_basis: "annual_percent_discount_basis"
   rf_conversion_formula: "(rate_pct / 100.0) / 252"
   rf_trading_days_per_year: 252
+  rf_alignment_policy: "h15_schedule_1615_ny_before_prev_nyse_close_1600_ny"
   rf_availability_lag_sessions: 1
+  rf_decision_timezone: "America/New_York"
+  rf_decision_cutoff_time: "16:00:00"
+  rf_release_time: "16:15:00"
   rf_no_backfill: true
   raw_dir: "data/raw"
   processed_dir: "data/processed"

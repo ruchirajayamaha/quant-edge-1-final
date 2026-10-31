@@ -24,7 +24,7 @@ from typing import Any, Literal, Protocol, runtime_checkable
 
 import pandas as pd
 
-CONTRACT_SCHEMA_VERSION: str = "1.0.0"
+CONTRACT_SCHEMA_VERSION: str = "1.1.0"
 
 CANONICAL_TICKERS: tuple[str, ...] = ("SPY", "EFA", "EEM", "AGG", "GLD", "XLE", "XLK")
 EQUITY_TICKERS: tuple[str, ...] = ("SPY", "EFA", "EEM", "XLE", "XLK")
@@ -125,6 +125,8 @@ class DataManifest:
     session_calendar_note: str = ""
     offline_cache_used: bool = False
     notes: tuple[str, ...] = ()
+    policy_revision: str = "r2_hardened"
+    parent_dataset_id: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """Serialize manifest metadata to a JSON-compatible dictionary."""
@@ -171,6 +173,8 @@ class DataBundle:
     manifest: DataManifest
     raw_rf_quotes: pd.DataFrame | None = None
     excluded_return_rows: pd.DataFrame | None = None
+    ex_post_rf_daily: pd.Series | None = None
+    quarantined_prices: pd.DataFrame | None = None
 
 
 @dataclass(frozen=True)

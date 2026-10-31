@@ -4,8 +4,8 @@ Quantitative portfolio construction, tail-risk modelling (VaR, Expected Shortfal
 
 - **Authoritative specification:** `Quant edge 1.0 Final Challenge 1.pdf`
 - **Canonical 7-ETF allocation universe:** `SPY, EFA, EEM, AGG, GLD, XLE, XLK`
-- **Contract / config schema version:** `1.0.0`
-- **Current workflow status:** **SOLO STEP 1 (D0 Project Setup) complete.** Data acquisition (Step 2), analytics (Steps 3–8), full six-view Streamlit dashboard (Step 9), and final report audit (Step 10) are not yet executed. All analytical functions explicitly raise `NotImplementedError` rather than returning fabricated numbers.
+- **Contract / config schema version:** `1.1.0`
+- **Current workflow status:** **SOLO STEP 1 (D0 Project Setup) and SOLO STEP 2 (A1 Data Snapshot, Quality Diagnostics & Bounded `r2` Hardening Pass) complete.** Active verified snapshot: `qe1_20050101_20261030_r2_cd2904443b` (derived from preserved audited snapshot `qe1_20050101_20261030_afb9ce5694`). Analytics (Steps 3–8), full six-view Streamlit dashboard (Step 9), and final report audit (Step 10) are not yet executed; remaining Step 3–9 analytical functions explicitly raise `NotImplementedError` rather than returning fabricated numbers.
 
 ---
 
@@ -31,8 +31,8 @@ Quantitative portfolio construction, tail-risk modelling (VaR, Expected Shortfal
 │       ├── __init__.py
 │       ├── contracts.py     # Frozen dataclasses, constants, column schemas, RiskForecastFn
 │       ├── config.py        # Offline YAML validator, provisional-item inspector, SHA-256 hasher
-│       ├── data.py          # Market-data snapshot & cache loader stub (Step 2)
-│       ├── returns.py       # Session returns, past-only RF alignment & ADF stubs (Step 2 / 4)
+│       ├── data.py          # Market-data snapshot, boundary/quarantine guards & SHA-256 cache loader (Step 2)
+│       ├── returns.py       # NYSE/Fed calendars, session returns, cutoff-valid RF & ADF diagnostics (Step 2)
 │       ├── portfolio.py     # Weight optimization & drifting return-path stubs (Step 3)
 │       ├── kpis.py          # Performance KPIs & CAPM regression stub (Step 4)
 │       ├── var.py           # Normal moments (ddof=1), VaR estimator & callback registry stubs (Step 5)

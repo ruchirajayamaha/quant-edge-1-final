@@ -2,6 +2,16 @@
 
 All notable milestone checkpoints for the Quant Edge 1.0 solo implementation are recorded incrementally in this file.
 
+## [0.2.1] - 2026-10-31 — SOLO STEP 2 Bounded Data-Hardening Pass (`r2_hardened`)
+
+### Changed & Fixed
+- **Contract & config schema `1.1.0` (`src/quantedge/contracts.py`, `src/quantedge/config.py`, `config.yaml`):** Added explicit `policy_revision` and `parent_dataset_id` provenance on `DataManifest`, optional `ex_post_rf_daily` and `quarantined_prices` fields on `DataBundle`, and validated `unexpected_session_policy`, `require_requested_boundary_coverage`, `rf_alignment_policy`, `rf_decision_timezone`, `rf_decision_cutoff_time`, and `rf_release_time`.
+- **RF release-cutoff causality & ex-post separation (`src/quantedge/returns.py`, `src/quantedge/data.py`):** Replaced date-only `obs_date + BDay(1)` matching with explicit UTC timestamp comparison (`available_at <= decision_time`) modelling the preceding NYSE close (`16:00:00 America/New_York`) against verified `release_timestamps` or the conservative Federal Reserve H.15 schedule (`16:15:00 America/New_York` on `expected_federal_reserve_business_days`, excluding all 11 US federal OPM holidays including Columbus Day and Veterans Day, Good Friday, special closures, and blank `DTB3` holiday dates). Persisted the contemporaneous ex-post proxy separately in `rf_daily_ex_post.parquet` and disclosed historical first-release/vintage uncertainty.
+- **Requested boundary coverage guard (`src/quantedge/data.py`):** Validated first and last expected NYSE sessions against `requested_start` / `requested_end` and unclipped `calendar_sessions`, rejecting truncated history (`DataUnavailableError`) while handling weekend/holiday bounds cleanly.
+- **Unexpected non-NYSE session quarantine (`src/quantedge/data.py`):** Reindexed `prices` strictly onto expected NYSE sessions (removing `.union(observed_prices.index)`), preserving unexpected raw rows in `etf_prices_raw.parquet` and `quarantined_unexpected_prices.parquet` with `action='quarantine_exclude_from_modelling_grid'` so weekend rows never enter one-session returns.
+- **Cached RF index validation (`src/quantedge/data.py`):** Removed positional `rf_daily.index = simple_returns.index.copy()` overwriting and added strict `DatetimeIndex` equality validation for `rf_daily.parquet`, `rf_daily_ex_post.parquet`, and `log_returns.parquet` against `simple_returns.index`.
+- **Snapshot lineage & regression tests:** Preserved audited snapshot `qe1_20050101_20261030_afb9ce5694` untouched (all 13 SHA-256 hashes verified intact), derived hardened snapshot `qe1_20050101_20261030_r2_cd2904443b` offline via `derive_snapshot_from_existing`, and expanded test suite to `21/21` passing tests (`tests/test_a_data.py`, `tests/test_d_setup.py`).
+
 ## [0.2.0] - 2026-10-31 — SOLO STEP 2 (A1 Data Snapshot, Returns & Quality Diagnostics)
 
 ### Added

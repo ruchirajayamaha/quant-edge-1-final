@@ -18,6 +18,8 @@ Covers:
 from __future__ import annotations
 
 import copy
+import hashlib
+import json
 from pathlib import Path
 
 import numpy as np
@@ -38,6 +40,7 @@ from quantedge.data import (
 from quantedge.returns import (
     align_risk_free_rate,
     compute_session_returns,
+    expected_federal_reserve_business_days,
     expected_nyse_sessions,
     run_stationarity_diagnostics,
 )
@@ -194,11 +197,12 @@ def test_session_grid_detects_missing_nyse_session_across_all_tickers() -> None:
 
 
 def test_past_only_rf_alignment_lag_units_and_no_backfill() -> None:
-    """FRED DTB3 uses (rate/100)/252 units, enforces 1-session lag, and NEVER backfills."""
+    """FRED DTB3 uses (rate/100)/252 units, enforces 16:15 ET H.15 <= prev 16:00 ET close, and NEVER backfills."""
     fred_csv = "\n".join(
         [
             "observation_date,DTB3",
-            "2024-01-04,5.04",
+            "2024-01-03,5.04",
+            "2024-01-04,5.166",
             "2024-01-05,.",
             "2024-01-08,5.292",
         ]
@@ -208,7 +212,15 @@ def test_past_only_rf_alignment_lag_units_and_no_backfill() -> None:
     assert np.isnan(parsed.loc["2024-01-05", "rate_annual_pct"])
 
     return_dates = pd.DatetimeIndex(
-        ["2024-01-03", "2024-01-04", "2024-01-05", "2024-01-08", "2024-01-09"],
+        [
+            "2024-01-03",
+            "2024-01-04",
+            "2024-01-05",
+            "2024-01-08",
+            "2024-01-09",
+            "2024-01-10",
+            "2024-01-11",
+        ],
         name="date",
     )
     rf = align_risk_free_rate(
@@ -218,20 +230,28 @@ def test_past_only_rf_alignment_lag_units_and_no_backfill() -> None:
         trading_days_per_year=252,
     )
 
-    # 2024-01-04 quote (5.04%) becomes available at 2024-01-04 + 1 BDay = 2024-01-05.
-    # Therefore 2024-01-03 AND 2024-01-04 MUST remain NaN (no same-day look-ahead, no backfill!).
+    # 2024-01-03 quote (5.04%) posts on Thu 2024-01-04 at 16:15 EST, which is AFTER
+    # Thu 2024-01-04 16:00 EST (the decision cutoff for return date Fri 2024-01-05!).
+    # Therefore 2024-01-03, 2024-01-04, AND 2024-01-05 remain NaN with zero backfill!
     assert np.isnan(rf.loc["2024-01-03"])
     assert np.isnan(rf.loc["2024-01-04"])
+    assert np.isnan(rf.loc["2024-01-05"])
 
-    # (5.04 / 100) / 252 = 0.0002 exactly
-    assert np.isclose(rf.loc["2024-01-05"], 0.0002, atol=1e-15)
-    # On Monday 2024-01-08, Friday 2024-01-05 was '.' and Monday's 5.292% is not yet available (lag=1),
-    # so 2024-01-08 still uses 0.0002!
+    # For Mon 2024-01-08 (decision_time = Fri 2024-01-05 16:00 EST):
+    # - 2024-01-03 (5.04% -> 0.0002) posted Thu 2024-01-04 16:15 EST <= Fri 16:00 EST -> available!
+    # - 2024-01-04 (5.166% -> 0.000205) posted Fri 2024-01-05 16:15 EST > Fri 16:00 EST -> excluded!
     assert np.isclose(rf.loc["2024-01-08"], 0.0002, atol=1e-15)
-    # On Tuesday 2024-01-09, Monday's 5.292% -> (5.292 / 100) / 252 = 0.00021 is active!
-    assert np.isclose(rf.loc["2024-01-09"], 0.00021, atol=1e-15)
 
-    # Future perturbation invariance check: altering 2024-01-08 quote cannot affect <= 2024-01-08
+    # Because 2024-01-05 is '.' (explicit holiday/non-publication marker in the feed),
+    # 2024-01-04 (5.166% -> 0.000205) does not publish until Mon 2024-01-08 16:15 EST (> Mon 16:00 EST).
+    # Thus Tue 2024-01-09 (decision_time = Mon 2024-01-08 16:00 EST) still uses 0.0002,
+    # Wed 2024-01-10 (decision_time = Tue 2024-01-09 16:00 EST) uses 0.000205,
+    # and Thu 2024-01-11 (decision_time = Wed 2024-01-10 16:00 EST) uses Mon's 5.292% -> 0.00021!
+    assert np.isclose(rf.loc["2024-01-09"], 0.0002, atol=1e-15)
+    assert np.isclose(rf.loc["2024-01-10"], 0.000205, atol=1e-15)
+    assert np.isclose(rf.loc["2024-01-11"], 0.00021, atol=1e-15)
+
+    # Future perturbation invariance check: altering 2024-01-08 quote cannot affect <= 2024-01-10
     perturbed = parsed["rate_annual_pct"].copy()
     perturbed.loc[pd.Timestamp("2024-01-08")] = 99.0
     rf_perturbed = align_risk_free_rate(
@@ -240,7 +260,7 @@ def test_past_only_rf_alignment_lag_units_and_no_backfill() -> None:
         availability_lag_sessions=1,
         trading_days_per_year=252,
     )
-    pd.testing.assert_series_equal(rf.iloc[:4], rf_perturbed.iloc[:4])
+    pd.testing.assert_series_equal(rf.iloc[:6], rf_perturbed.iloc[:6])
 
 
 def test_quality_flags_retain_all_returns_and_handle_zero_mad_safely() -> None:
@@ -378,10 +398,339 @@ def test_offline_cache_roundtrip_network_fallback_and_sha256_tamper_rejection(
         load_data(test_cfg, offline=True, repo_root=tmp_path)
 
 
-def test_real_repository_snapshot_integrity(baseline_config: AppConfig, repo_root: Path) -> None:
-    """Verify the actual persisted Step 2 snapshot in data/processed/ offline."""
+def test_rf_availability_cutoff_after_close_holidays_and_ex_post_distinction() -> None:
+    """Finding 1: 16:15 ET H.15 release > 16:00 ET NYSE close, Fed holidays, verified timestamps, ex-post vs forward."""
+    # 1. Audited Oct 2026 forecast-origin cutoff example (t = Fri 2026-10-30, decision_time = Thu 2026-10-29 16:00 EDT)
+    oct_csv = "\n".join(
+        [
+            "observation_date,DTB3",
+            "2026-10-07,4.03",
+            "2026-10-08,4.05",
+            "2026-10-09,4.06",
+            "2026-10-12,",  # Columbus Day: NYSE open, Federal Reserve Board H.15 closed!
+            "2026-10-13,4.09",
+            "2026-10-14,4.10",
+            "2026-10-27,4.05",
+            "2026-10-28,4.01",
+            "2026-10-29,4.00",
+        ]
+    )
+    parsed = parse_fred_dtb3_csv(oct_csv)
+    nyse_sessions = expected_nyse_sessions("2026-10-07", "2026-10-30")
+    # Confirm NYSE is OPEN on Columbus Day 2026-10-12 whereas Fed H.15 business calendar is CLOSED
+    assert pd.Timestamp("2026-10-12") in nyse_sessions
+    fed_days = expected_federal_reserve_business_days("2026-10-07", "2026-10-30")
+    assert pd.Timestamp("2026-10-12") not in fed_days
+
+    return_dates = nyse_sessions[1:]
+    rf_fwd = align_risk_free_rate(
+        parsed["rate_annual_pct"],
+        return_dates,
+        mode="forward_decision",
+        price_sessions=nyse_sessions,
+    )
+    rf_exp = align_risk_free_rate(
+        parsed["rate_annual_pct"],
+        return_dates,
+        mode="ex_post",
+        price_sessions=nyse_sessions,
+    )
+
+    assert rf_fwd.attrs["rf_mode"] == "forward_decision_cutoff_proxy"
+    assert rf_exp.attrs["rf_mode"] == "ex_post_contemporaneous_proxy_not_for_forward_decisions"
+
+    # On Fri 2026-10-30 (decision_time = Thu 2026-10-29 16:00 EDT):
+    # - 2026-10-29 (4.00%) posts Fri 2026-10-30 16:15 EDT -> excluded
+    # - 2026-10-28 (4.01%) posts Thu 2026-10-29 16:15 EDT (> 16:00 EDT!) -> excluded
+    # - 2026-10-27 (4.05%) posts Wed 2026-10-28 16:15 EDT (<= Thu 16:00 EDT) -> SELECTED!
+    assert np.isclose(rf_fwd.loc["2026-10-30"], (4.05 / 100.0) / 252.0, atol=1e-15)
+    assert np.isclose(rf_exp.loc["2026-10-30"], (4.00 / 100.0) / 252.0, atol=1e-15)
+
+    # Columbus Day week (distinct rates uniquely fingerprint each observation date):
+    # - Mon 2026-10-12 (decision_time = Fri 2026-10-09 16:00 EDT): Thu Oct 8 (4.05%) posts at
+    #   Fri Oct 9 16:15 EDT (> 16:00), so Wed Oct 7 (4.03%, posted Thu Oct 8 16:15 EDT) is active!
+    # - Tue 2026-10-13 (decision_time = Mon 2026-10-12 16:00 EDT): Fri Oct 9 (4.06%) did NOT post
+    #   on Columbus Day Mon Oct 12, so Thu Oct 8 (4.05%, posted Fri Oct 9 16:15 EDT) is active!
+    # - Wed 2026-10-14 (decision_time = Tue 2026-10-13 16:00 EDT): Fri Oct 9 (4.06%) posts at
+    #   Tue Oct 13 16:15 EDT (> Tue 16:00 EDT!), so Thu Oct 8 (4.05%) REMAINS active!
+    # - Thu 2026-10-15 (decision_time = Wed 2026-10-14 16:00 EDT): Fri Oct 9 (4.06%) is now active!
+    assert np.isclose(rf_fwd.loc["2026-10-12"], (4.03 / 100.0) / 252.0, atol=1e-15)
+    assert np.isclose(rf_fwd.loc["2026-10-13"], (4.05 / 100.0) / 252.0, atol=1e-15)
+    assert np.isclose(rf_fwd.loc["2026-10-14"], (4.05 / 100.0) / 252.0, atol=1e-15)
+    assert np.isclose(rf_fwd.loc["2026-10-15"], (4.06 / 100.0) / 252.0, atol=1e-15)
+
+    # 2. OPM Saturday Veterans Day observed on Friday 2023-11-10 (SIFMA & NYSE open, Fed Board closed!)
+    vet_series = pd.Series(
+        [5.40, 5.42, 5.45],
+        index=pd.DatetimeIndex(["2023-11-08", "2023-11-09", "2023-11-10"]),
+    )
+    vet_nyse = expected_nyse_sessions("2023-11-08", "2023-11-15")
+    assert pd.Timestamp("2023-11-10") in vet_nyse
+    assert pd.Timestamp("2023-11-10") not in expected_federal_reserve_business_days(
+        "2023-11-08", "2023-11-15"
+    )
+    rf_vet = align_risk_free_rate(
+        vet_series,
+        vet_nyse[1:],
+        mode="forward_decision",
+        price_sessions=vet_nyse,
+    )
+    # On Mon 2023-11-13 (decision_time = Fri 2023-11-10 16:00 EST), Thu 2023-11-09 (5.42%) was NOT
+    # published on Fri 2023-11-10 because Fri 2023-11-10 was the OPM Veterans Day federal holiday;
+    # Wed 2023-11-08 (5.40%, published Thu 2023-11-09 16:15 EST) remains active on Mon 2023-11-13
+    # and Tue 2023-11-14, advancing to 5.45% on Wed 2023-11-15!
+    assert np.isclose(rf_vet.loc["2023-11-13"], (5.40 / 100.0) / 252.0, atol=1e-15)
+    assert np.isclose(rf_vet.loc["2023-11-14"], (5.40 / 100.0) / 252.0, atol=1e-15)
+    assert np.isclose(rf_vet.loc["2023-11-15"], (5.45 / 100.0) / 252.0, atol=1e-15)
+
+    # 3. Verified release_timestamps before vs after 16:00 ET cutoff & naive rejection
+    early_verified = {
+        pd.Timestamp("2026-10-28"): pd.Timestamp("2026-10-29 15:45:00-04:00"),
+    }
+    rf_early = align_risk_free_rate(
+        parsed["rate_annual_pct"],
+        return_dates,
+        mode="forward_decision",
+        price_sessions=nyse_sessions,
+        release_timestamps=early_verified,
+    )
+    assert np.isclose(rf_early.loc["2026-10-30"], (4.01 / 100.0) / 252.0, atol=1e-15)
+
+    after_close_verified = {
+        pd.Timestamp("2026-10-28"): pd.Timestamp("2026-10-29 16:00:01-04:00"),
+    }
+    rf_after = align_risk_free_rate(
+        parsed["rate_annual_pct"],
+        return_dates,
+        mode="forward_decision",
+        price_sessions=nyse_sessions,
+        release_timestamps=after_close_verified,
+    )
+    assert np.isclose(rf_after.loc["2026-10-30"], (4.05 / 100.0) / 252.0, atol=1e-15)
+
+    with pytest.raises(ValueError, match="timezone-aware"):
+        align_risk_free_rate(
+            parsed["rate_annual_pct"],
+            return_dates,
+            mode="forward_decision",
+            release_timestamps={pd.Timestamp("2026-10-28"): pd.Timestamp("2026-10-29 15:00:00")},
+        )
+
+
+def test_requested_boundary_coverage_rejects_truncation_and_handles_weekends_holidays(
+    repo_root: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Finding 2: Start/end truncation fails fast while requested weekend/holiday bounds pass cleanly."""
+    # 1. Start truncation reproduction: only Oct 2026 rows returned for requested_start='2005-01-01'
+    oct_only_sessions = expected_nyse_sessions("2026-10-01", "2026-10-30")
+    truncated_prices = _make_synthetic_prices(oct_only_sessions)
+    with pytest.raises(DataUnavailableError, match="start boundary coverage failed"):
+        build_session_price_grid(
+            truncated_prices,
+            requested_start="2005-01-01",
+            requested_end="2026-10-30",
+        )
+
+    # End-to-end through load_data: truncated download MUST raise DataUnavailableError (not pass!)
+    raw_cfg = yaml.safe_load((repo_root / "config.yaml").read_text(encoding="utf-8"))
+    trunc_cfg_dict = copy.deepcopy(raw_cfg)
+    trunc_cfg_dict["data"]["requested_start"] = "2005-01-01"
+    trunc_cfg_dict["data"]["frozen_end_date"] = "2026-10-30"
+    trunc_cfg_dict["data"]["raw_dir"] = str(tmp_path / "trunc_raw")
+    trunc_cfg_dict["data"]["processed_dir"] = str(tmp_path / "trunc_proc")
+    trunc_cfg = _validate_raw_config(trunc_cfg_dict)
+
+    monkeypatch.setattr("quantedge.data._download_etf_adjusted_closes", lambda cfg: truncated_prices)
+    monkeypatch.setattr(
+        "quantedge.data._download_fred_dtb3",
+        lambda cfg: parse_fred_dtb3_csv("observation_date,DTB3\n2026-09-25,4.10\n"),
+    )
+    with pytest.raises(DataUnavailableError, match="start boundary coverage failed"):
+        load_data(trunc_cfg, offline=False, repo_root=tmp_path)
+
+    # 2. End truncation: download stops at 2024-02-29 when requested_end is 2024-03-28
+    early_stop_prices = _make_synthetic_prices(expected_nyse_sessions("2024-01-02", "2024-02-29"))
+    with pytest.raises(DataUnavailableError, match="end boundary coverage failed"):
+        build_session_price_grid(
+            early_stop_prices,
+            requested_start="2024-01-02",
+            requested_end="2024-03-28",
+        )
+
+    # 3. Single-ticker missingness on first expected session fails boundary coverage
+    partial_first = _make_synthetic_prices(expected_nyse_sessions("2024-01-02", "2024-01-10"))
+    partial_first.iloc[0, partial_first.columns.get_loc("GLD")] = np.nan
+    with pytest.raises(DataUnavailableError, match="GLD"):
+        build_session_price_grid(
+            partial_first,
+            requested_start="2024-01-02",
+            requested_end="2024-01-10",
+        )
+
+    # 4. Explicit calendar_sessions is NOT clipped back to observed endpoints
+    cal_sessions = expected_nyse_sessions("2024-01-02", "2024-01-10")
+    missing_first = _make_synthetic_prices(cal_sessions[1:])
+    with pytest.raises(DataUnavailableError, match="start boundary coverage failed"):
+        build_session_price_grid(missing_first, calendar_sessions=cal_sessions)
+
+    # 5. Requested weekend/holiday bounds (Sat 2005-01-01 to MLK Mon 2005-01-17) pass cleanly
+    jan2005_sessions = expected_nyse_sessions("2005-01-01", "2005-01-17")
+    assert jan2005_sessions[0] == pd.Timestamp("2005-01-03")
+    assert jan2005_sessions[-1] == pd.Timestamp("2005-01-14")
+    jan2005_prices = _make_synthetic_prices(jan2005_sessions)
+    grid, miss_exp, unexp_obs = build_session_price_grid(
+        jan2005_prices,
+        requested_start="2005-01-01",
+        requested_end="2005-01-17",
+    )
+    assert len(miss_exp) == 0 and len(unexp_obs) == 0
+    diag = grid.attrs["session_grid_diagnostics"]
+    assert diag["n_leading_missing_sessions"] == 0
+    assert diag["n_trailing_missing_sessions"] == 0
+
+
+def test_unexpected_weekend_session_quarantined_and_excluded_from_returns(
+    repo_root: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Finding 3: Bogus Saturday row is preserved for audit but quarantined out of prices and 1-day returns."""
+    raw_dates = pd.DatetimeIndex(["2024-01-05", "2024-01-06", "2024-01-08"], name="date")
+    vendor_df = pd.DataFrame(
+        {
+            ticker: np.array([100.0, 150.0, 102.0], dtype=float)
+            for ticker in CANONICAL_TICKERS
+        },
+        index=raw_dates,
+    )
+
+    # Policy 'error' rejects unexpected weekend sessions
+    with pytest.raises(ValueError, match="2024-01-06"):
+        build_session_price_grid(
+            vendor_df,
+            requested_start="2024-01-05",
+            requested_end="2024-01-08",
+            unexpected_session_policy="error",
+        )
+
+    # Policy 'quarantine' excludes Saturday from modelling grid and returns while recording it
+    raw_cfg = yaml.safe_load((repo_root / "config.yaml").read_text(encoding="utf-8"))
+    q_cfg_dict = copy.deepcopy(raw_cfg)
+    q_cfg_dict["data"]["requested_start"] = "2024-01-05"
+    q_cfg_dict["data"]["frozen_end_date"] = "2024-01-08"
+    q_cfg_dict["data"]["raw_dir"] = str(tmp_path / "q_raw")
+    q_cfg_dict["data"]["processed_dir"] = str(tmp_path / "q_proc")
+    q_cfg = _validate_raw_config(q_cfg_dict)
+
+    monkeypatch.setattr("quantedge.data._download_etf_adjusted_closes", lambda cfg: vendor_df)
+    monkeypatch.setattr(
+        "quantedge.data._download_fred_dtb3",
+        lambda cfg: parse_fred_dtb3_csv("observation_date,DTB3\n2023-12-28,5.04\n"),
+    )
+
+    bundle = load_data(q_cfg, offline=False, repo_root=tmp_path)
+
+    # Modelling prices grid has ONLY Fri 2024-01-05 and Mon 2024-01-08 (NO Saturday!)
+    assert list(bundle.prices.index) == [pd.Timestamp("2024-01-05"), pd.Timestamp("2024-01-08")]
+    # Simple returns has ONLY Mon 2024-01-08 with exact Fri->Mon return 102/100 - 1 = +0.02
+    assert list(bundle.simple_returns.index) == [pd.Timestamp("2024-01-08")]
+    np.testing.assert_allclose(bundle.simple_returns.iloc[0].to_numpy(), 0.02, rtol=0, atol=1e-14)
+
+    # Raw parquet and quarantined_prices preserve Saturday 2024-01-06 (150.0) for audit
+    assert bundle.quarantined_prices is not None
+    assert list(bundle.quarantined_prices.index) == [pd.Timestamp("2024-01-06")]
+    np.testing.assert_allclose(bundle.quarantined_prices.iloc[0].to_numpy(), 150.0, rtol=0, atol=1e-14)
+    raw_saved = pd.read_parquet(
+        tmp_path / "q_raw" / bundle.manifest.dataset_id / "etf_prices_raw.parquet"
+    )
+    assert pd.Timestamp("2024-01-06") in raw_saved.index
+    assert bundle.manifest.row_exclusions["n_quarantined_unexpected_sessions"] == 1
+    assert bundle.manifest.row_exclusions["quarantined_unexpected_dates"] == ["2024-01-06"]
+
+    q_flags = bundle.quality_flags.loc[
+        bundle.quality_flags["rule"] == "unexpected_non_nyse_session"
+    ]
+    assert len(q_flags) == len(CANONICAL_TICKERS)
+    assert set(q_flags["action"]) == {"quarantine_exclude_from_modelling_grid"}
+
+
+def test_cached_rf_shifted_index_with_valid_sha256_is_rejected(
+    repo_root: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Finding 4: Same-length shifted or RangeIndex rf_daily.parquet with valid SHA-256 fails logical index check."""
+    raw_cfg = yaml.safe_load((repo_root / "config.yaml").read_text(encoding="utf-8"))
+    cfg_dict = copy.deepcopy(raw_cfg)
+    cfg_dict["data"]["requested_start"] = "2024-01-02"
+    cfg_dict["data"]["frozen_end_date"] = "2024-02-15"
+    cfg_dict["data"]["raw_dir"] = str(tmp_path / "idx_raw")
+    cfg_dict["data"]["processed_dir"] = str(tmp_path / "idx_proc")
+    test_cfg = _validate_raw_config(cfg_dict)
+
+    sessions = expected_nyse_sessions("2024-01-02", "2024-02-15")
+    monkeypatch.setattr(
+        "quantedge.data._download_etf_adjusted_closes",
+        lambda cfg: _make_synthetic_prices(sessions),
+    )
+    monkeypatch.setattr(
+        "quantedge.data._download_fred_dtb3",
+        lambda cfg: parse_fred_dtb3_csv("observation_date,DTB3\n2023-12-20,5.25\n2024-01-15,5.20\n"),
+    )
+
+    created = load_data(test_cfg, offline=False, repo_root=tmp_path)
+    ds_id = created.manifest.dataset_id
+    snap_dir = tmp_path / "idx_proc" / ds_id
+    rf_parquet = snap_dir / "rf_daily.parquet"
+    manifest_json = snap_dir / "manifest.json"
+
+    def _rewrite_rf_and_update_manifest_hash(new_rf_df: pd.DataFrame) -> None:
+        new_rf_df.to_parquet(rf_parquet, engine="pyarrow", index=True)
+        new_sha = hashlib.sha256(rf_parquet.read_bytes()).hexdigest()
+        m_data = json.loads(manifest_json.read_text(encoding="utf-8"))
+        matched_keys = [k for k in m_data["file_sha256"] if k.endswith("rf_daily.parquet")]
+        assert len(matched_keys) == 1
+        m_data["file_sha256"][matched_keys[0]] = new_sha
+        manifest_json.write_text(json.dumps(m_data, indent=2, sort_keys=True), encoding="utf-8")
+
+    # 1. Same-length DatetimeIndex shifted by +1 business day with recomputed valid SHA-256
+    orig_rf_df = pd.read_parquet(rf_parquet, engine="pyarrow")
+    shifted_rf_df = orig_rf_df.copy()
+    shifted_rf_df.index = shifted_rf_df.index + pd.offsets.BDay(1)
+    assert len(shifted_rf_df) == len(created.simple_returns)
+    _rewrite_rf_and_update_manifest_hash(shifted_rf_df)
+
+    with pytest.raises(DataUnavailableError, match="rf_daily.parquet index does not match"):
+        load_data(test_cfg, offline=True, repo_root=tmp_path)
+
+    # 2. Same-length RangeIndex with recomputed valid SHA-256
+    range_rf_df = orig_rf_df.reset_index(drop=True)
+    assert len(range_rf_df) == len(created.simple_returns)
+    _rewrite_rf_and_update_manifest_hash(range_rf_df)
+
+    with pytest.raises(DataUnavailableError, match="rf_daily.parquet index does not match"):
+        load_data(test_cfg, offline=True, repo_root=tmp_path)
+
+
+def test_real_repository_snapshot_integrity_and_preserved_v1_audit_snapshot(
+    baseline_config: AppConfig,
+    repo_root: Path,
+    tmp_path: Path,
+) -> None:
+    """Verify active r2 hardened snapshot, preserved v1 audited snapshot hashes, and policy isolation."""
     bundle = load_data(baseline_config, offline=True, repo_root=repo_root)
     m = bundle.manifest
+
+    assert m.dataset_id.startswith("qe1_20050101_20261030_r2_")
+    assert m.policy_revision == "r2_hardened"
+    assert m.parent_dataset_id == "qe1_20050101_20261030_afb9ce5694"
+    assert m.schema_version == "1.1.0"
+    assert (
+        m.rf_convention["alignment_policy"]
+        == "h15_schedule_1615_ny_before_prev_nyse_close_1600_ny"
+    )
 
     assert tuple(bundle.prices.columns) == CANONICAL_TICKERS
     assert tuple(bundle.simple_returns.columns) == CANONICAL_TICKERS
@@ -390,11 +739,23 @@ def test_real_repository_snapshot_integrity(baseline_config: AppConfig, repo_roo
     assert bundle.simple_returns.index.is_monotonic_increasing and bundle.simple_returns.index.is_unique
     pd.testing.assert_index_equal(bundle.simple_returns.index, bundle.log_returns.index)
     pd.testing.assert_index_equal(bundle.simple_returns.index, bundle.rf_daily.index)
+    assert bundle.ex_post_rf_daily is not None
+    pd.testing.assert_index_equal(bundle.simple_returns.index, bundle.ex_post_rf_daily.index)
+
+    # Confirm forward-decision vs ex-post RF values on audited final session 2026-10-30
+    assert np.isclose(bundle.rf_daily.loc["2026-10-30"], (4.05 / 100.0) / 252.0, atol=1e-15)
+    assert np.isclose(
+        bundle.ex_post_rf_daily.loc["2026-10-30"], (4.00 / 100.0) / 252.0, atol=1e-15
+    )
+    assert m.rf_convention["n_days_forward_differs_from_ex_post"] > 4000
 
     assert m.actual_start == "2005-01-03"
-    assert len(bundle.simple_returns) > 5000
+    assert m.actual_end == "2026-10-30"
+    assert len(bundle.prices) == 5492
+    assert len(bundle.simple_returns) == 5491
     assert not bool(bundle.simple_returns.isna().any().any())
     assert not bool(bundle.log_returns.isna().any().any())
+    assert not bool(bundle.rf_daily.isna().any())
     assert np.allclose(
         bundle.log_returns.to_numpy(),
         np.log1p(bundle.simple_returns.to_numpy()),
@@ -405,7 +766,41 @@ def test_real_repository_snapshot_integrity(baseline_config: AppConfig, repo_roo
     snap_dir = repo_root / "data" / "processed" / m.dataset_id
     assert (snap_dir / "manifest.json").exists()
     assert (snap_dir / "quality_report.md").exists()
+    assert (snap_dir / "rf_daily_ex_post.parquet").exists()
+    assert (snap_dir / "quarantined_unexpected_prices.parquet").exists()
     assert (snap_dir / "adf_stationarity.csv").exists()
     assert (snap_dir / "descriptive_stats_simple.csv").exists()
     assert (snap_dir / "descriptive_stats_log.csv").exists()
     assert (snap_dir / "log_return_correlations.csv").exists()
+
+    # Verify preserved Step 2 v1 snapshot qe1_20050101_20261030_afb9ce5694 is untouched bit-for-bit
+    v1_id = "qe1_20050101_20261030_afb9ce5694"
+    v1_manifest_path = repo_root / "data" / "processed" / v1_id / "manifest.json"
+    assert v1_manifest_path.exists()
+    v1_manifest = json.loads(v1_manifest_path.read_text(encoding="utf-8"))
+    assert v1_manifest["schema_version"] == "1.0.0"
+    assert len(v1_manifest["file_sha256"]) == 13
+    for rel_key, expected_sha in v1_manifest["file_sha256"].items():
+        fpath = repo_root / Path(rel_key)
+        assert fpath.exists(), f"Preserved v1 file missing: {fpath}"
+        actual_sha = hashlib.sha256(fpath.read_bytes()).hexdigest()
+        assert actual_sha == expected_sha, f"Preserved v1 file modified: {rel_key}"
+
+    # Verify policy isolation: an active_snapshot.json pointing ONLY to a v1.0.0 snapshot is
+    # never returned under the v1.1.0 hardened RF policy.
+    iso_proc = tmp_path / "iso_processed"
+    iso_v1_dir = iso_proc / v1_id
+    iso_v1_dir.mkdir(parents=True)
+    (iso_v1_dir / "manifest.json").write_text(
+        v1_manifest_path.read_text(encoding="utf-8"), encoding="utf-8"
+    )
+    (iso_proc / "active_snapshot.json").write_text(
+        json.dumps({"dataset_id": v1_id, "manifest_relpath": f"{v1_id}/manifest.json"}),
+        encoding="utf-8",
+    )
+    raw_cfg = yaml.safe_load((repo_root / "config.yaml").read_text(encoding="utf-8"))
+    iso_cfg_dict = copy.deepcopy(raw_cfg)
+    iso_cfg_dict["data"]["processed_dir"] = str(iso_proc)
+    iso_cfg = _validate_raw_config(iso_cfg_dict)
+    with pytest.raises(DataUnavailableError, match="Offline mode"):
+        load_data(iso_cfg, offline=True, repo_root=repo_root)
