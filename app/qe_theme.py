@@ -135,11 +135,12 @@ def css() -> str:
     [data-testid="stMetric"] {{background:{SURFACE};border:1px solid {RULE};border-top:2px solid {INK};
         padding:13px 15px 11px;border-radius:2px;height:100%;}}
     [data-testid="stMetricLabel"] p {{color:{MUTED};font-size:.79rem;font-weight:600;line-height:1.3;}}
-    [data-testid="stMetricValue"] {{font-family:{SERIF};color:{INK};font-size:1.72rem;font-variant-numeric:lining-nums;}}
+    [data-testid="stMetricValue"] {{font-family:{SERIF};color:{INK};font-size:clamp(1.3rem,2vw,1.72rem);font-variant-numeric:lining-nums;}}
     [data-testid="stMetricDelta"] {{font-size:.78rem;border-radius:8px;}}
-    [data-testid="stMetricLabel"],[data-testid="stMetricLabel"] *,[data-testid="stMetricDelta"],[data-testid="stMetricDelta"] *,
-    [data-testid="stMetricValue"],[data-testid="stMetricValue"] *
+    [data-testid="stMetricLabel"],[data-testid="stMetricLabel"] *,[data-testid="stMetricDelta"],[data-testid="stMetricDelta"] *
     {{white-space:normal !important;overflow:visible !important;text-overflow:clip !important;height:auto;}}
+    [data-testid="stMetricValue"],[data-testid="stMetricValue"] *
+    {{white-space:nowrap !important;overflow:visible !important;text-overflow:clip !important;}}
     [data-testid="stCaptionContainer"] {{opacity:1 !important;}}
     [data-testid="stCaptionContainer"] p {{color:{MUTED};font-size:.82rem;line-height:1.5;}}
     [data-testid="stExpander"] {{background:{SURFACE};border:1px solid {RULE};border-radius:2px;}}
