@@ -13,6 +13,7 @@ from quantedge.reference import load_reference,load_backtest
 from quantedge.final_engine import backtest_view
 
 ROOT=Path(__file__).resolve().parents[1]
+(ROOT/'tmp').mkdir(exist_ok=True)
 
 @pytest.fixture(scope='module')
 def final():return load_reference(),load_data(load_config(),offline=True)

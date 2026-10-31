@@ -5,6 +5,7 @@ from the dashboard runtime). No analytical model is reimplemented here.
 """
 import json
 import math
+import re
 from pathlib import Path
 from xml.sax.saxutils import escape
 from reportlab.lib import colors
@@ -39,7 +40,13 @@ S.add(ParagraphStyle(name='SubX',parent=S['BodyX'],fontName='DejaVuBold',fontSiz
 S.add(ParagraphStyle(name='CellX',parent=S['BodyX'],fontSize=7.5,leading=10,spaceAfter=0))
 S.add(ParagraphStyle(name='BadgeX',parent=S['BodyX'],fontName='DejaVuBold',fontSize=12,leading=18,textColor=TEAL,spaceAfter=12))
 
-def p(text,style='BodyX'):return Paragraph(text,S[style])
+def p(text,style='BodyX'):
+    # Keep prose spacing readable without changing link targets or hash strings.
+    parts=re.split(r'(<[^>]*>)',text)
+    for i in range(0,len(parts),2):
+        parts[i]=re.sub(r'(?<=[,;])(?=\S)',' ',parts[i])
+        parts[i]=re.sub(r'\b(during|through|above|below|versus|for|separate|horizon|spending|inflation|fee|of|after|before|additional|Historical)(?=\d)',r'\1 ',parts[i])
+    return Paragraph(''.join(parts),S[style])
 def percent(x,d=2):return 'N/A' if x is None else f'{x:.{d}%}'
 def num(x,d=3):
     if x is None:return 'N/A'
@@ -153,7 +160,7 @@ def memo():
         bt.append([period.title()+f' / {label} {c:.0%}',str(x['n_valid'])+' / '+str(x['n_exceedances']),num(x['p_uc'],4),num(x['p_ind'],4),num(x['p_cc'],4)])
     page('09 / Backtesting: count and sequence both matter',[
       image('04_rolling_exceptions',175),table(bt,[180,100,74,74,75]),Spacer(1,8),
-      p('Each forecast uses 500 sessions strictly before target t and the actual pre-return portfolio weights. Realised gross loss is -wₜ₋·rₜ. An exception requires loss &gt; VaR (equality is not an exception). Date controls select targets without deleting warmup. HS is primary; Normal is the fixed comparison. No rolling MC or EVT results are asserted.'),
+      p('Each forecast uses 500 sessions strictly before target t and the actual pre-return portfolio weights. Realised gross loss is -(w_before[t] dot r[t]). An exception requires loss &gt; VaR (equality is not an exception). Date controls select targets without deleting warmup. HS is primary; Normal is the fixed comparison. No rolling MC or EVT results are asserted.'),
       p('Kupiec tests unconditional exception frequency on all valid N. Christoffersen IND tests first-order clustering. CC combines IND with transition-conditioned UC; each contiguous run’s first state is conditioned out. Disconnected valid runs withhold CC. Asymptotic p-values, sparse cells and low power limit conclusions; non-rejection is not safety.'),
       p('The final 250 sessions (3 Nov 2025-30 Oct 2026) contain <b>4 HS99 exceptions: green</b>, versus <b>9 Normal99 exceptions: yellow</b>. This educational Basel-style diagnostic [3] is not regulatory approval. It does not erase full-history HS99 frequency / independence rejection, nor Normal99 evaluation rejection. Evaluation HS99 is less concerning at these tests, while HS95 evaluation independence still rejects.')])
     st=[['Portfolio / scenario','Total return','Max drawdown','Terminal USD loss']]

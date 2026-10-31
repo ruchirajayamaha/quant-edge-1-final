@@ -25,6 +25,10 @@ digest are distinguished; no self-referential final-commit hash is fabricated.
   local socket pair; the sandbox stalled asyncio before the app started, rather
   than revealing a financial-model failure. The actual tests then ran successfully.
 - `pip check`: no broken requirements.
+- Final release suite after mandate/source identity and RF-sensitivity integration:
+ 132 passed in21.57s. The fresh checkout initially exposed a missing ignored `tmp/`
+ directory in test setup; the integration test now creates its own workspace temp
+ directory rather than depending on a directory from prior development runs.
 - Memo12 pages, tear sheet1 page, separate plain-English recommendation1 page;
   PDFs rendered via Poppler, all pages visually inspected. No clipping/overflow.
 - Publication token/private-key pattern scan found no matches; no unignored file
