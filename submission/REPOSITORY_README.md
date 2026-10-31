@@ -104,17 +104,20 @@ identity; no executable pickle is loaded. Tampering or stale analytical code/con
 is rejected. Reference hashes are checked on app load; sidebar changes cache only
 affected risk computations. Original Steps3-8 outputs remain available unchanged.
 
-Figures and PDFs have optional rendering dependencies, separate from the app:
+The reports are compiled from LaTeX. That needs a TeX distribution and optional
+Python packages, neither of which the app needs:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements-render.txt
-.\.venv\Scripts\python.exe scripts/export_final_figures.py
-.\.venv\Scripts\python.exe scripts/build_submission_pdfs.py
+.\.venv\Scripts\python.exe scripts/build_reports.py
+.\.venv\Scripts\python.exe audit/presentation_review/verify_presentation.py
 ```
 
-PDF output: `output/pdf/`, copied to `submission/`; figures: PNG300dpi + vectorSVG
-in `results/final/figures/`. Rendering uses DejaVu Sans, available through Matplotlib
-or system fonts. PDF generation requires a render/visual check after edits.
+`scripts/build_reports.py` is the one report entry point. It generates every number from
+the frozen results, compiles with XeLaTeX and BibTeX, checks page limits and publishes
+to `submission/` and `output/pdf/`. Sources, toolchain and exact options are in
+[report/latex/README.md](report/latex/README.md). Render and read every page after an edit.
+The old ReportLab script only runs with `--legacy-reportlab`, and writes elsewhere.
 
 ## Method and limitations
 
@@ -141,19 +144,20 @@ replays use the current target ex-post, not the historical investable strategy.
 
 ## Submission and defence
 
-Start with `submission/SUBMIT_README.md`. The12-page memo,1-page tear sheet and
+Start with `submission/SUBMIT_README.md`. The11-page memo,1-page tear sheet and
 1-page recommendation are the required documents. `submission/DEFENCE_NOTES.md`
 supports human review and a conditional final-five10-12 minute pitch. A slide deck
 is not claimed to have been submitted or rehearsed. Exact organiser deadline,
 upload route and team member details must come from the team/organiser.
 
 Before certification, complete `submission/VALIDATION_CHECKLIST.md` with real names,
-dates and calculations. AI generated/materially changed code, analysis and prose;
+dates and calculations, using `handoff/human_review_pack/`. AI generated/materially changed code, analysis and prose;
 the team must independently evaluate and defend them under the official AI rules.
 
 ## Repository map
 
-`src/quantedge/`: UI-independent analytics; `app/`: Streamlit; `data/`: verified
+`src/quantedge/`: UI-independent analytics; `app/`: Streamlit; `report/latex/`: report
+sources; `handoff/human_review_pack/`: blank human review pack; `data/`: verified
 snapshots/evidence; `results/final/`: frozen integrated results; `tests/`: numerical,
 causality and real-app checks; `audit/`: independent recomputations and review trail;
 `docs/sections/`: detailed method; `scripts/`: reproducible builders;

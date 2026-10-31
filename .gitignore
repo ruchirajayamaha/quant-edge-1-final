@@ -31,6 +31,18 @@ tmp/
 .DS_Store
 Thumbs.db
 
+# TeX intermediates and the superseded ReportLab output
+report/latex/**/*.aux
+report/latex/**/*.log
+report/latex/**/*.out
+report/latex/**/*.toc
+report/latex/**/*.bbl
+report/latex/**/*.blg
+report/latex/**/*.xdv
+report/latex/**/*.fls
+report/latex/**/*.fdb_latexmk
+output/legacy_reportlab/
+
 # Local audit runtime caches; retain the actual audit reports and evidence
 audit/**/yfinance_cache/
 audit/**/pytest_temp*/

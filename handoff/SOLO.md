@@ -1,10 +1,16 @@
 # Quant Edge 1.0 — Solo Checkpoint (`handoff/SOLO.md`)
 
+**LATEST: presentation and LaTeX reports complete.** The dashboard is redesigned and
+the memo (11 pages), tear sheet and recommendation are compiled with XeLaTeX through
+`scripts/build_reports.py`. No numerical research changed. Evidence and limits are in
+audit/presentation_review/PRESENTATION_CLOSURE.md. Human validation remains PENDING;
+start with handoff/human_review_pack/. The next entry records the earlier state.
+
 **LATEST: Step9 integration and final exports implemented.** The registered rule and
 proposed mandate were committed as782ec20 before post-2016 strategy outcomes; no
 outcome-dependent switch/tuning followed. `results/final/reference.json` binds all
 current outputs. Six-view app: `python scripts/launch.py`. Final documents:
-submission/investment_memo.pdf (12 pages), tear_sheet.pdf (1), recommendation.pdf (1).
+the then-current ReportLab memo (12 pages), tear sheet (1) and recommendation (1).
 Numerical/integration checks and GitHub publication evidence are recorded in
 audit/step9_review/STEP9_CLOSURE.md. Team-proposed assumptions are in
 submission/mandate_proposal.json; preserved config approval fields remain pending.

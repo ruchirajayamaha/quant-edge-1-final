@@ -2,6 +2,17 @@
 
 All notable milestone checkpoints for the Quant Edge 1.0 solo implementation are recorded incrementally in this file.
 
+## [1.0.0] - 2026-11-01 - Redesigned decision room and LaTeX reports
+
+- Redesigned the six-view Streamlit app around the decision, with an honest status strip,
+  funding trade-off, budget comparison, crisis numbers, actions and report downloads.
+- Replaced the ReportLab documents with XeLaTeX sources in `report/latex/`, built by
+  `scripts/build_reports.py`. Every number comes from generated macros and tables.
+- Added a printable human review pack with blank answers and a separate AI-prepared key.
+- Guarded the old PDF script behind `--legacy-reportlab`, and archived the prior PDFs.
+- Froze a baseline of analytics, config, data, final results and prior audit evidence.
+  Numerical research did not change. Human validation remains PENDING.
+
 ## [0.9.0] - 2026-10-31 - Integrated decision room and final exports
 
 - Implemented single pipeline, additive result payload and hash-verified JSON/CSV

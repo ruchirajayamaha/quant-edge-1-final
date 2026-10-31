@@ -1,4 +1,4 @@
-"""Package reviewed documents, evidence and actual headline tables; no credentials."""
+"""Package reviewed documents, LaTeX sources, evidence and headline tables; no credentials."""
 import hashlib
 import json
 from pathlib import Path
@@ -13,6 +13,15 @@ def main():
     for name in ['publication.json','clean_install.json','verification.json']:
         path=ROOT/'audit/step9_review'/name
         if path.exists():shutil.copy2(path,SUB/name)
+    for name,target in [('verification.json','presentation_verification.json'),('app_exercise.json','presentation_app_exercise.json'),
+                        ('clean_install.json','presentation_clean_install.json'),('PRESENTATION_CLOSURE.md','PRESENTATION_CLOSURE.md')]:
+        path=ROOT/'audit/presentation_review'/name
+        if path.exists():shutil.copy2(path,SUB/target)
+    review=SUB/'human_review';review.mkdir(exist_ok=True)
+    for path in (ROOT/'handoff/human_review_pack').glob('*.md'):shutil.copy2(path,review/path.name)
+    source=SUB/'latex_source'
+    if source.exists():shutil.rmtree(source)
+    shutil.copytree(ROOT/'report/latex',source,ignore=shutil.ignore_patterns('*.aux','*.log','*.out','*.toc','*.bbl','*.blg','*.xdv','*.fls','*.fdb_latexmk'))
     tables=SUB/'tables';tables.mkdir(exist_ok=True)
     for name in ['period_kpis.csv','risk_table.csv','coverage_summary.csv','stress_results.csv','evt_diagnostics.csv','reference.json']:
         shutil.copy2(ROOT/'results/final'/name,tables/name)
@@ -28,6 +37,8 @@ def main():
     with zipfile.ZipFile(output) as archive:
         assert archive.testzip() is None
         assert all('..' not in Path(n).parts and not Path(n).is_absolute() for n in archive.namelist())
+        for name,digest in manifest['file_sha256'].items():
+            assert hashlib.sha256(archive.read('QuantEdge_Final_Submission/'+name)).hexdigest()==digest,name
     print(output.name,output.stat().st_size,'bytes',hashlib.sha256(output.read_bytes()).hexdigest())
 
 if __name__=='__main__':main()

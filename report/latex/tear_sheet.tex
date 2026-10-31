@@ -1,0 +1,83 @@
+% One-page executive tear sheet.
+\documentclass[11pt,a4paper]{article}
+\usepackage[top=13mm,bottom=15mm,left=16mm,right=16mm,footskip=6.5mm]{geometry}
+\usepackage{style/quantedge}
+\input{generated/metrics.tex}
+\hypersetup{pdftitle={Quant Edge: Executive Tear Sheet},pdfauthor={Quant Edge research team}}
+\qefooter{Quant Edge 1.0 \textbar\ Evidence to 30 Oct 2026 \textbar\ Bundle \qeBundle{} \textbar\ Dataset \qeDataset}
+\setlength{\parskip}{4.5pt}
+\begin{document}
+\qekicker{Serendib University Endowment \textperiodcentered{} USD 10 million \textperiodcentered{} seven eligible ETFs}\par\vspace{1pt}
+{\sffamily\bfseries\LARGE\color{qeink} Executive tear sheet\par}
+\qedecision{Conditional ADJUST}{Retain the constrained minimum-variance rule as a candidate. Resolve the spending plan, loss budgets and drift policy before committing capital. This is a team proposal under review, not an approved decision.}
+
+\noindent
+\begin{minipage}[t]{0.36\textwidth}\vspace{0pt}
+\subsection{Proposed target, 30 Oct 2026}
+\input{generated/tables/tear_weights.tex}
+\qenote{Next-session target, not a trade instruction. ES share is signed, on the recent Historical 99\% sample.}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.60\textwidth}\vspace{0pt}
+\subsection{Risk against proposed budgets}
+{\begin{tabular}{@{}lrrl@{}}
+\toprule
+One-day, USD on \$10M & Estimate & Budget & \\
+\midrule
+VaR 99\%, recent & \qeVarUsd & \qeBudgetVarUsd & \qeabove \\
+ES 99\%, recent & \qeEsUsd & \qeBudgetEsUsd & \qeabove \\
+ES 99\%, full history & \qeFullEsUsd & \qeBudgetEsUsd & \qeabove \\
+\bottomrule
+\end{tabular}}
+\qenote{Excesses: VaR \qeVarExcess, ES \qeEsExcess{} on the recent 1,260 sessions, which omit the GFC and COVID-19. Normal VaR is \qeNormalVar; pure POT VaR is \qePotVar.}
+\end{minipage}
+
+\noindent
+\begin{minipage}[t]{0.53\textwidth}\vspace{0pt}
+\subsection{Performance, net of trading costs}
+\input{generated/tables/tear_performance.tex}
+\qenote{Before spending and the extra fee; 60/40 is 2021--26. The proposed hurdle of \qeHurdle{} = \qeSpending{} spending + \qeInflation{} inflation + \qeFee{} fee. It is a planning sum, not a forecast.}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.44\textwidth}\vspace{0pt}
+\subsection{Funding trade-off}
+\includegraphics[width=\linewidth]{generated/figures/funding.pdf}
+\end{minipage}
+
+\noindent
+\begin{minipage}[t]{0.47\textwidth}\vspace{0pt}
+\subsection{Crisis replay of today's target}
+{\begin{tabular}{@{}lrrr@{}}
+\toprule
+ & Endpoint & Drawdown & 60/40 DD \\
+\midrule
+GFC 2007--09 & \qeGfcReturn & \qeGfcDrawdown & \qeGfcDrawdownSixty \\
+COVID-19 2020 & \qeCovidReturn & \qeCovidDrawdown & \qeCovidDrawdownSixty \\
+Rate shock 2022 & \qeRatesReturn & \qeRatesDrawdown & \qeRatesDrawdownSixty \\
+\bottomrule
+\end{tabular}}
+\qenote{Buy-and-hold ex-post replays, not the strategy's historical record. GFC drawdown exceeds the \qeBudgetDrawdown{} review line.}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.50\textwidth}\vspace{0pt}
+\subsection{Model validation}
+{\begin{tabular}{@{}lrl@{}}
+\toprule
+99\% VaR, prior 500 days & Exceptions & Result \\
+\midrule
+Historical, last 250 & \qeBaselHs & \qezone{\qeBaselHsZone} \\
+Normal, last 250 & \qeBaselNormal & \qezone{\qeBaselNormalZone} \\
+Historical, 2021--26 & \qeHsEvalExceptions{} / \qeEvalSessions & Not rejected \\
+Historical, full & \qeHsFullExceptions{} / \qeFullSessions & \textcolor{qered}{\sffamily\bfseries Rejected} \\
+\bottomrule
+\end{tabular}}
+\qenote{Basel zones are educational. Non-rejection is not proof of safety.}
+\end{minipage}
+
+\subsection{What needs adjusting}
+\begin{itemize}[itemsep=1pt]
+\item \textbf{Funding.} Ending cash yield of \qeIncomeYield{} is below \qeSpending{} spending, so planned sales and liquidity need approval.
+\item \textbf{Concentration.} XLE is \qeWeightXle{} of target but \qeShareXle{} of ES; GLD is \qeShareGld{}. Weight is not the same as risk.
+\item \textbf{Drift.} Holdings passed a target cap on \qeDriftSessions{} of \qeActiveSessions{} sessions, peaking at \qeDriftMax{} in \qeDriftTicker{}. Targets are controlled; daily holdings are not.
+\item \textbf{Monitoring.} Review quarterly. Escalate if ES 99\% exceeds \qeBudgetEs{}, drawdown exceeds \qeBudgetDrawdown{}, holdings pass a target cap, or exceptions cluster. Limits are not raised to make the portfolio pass.
+\end{itemize}
+
+\qenote{Rule: 504 prior sessions, monthly long-only minimum variance; each ETF at most 40\%, equities at most 35\%; 5 bp per unit traded. Day-level RF and ex-post CPI limits apply. AI materially assisted this work; independent human validation is pending and no university committee has approved it.}
+\end{document}

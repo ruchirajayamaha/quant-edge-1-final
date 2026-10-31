@@ -1,5 +1,8 @@
 # Human review: follow this guide and record what you actually checked
 
+Use the printable pack in `handoff/human_review_pack/` or
+`submission/human_review/human_review_pack.pdf` for the worksheet and form.
+
 This is an AI-prepared guide, not a completed human validation record. Reading the
 expected answers or rerunning the same AI script does not, by itself, independently
 validate the work. Check the original inputs, calculate using your own calculator,
@@ -15,11 +18,10 @@ cd "C:\Users\ruchira\Desktop\qunt"
 .\.venv\Scripts\python.exe scripts/launch.py
 ```
 
-Open the local URL printed by Streamlit. A previous verification server may also
-be available at http://127.0.0.1:8512 . That is a local preview, not public hosting.
+Open the local URL printed by Streamlit. That is a local server, not public hosting.
 
 Visit Decision, Performance, Tail risk, Backtesting, Risk budget & stress, and
-Assumptions & evidence. Write down any error, inconsistent label or unexplained number.
+Assumptions & Limitations. Write down any error, inconsistent label or unexplained number.
 
 Try these specific controls:
 

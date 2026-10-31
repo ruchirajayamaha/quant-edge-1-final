@@ -84,7 +84,7 @@ def test_app_real_pages_controls_and_edge_ranges():
     app=AppTest.from_file(str(ROOT/'app/Home.py'),default_timeout=45).run()
     assert not app.exception and not app.error
     assert app.metric[1].value=='7.63%'
-    for view in ['Performance','Tail risk','Backtesting','Risk budget & stress','Assumptions & evidence']:
+    for view in ['Performance','Tail risk','Backtesting','Risk budget & stress','Assumptions & Limitations']:
         app.sidebar.radio[0].set_value(view).run(timeout=45)
         assert not app.exception and not app.error,view
     app.sidebar.radio[0].set_value('Tail risk').run(timeout=45)

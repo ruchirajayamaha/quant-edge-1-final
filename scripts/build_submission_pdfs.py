@@ -1,8 +1,15 @@
-"""Deterministic memo, tear sheet and plain-English recommendation from final JSON.
+"""LEGACY ReportLab documents, superseded by the LaTeX build in scripts/build_reports.py.
 
-Run with Python containing reportlab/pypdf (rendering dependencies are separate
-from the dashboard runtime). No analytical model is reimplemented here.
+The submitted PDFs are compiled from report/latex/. This script is kept only to reproduce the earlier
+accepted documents. It needs --legacy-reportlab and writes to output/legacy_reportlab/, so it cannot
+replace a submitted PDF. Those earlier PDFs are archived in audit/presentation_review/.
 """
+import sys
+
+if '--legacy-reportlab' not in sys.argv:
+    raise SystemExit('Superseded: run python scripts/build_reports.py. '
+                     'Use --legacy-reportlab to reproduce the old ReportLab PDFs in output/legacy_reportlab/.')
+
 import json
 import math
 import re
@@ -17,8 +24,8 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from pypdf import PdfReader
 
-ROOT=Path(__file__).resolve().parents[1];OUT=ROOT/'output/pdf';OUT.mkdir(parents=True,exist_ok=True)
-SUB=ROOT/'submission';FIG=ROOT/'results/final/figures'
+ROOT=Path(__file__).resolve().parents[1];OUT=ROOT/'output/legacy_reportlab';OUT.mkdir(parents=True,exist_ok=True)
+FIG=ROOT/'results/final/figures'
 R=json.loads((ROOT/'results/final/reference.json').read_text())
 font_dirs=[Path('C:/Windows/Fonts'),Path('/usr/share/fonts/truetype/dejavu')]
 try:
@@ -80,7 +87,7 @@ def document(name,story,expected):
     doc.build(story,onFirstPage=footer,onLaterPages=footer)
     n=len(PdfReader(path).pages)
     if n!=expected:raise AssertionError(f'{name}: expected{expected} pages, got{n}')
-    (SUB/name).write_bytes(path.read_bytes());print(name,n,'pages')
+    print(name,n,'pages')
 
 def memo():
     story=[]

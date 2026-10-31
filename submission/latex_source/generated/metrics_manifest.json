@@ -1,0 +1,914 @@
+{
+ "qeBundle": {
+  "tex": "1c7bd6007fe22b014b25",
+  "value": "1c7bd6007fe22b014b25",
+  "source": "metadata.bundle_id",
+  "kind": "text"
+ },
+ "qeDataset": {
+  "tex": "qe1\\_20050101\\_20261030\\_r3\\_6c4633a7ba",
+  "value": "qe1_20050101_20261030_r3_6c4633a7ba",
+  "source": "metadata.dataset_id",
+  "kind": "text"
+ },
+ "qeConfigHash": {
+  "tex": "587ddbe363589fb6956c23c5fe8b2b544bac81d9224a0b4bb59f60f5fbc0a017",
+  "value": "587ddbe363589fb6956c23c5fe8b2b544bac81d9224a0b4bb59f60f5fbc0a017",
+  "source": "metadata.config_hash",
+  "kind": "text"
+ },
+ "qeProtocolCommit": {
+  "tex": "782ec20",
+  "value": "782ec20",
+  "source": "diagnostics.protocol_commit",
+  "kind": "text"
+ },
+ "qeHurdle": {
+  "tex": "6.75\\%",
+  "value": 0.0675,
+  "source": "proposal.required_nominal_return_fraction",
+  "kind": "percent2"
+ },
+ "qeSpending": {
+  "tex": "4.00\\%",
+  "value": 0.04,
+  "source": "proposal.spending_annual_fraction",
+  "kind": "percent2"
+ },
+ "qeInflation": {
+  "tex": "2.50\\%",
+  "value": 0.025,
+  "source": "proposal.inflation_assumption_annual_fraction",
+  "kind": "percent2"
+ },
+ "qeFee": {
+  "tex": "0.25\\%",
+  "value": 0.0025,
+  "source": "proposal.additional_fee_assumption_annual_fraction",
+  "kind": "percent2"
+ },
+ "qeRealGrowth": {
+  "tex": "0.00\\%",
+  "value": 0.0,
+  "source": "proposal.desired_real_growth_annual_fraction",
+  "kind": "percent2"
+ },
+ "qeHorizon": {
+  "tex": "10",
+  "value": 10,
+  "source": "proposal.investment_horizon_years",
+  "kind": "count"
+ },
+ "qeBudgetVarNinetyFive": {
+  "tex": "1.00\\%",
+  "value": 0.01,
+  "source": "risk_limits.max_daily_var_95_fraction",
+  "kind": "percent2"
+ },
+ "qeBudgetVar": {
+  "tex": "1.50\\%",
+  "value": 0.015,
+  "source": "risk_limits.max_daily_var_99_fraction",
+  "kind": "percent2"
+ },
+ "qeBudgetEs": {
+  "tex": "2.00\\%",
+  "value": 0.02,
+  "source": "risk_limits.max_daily_es_99_fraction",
+  "kind": "percent2"
+ },
+ "qeBudgetVol": {
+  "tex": "10.00\\%",
+  "value": 0.1,
+  "source": "risk_limits.max_annual_volatility_fraction",
+  "kind": "percent2"
+ },
+ "qeBudgetDrawdown": {
+  "tex": "20.00\\%",
+  "value": 0.2,
+  "source": "risk_limits.max_drawdown_fraction",
+  "kind": "percent2"
+ },
+ "qeBudgetScenario": {
+  "tex": "20.00\\%",
+  "value": 0.2,
+  "source": "risk_limits.max_historical_scenario_loss_fraction",
+  "kind": "percent2"
+ },
+ "qeBudgetVarUsd": {
+  "tex": "\\$150,000",
+  "value": 150000.0,
+  "source": "risk_limits.max_daily_var_99_fraction*NAV",
+  "kind": "usd"
+ },
+ "qeBudgetEsUsd": {
+  "tex": "\\$200,000",
+  "value": 200000.0,
+  "source": "risk_limits.max_daily_es_99_fraction*NAV",
+  "kind": "usd"
+ },
+ "qeBudgetDrawdownUsd": {
+  "tex": "\\$2,000,000",
+  "value": 2000000.0,
+  "source": "risk_limits.max_drawdown_fraction*NAV",
+  "kind": "usd"
+ },
+ "qeDevCagr": {
+  "tex": "6.65\\%",
+  "value": 0.06653371264164118,
+  "source": "period_kpis[development,min_variance]",
+  "kind": "percent2"
+ },
+ "qeDevVol": {
+  "tex": "8.77\\%",
+  "value": 0.08769908081242896,
+  "source": "period_kpis[development,min_variance]",
+  "kind": "percent2"
+ },
+ "qeDevDrawdown": {
+  "tex": "−22.18\\%",
+  "value": -0.22175618468011338,
+  "source": "period_kpis[development,min_variance]",
+  "kind": "percent2"
+ },
+ "qeDevSharpe": {
+  "tex": "0.70",
+  "value": 0.7027850546810748,
+  "source": "period_kpis[development,min_variance]",
+  "kind": "number2"
+ },
+ "qeSelCagr": {
+  "tex": "10.38\\%",
+  "value": 0.10381754757691586,
+  "source": "period_kpis[selection,min_variance]",
+  "kind": "percent2"
+ },
+ "qeSelVol": {
+  "tex": "7.74\\%",
+  "value": 0.07735592025304078,
+  "source": "period_kpis[selection,min_variance]",
+  "kind": "percent2"
+ },
+ "qeSelDrawdown": {
+  "tex": "−14.47\\%",
+  "value": -0.14469397772273995,
+  "source": "period_kpis[selection,min_variance]",
+  "kind": "percent2"
+ },
+ "qeSelSharpe": {
+  "tex": "1.14",
+  "value": 1.1449752274083806,
+  "source": "period_kpis[selection,min_variance]",
+  "kind": "number2"
+ },
+ "qeEvalCagr": {
+  "tex": "7.63\\%",
+  "value": 0.07633604517748528,
+  "source": "period_kpis[evaluation,min_variance]",
+  "kind": "percent2"
+ },
+ "qeEvalVol": {
+  "tex": "8.80\\%",
+  "value": 0.08802585088601593,
+  "source": "period_kpis[evaluation,min_variance]",
+  "kind": "percent2"
+ },
+ "qeEvalDrawdown": {
+  "tex": "−16.78\\%",
+  "value": -0.16782839219930523,
+  "source": "period_kpis[evaluation,min_variance]",
+  "kind": "percent2"
+ },
+ "qeEvalSharpe": {
+  "tex": "0.51",
+  "value": 0.5058904467456887,
+  "source": "period_kpis[evaluation,min_variance]",
+  "kind": "number2"
+ },
+ "qeFullCagr": {
+  "tex": "7.68\\%",
+  "value": 0.07684766150466689,
+  "source": "period_kpis[full,min_variance]",
+  "kind": "percent2"
+ },
+ "qeFullVol": {
+  "tex": "8.58\\%",
+  "value": 0.08579676595440726,
+  "source": "period_kpis[full,min_variance]",
+  "kind": "percent2"
+ },
+ "qeFullDrawdown": {
+  "tex": "−22.18\\%",
+  "value": -0.22175618468011338,
+  "source": "period_kpis[full,min_variance]",
+  "kind": "percent2"
+ },
+ "qeFullSharpe": {
+  "tex": "0.72",
+  "value": 0.7232996129418642,
+  "source": "period_kpis[full,min_variance]",
+  "kind": "number2"
+ },
+ "qeEvalCagrSixty": {
+  "tex": "8.41\\%",
+  "value": 0.08409466060467587,
+  "source": "period_kpis[evaluation,benchmark_60_40]",
+  "kind": "percent2"
+ },
+ "qeEvalVolSixty": {
+  "tex": "10.66\\%",
+  "value": 0.10656415614265548,
+  "source": "period_kpis[evaluation,benchmark_60_40]",
+  "kind": "percent2"
+ },
+ "qeEvalDrawdownSixty": {
+  "tex": "−20.77\\%",
+  "value": -0.2076564146778197,
+  "source": "period_kpis[evaluation,benchmark_60_40]",
+  "kind": "percent2"
+ },
+ "qeEvalSharpeSixty": {
+  "tex": "0.50",
+  "value": 0.502041118118964,
+  "source": "period_kpis[evaluation,benchmark_60_40]",
+  "kind": "number2"
+ },
+ "qeEvalCagrEqual": {
+  "tex": "13.69\\%",
+  "value": 0.1369080686601491,
+  "source": "period_kpis[evaluation,equal_weight]",
+  "kind": "percent2"
+ },
+ "qeFullBeta": {
+  "tex": "0.29",
+  "value": 0.2899356317113505,
+  "source": "period_kpis[full,min_variance]",
+  "kind": "number2"
+ },
+ "qeFullAlpha": {
+  "tex": "3.13\\%",
+  "value": 0.031256587495315034,
+  "source": "period_kpis[full,min_variance]",
+  "kind": "percent2"
+ },
+ "qeEvalAlpha": {
+  "tex": "0.77\\%",
+  "value": 0.0076937435201845095,
+  "source": "period_kpis[evaluation,min_variance]",
+  "kind": "percent2"
+ },
+ "qeHurdleGapDev": {
+  "tex": "−0.10\\%",
+  "value": -0.000966287358358825,
+  "source": "development CAGR minus hurdle",
+  "kind": "percent2"
+ },
+ "qeIncomeYield": {
+  "tex": "2.19\\%",
+  "value": 0.021938302835423633,
+  "source": "context.distribution_income",
+  "kind": "percent2"
+ },
+ "qeIncomeMean": {
+  "tex": "1.80\\%",
+  "value": 0.01797045056995574,
+  "source": "context.distribution_income",
+  "kind": "percent2"
+ },
+ "qeRealReturn": {
+  "tex": "4.88\\%",
+  "value": 0.048817963137170794,
+  "source": "context.ex_post_real_returns",
+  "kind": "percent2"
+ },
+ "qeCpiInflation": {
+  "tex": "2.59\\%",
+  "value": 0.025887438895822568,
+  "source": "context.ex_post_real_returns",
+  "kind": "percent2"
+ },
+ "qeSharpeAccrual": {
+  "tex": "0.719",
+  "value": 0.7188343233748514,
+  "source": "context.rf_sensitivity.sharpe_ratio",
+  "kind": "number3"
+ },
+ "qeSharpePrimary": {
+  "tex": "0.723",
+  "value": 0.7232996129418642,
+  "source": "context.rf_sensitivity.sharpe_ratio",
+  "kind": "number3"
+ },
+ "qeVar": {
+  "tex": "1.54\\%",
+  "value": 0.015394981955742935,
+  "source": "risk_table[recent,historical,0.99].var_loss",
+  "kind": "percent2"
+ },
+ "qeEs": {
+  "tex": "2.03\\%",
+  "value": 0.020316886479385343,
+  "source": "risk_table[recent,historical,0.99].es_loss",
+  "kind": "percent2"
+ },
+ "qeVarUsd": {
+  "tex": "\\$153,950",
+  "value": 153949.81955742935,
+  "source": "risk_table[recent,historical,0.99].var_usd",
+  "kind": "usd"
+ },
+ "qeEsUsd": {
+  "tex": "\\$203,169",
+  "value": 203168.86479385343,
+  "source": "risk_table[recent,historical,0.99].es_usd",
+  "kind": "usd"
+ },
+ "qeVarExcess": {
+  "tex": "\\$3,950",
+  "value": 3949.8195574293495,
+  "source": "VaR USD minus budget USD",
+  "kind": "usd"
+ },
+ "qeEsExcess": {
+  "tex": "\\$3,169",
+  "value": 3168.864793853427,
+  "source": "ES USD minus budget USD",
+  "kind": "usd"
+ },
+ "qeVarNinetyFive": {
+  "tex": "0.87\\%",
+  "value": 0.008745736074162156,
+  "source": "risk_table[recent,historical,0.95].var_loss",
+  "kind": "percent2"
+ },
+ "qeNormalVarNinetyFive": {
+  "tex": "0.90\\%",
+  "value": 0.009015722810777173,
+  "source": "risk_table[recent,parametric_normal,0.95].var_loss",
+  "kind": "percent2"
+ },
+ "qeFullVar": {
+  "tex": "1.63\\%",
+  "value": 0.016347096375791577,
+  "source": "risk_table[full_history,historical,0.99].var_loss",
+  "kind": "percent2"
+ },
+ "qeFullEs": {
+  "tex": "2.50\\%",
+  "value": 0.02501846532170661,
+  "source": "risk_table[full_history,historical,0.99].es_loss",
+  "kind": "percent2"
+ },
+ "qeFullEsUsd": {
+  "tex": "\\$250,185",
+  "value": 250184.6532170661,
+  "source": "risk_table[full_history,historical,0.99].es_usd",
+  "kind": "usd"
+ },
+ "qeNormalVar": {
+  "tex": "1.29\\%",
+  "value": 0.012923551409315144,
+  "source": "risk_table[recent,parametric_normal,0.99].var_loss",
+  "kind": "percent2"
+ },
+ "qeNormalEs": {
+  "tex": "1.49\\%",
+  "value": 0.014866680943905286,
+  "source": "risk_table[recent,parametric_normal,0.99].es_loss",
+  "kind": "percent2"
+ },
+ "qeMcVar": {
+  "tex": "1.28\\%",
+  "value": 0.012842857100494359,
+  "source": "risk_table[recent,monte_carlo_normal,0.99].var_loss",
+  "kind": "percent2"
+ },
+ "qePotEs": {
+  "tex": "2.03\\%",
+  "value": 0.02027240511008532,
+  "source": "risk_table[recent,evt_pot,0.99].es_loss",
+  "kind": "percent2"
+ },
+ "qePotVar": {
+  "tex": "1.56\\%",
+  "value": 0.015585757413282641,
+  "source": "risk_table[recent,evt_pot,0.99].var_loss",
+  "kind": "percent2"
+ },
+ "qeFullPotEs": {
+  "tex": "2.50\\%",
+  "value": 0.025014280422448017,
+  "source": "risk_table[full_history,evt_pot,0.99].es_loss",
+  "kind": "percent2"
+ },
+ "qeMcDraws": {
+  "tex": "25,000",
+  "value": 25000,
+  "source": "risk_table monte_carlo_simulations",
+  "kind": "count"
+ },
+ "qeHsFullExceptions": {
+  "tex": "65",
+  "value": 65,
+  "source": "coverage[full,historical,0.99]",
+  "kind": "count"
+ },
+ "qeFullSessions": {
+  "tex": "4,987",
+  "value": 4987,
+  "source": "coverage[full,historical,0.99]",
+  "kind": "count"
+ },
+ "qeHsFullUc": {
+  "tex": "0.040",
+  "value": 0.03966380100963404,
+  "source": "coverage[full,historical,0.99].p_uc",
+  "kind": "pvalue"
+ },
+ "qeHsFullInd": {
+  "tex": "$1.7\\times10^{-5}$",
+  "value": 1.7136530719932695e-05,
+  "source": "coverage[full,historical,0.99].p_ind",
+  "kind": "pvalue"
+ },
+ "qeHsEvalUc": {
+  "tex": "0.394",
+  "value": 0.3942126678772572,
+  "source": "coverage[evaluation,historical,0.99].p_uc",
+  "kind": "pvalue"
+ },
+ "qeHsEvalInd": {
+  "tex": "0.216",
+  "value": 0.21647974064015316,
+  "source": "coverage[evaluation,historical,0.99].p_ind",
+  "kind": "pvalue"
+ },
+ "qeHsEvalExceptions": {
+  "tex": "18",
+  "value": 18,
+  "source": "coverage[evaluation,historical,0.99]",
+  "kind": "count"
+ },
+ "qeNormalEvalExceptions": {
+  "tex": "27",
+  "value": 27,
+  "source": "coverage[evaluation,parametric_normal,0.99]",
+  "kind": "count"
+ },
+ "qeNormalEvalUc": {
+  "tex": "0.004",
+  "value": 0.0036746196441197884,
+  "source": "coverage[evaluation,parametric_normal,0.99].p_uc",
+  "kind": "pvalue"
+ },
+ "qeEvalSessions": {
+  "tex": "1,464",
+  "value": 1464,
+  "source": "coverage[evaluation,historical,0.99]",
+  "kind": "count"
+ },
+ "qeBaselHs": {
+  "tex": "4",
+  "value": 4,
+  "source": "basel.historical",
+  "kind": "count"
+ },
+ "qeBaselNormal": {
+  "tex": "9",
+  "value": 9,
+  "source": "basel.parametric_normal",
+  "kind": "count"
+ },
+ "qeBaselHsZone": {
+  "tex": "green",
+  "value": "green",
+  "source": "basel.historical.zone",
+  "kind": "text"
+ },
+ "qeBaselNormalZone": {
+  "tex": "yellow",
+  "value": "yellow",
+  "source": "basel.parametric_normal.zone",
+  "kind": "text"
+ },
+ "qeBaselStart": {
+  "tex": "3 Nov 2025",
+  "value": "3 Nov 2025",
+  "source": "basel.historical.block_start",
+  "kind": "text"
+ },
+ "qeBaselEnd": {
+  "tex": "30 Oct 2026",
+  "value": "30 Oct 2026",
+  "source": "basel.historical.block_end",
+  "kind": "text"
+ },
+ "qeBaselExpected": {
+  "tex": "2.5",
+  "value": 2.5,
+  "source": "basel.historical",
+  "kind": "number1"
+ },
+ "qeWeightSpy": {
+  "tex": "20.4\\%",
+  "value": 0.20392272952740187,
+  "source": "current_weights.SPY",
+  "kind": "percent1"
+ },
+ "qeShareSpy": {
+  "tex": "29.6\\%",
+  "value": 0.29644363579905925,
+  "source": "risk_contributions.historical_es.SPY",
+  "kind": "percent1"
+ },
+ "qeWeightAgg": {
+  "tex": "40.0\\%",
+  "value": 0.4,
+  "source": "current_weights.AGG",
+  "kind": "percent1"
+ },
+ "qeShareAgg": {
+  "tex": "7.0\\%",
+  "value": 0.069993374917522,
+  "source": "risk_contributions.historical_es.AGG",
+  "kind": "percent1"
+ },
+ "qeWeightGld": {
+  "tex": "25.0\\%",
+  "value": 0.25000000000000006,
+  "source": "current_weights.GLD",
+  "kind": "percent1"
+ },
+ "qeShareGld": {
+  "tex": "31.6\\%",
+  "value": 0.31598831670150823,
+  "source": "risk_contributions.historical_es.GLD",
+  "kind": "percent1"
+ },
+ "qeWeightXle": {
+  "tex": "14.6\\%",
+  "value": 0.146077270472598,
+  "source": "current_weights.XLE",
+  "kind": "percent1"
+ },
+ "qeShareXle": {
+  "tex": "31.8\\%",
+  "value": 0.31757467258191036,
+  "source": "risk_contributions.historical_es.XLE",
+  "kind": "percent1"
+ },
+ "qeDriftSessions": {
+  "tex": "2,771",
+  "value": 2771,
+  "source": "diagnostics.drift.n_breach_sessions",
+  "kind": "count"
+ },
+ "qeActiveSessions": {
+  "tex": "4,987",
+  "value": 4987,
+  "source": "diagnostics.drift.n_active_sessions",
+  "kind": "count"
+ },
+ "qeDriftMax": {
+  "tex": "45.14\\%",
+  "value": 0.4513928828216966,
+  "source": "diagnostics.drift.max_exposures",
+  "kind": "percent2"
+ },
+ "qeDriftTicker": {
+  "tex": "AGG",
+  "value": "AGG",
+  "source": "diagnostics.drift.max_exposures",
+  "kind": "text"
+ },
+ "qeDriftDate": {
+  "tex": "23 Oct 2008",
+  "value": "23 Oct 2008",
+  "source": "diagnostics.drift.max_exposures",
+  "kind": "text"
+ },
+ "qeDriftEquity": {
+  "tex": "37.30\\%",
+  "value": 0.37298300491046316,
+  "source": "diagnostics.drift.max_exposures",
+  "kind": "percent2"
+ },
+ "qeGfcReturn": {
+  "tex": "−8.93\\%",
+  "value": -0.08929913353511387,
+  "source": "stress[gfc_2007_2009].total_return",
+  "kind": "percent2"
+ },
+ "qeGfcDrawdown": {
+  "tex": "−23.87\\%",
+  "value": -0.2387357945727161,
+  "source": "stress[gfc_2007_2009].max_drawdown",
+  "kind": "percent2"
+ },
+ "qeGfcUsd": {
+  "tex": "\\$892,991",
+  "value": 892991.3353511387,
+  "source": "stress[gfc_2007_2009].usd_loss",
+  "kind": "usd"
+ },
+ "qeGfcReturnSixty": {
+  "tex": "−29.99\\%",
+  "value": -0.2999420329143063,
+  "source": "stress[gfc_2007_2009,60/40].total_return",
+  "kind": "percent2"
+ },
+ "qeGfcDrawdownSixty": {
+  "tex": "−30.33\\%",
+  "value": -0.3032916723504989,
+  "source": "stress[gfc_2007_2009,60/40].max_drawdown",
+  "kind": "percent2"
+ },
+ "qeCovidReturn": {
+  "tex": "−16.23\\%",
+  "value": -0.16227500374259396,
+  "source": "stress[covid_2020].total_return",
+  "kind": "percent2"
+ },
+ "qeCovidDrawdown": {
+  "tex": "−18.84\\%",
+  "value": -0.18842264813526555,
+  "source": "stress[covid_2020].max_drawdown",
+  "kind": "percent2"
+ },
+ "qeCovidUsd": {
+  "tex": "\\$1,622,750",
+  "value": 1622750.0374259397,
+  "source": "stress[covid_2020].usd_loss",
+  "kind": "usd"
+ },
+ "qeCovidReturnSixty": {
+  "tex": "−20.59\\%",
+  "value": -0.20588219104148986,
+  "source": "stress[covid_2020,60/40].total_return",
+  "kind": "percent2"
+ },
+ "qeCovidDrawdownSixty": {
+  "tex": "−20.81\\%",
+  "value": -0.20807087554269854,
+  "source": "stress[covid_2020,60/40].max_drawdown",
+  "kind": "percent2"
+ },
+ "qeRatesReturn": {
+  "tex": "−6.57\\%",
+  "value": -0.06566601657117888,
+  "source": "stress[rate_shock_2022].total_return",
+  "kind": "percent2"
+ },
+ "qeRatesDrawdown": {
+  "tex": "−13.36\\%",
+  "value": -0.13360413973565566,
+  "source": "stress[rate_shock_2022].max_drawdown",
+  "kind": "percent2"
+ },
+ "qeRatesUsd": {
+  "tex": "\\$656,660",
+  "value": 656660.1657117888,
+  "source": "stress[rate_shock_2022].usd_loss",
+  "kind": "usd"
+ },
+ "qeRatesReturnSixty": {
+  "tex": "−20.58\\%",
+  "value": -0.20575063718769626,
+  "source": "stress[rate_shock_2022,60/40].total_return",
+  "kind": "percent2"
+ },
+ "qeRatesDrawdownSixty": {
+  "tex": "−20.63\\%",
+  "value": -0.20633713331193648,
+  "source": "stress[rate_shock_2022,60/40].max_drawdown",
+  "kind": "percent2"
+ },
+ "qeHypoReturn": {
+  "tex": "−4.48\\%",
+  "value": -0.04476522828733088,
+  "source": "stress[hypothetical_stagflation_repricing].total_return",
+  "kind": "percent2"
+ },
+ "qeHypoDrawdown": {
+  "tex": "−4.48\\%",
+  "value": -0.04476522828733088,
+  "source": "stress[hypothetical_stagflation_repricing].max_drawdown",
+  "kind": "percent2"
+ },
+ "qeHypoUsd": {
+  "tex": "\\$447,652",
+  "value": 447652.2828733088,
+  "source": "stress[hypothetical_stagflation_repricing].usd_loss",
+  "kind": "usd"
+ },
+ "qeHypoReturnSixty": {
+  "tex": "−19.80\\%",
+  "value": -0.198,
+  "source": "stress[hypothetical_stagflation_repricing,60/40].total_return",
+  "kind": "percent2"
+ },
+ "qeHypoDrawdownSixty": {
+  "tex": "−19.80\\%",
+  "value": -0.198,
+  "source": "stress[hypothetical_stagflation_repricing,60/40].max_drawdown",
+  "kind": "percent2"
+ },
+ "qeFlags": {
+  "tex": "307",
+  "value": 307,
+  "source": "quality_flags rows",
+  "kind": "count"
+ },
+ "qeFlagNegative": {
+  "tex": "188",
+  "value": 188,
+  "source": "quality_flags",
+  "kind": "count"
+ },
+ "qeFlagJump": {
+  "tex": "101",
+  "value": 101,
+  "source": "quality_flags",
+  "kind": "count"
+ },
+ "qeFlagBreak": {
+  "tex": "18",
+  "value": 18,
+  "source": "quality_flags",
+  "kind": "count"
+ },
+ "qePriceSessions": {
+  "tex": "5,492",
+  "value": 5492,
+  "source": "manifest.row_exclusions",
+  "kind": "count"
+ },
+ "qeReturnSessions": {
+  "tex": "5,491",
+  "value": 5491,
+  "source": "manifest.row_exclusions",
+  "kind": "count"
+ },
+ "qeMissingCells": {
+  "tex": "0",
+  "value": 0,
+  "source": "manifest.row_exclusions",
+  "kind": "count"
+ },
+ "qeVintages": {
+  "tex": "5,142",
+  "value": 5142,
+  "source": "evidence_coverage.published_vintages",
+  "kind": "count"
+ },
+ "qeRfObservations": {
+  "tex": "5,493",
+  "value": 5493,
+  "source": "evidence_coverage.observations",
+  "kind": "count"
+ },
+ "qeRfSupported": {
+  "tex": "3,617",
+  "value": 3617,
+  "source": "evidence_coverage.initial_by_tier",
+  "kind": "count"
+ },
+ "qeRfInferred": {
+  "tex": "1,537",
+  "value": 1537,
+  "source": "evidence_coverage.initial_by_tier",
+  "kind": "count"
+ },
+ "qeRfFallback": {
+  "tex": "314",
+  "value": 314,
+  "source": "evidence_coverage.initial_by_tier",
+  "kind": "count"
+ },
+ "qeRfDocumented": {
+  "tex": "23",
+  "value": 23,
+  "source": "evidence_coverage.initial_by_tier",
+  "kind": "count"
+ },
+ "qeRfUnresolved": {
+  "tex": "2",
+  "value": 2,
+  "source": "evidence_coverage.initial_by_tier",
+  "kind": "count"
+ },
+ "qeHurdleGapDevAbs": {
+  "tex": "0.10",
+  "value": 0.09662873583588194,
+  "source": "hurdle minus development CAGR, pct points",
+  "kind": "number2"
+ },
+ "qeIncomeGapUsd": {
+  "tex": "\\$180,617",
+  "value": 180616.97164576367,
+  "source": "(spending minus ending yield) * NAV; illustrative",
+  "kind": "usd"
+ },
+ "qeEvtRecentXi": {
+  "tex": "0.054",
+  "value": 0.05354531589854332,
+  "source": "evt_diagnostics[recent,0.95].xi",
+  "kind": "number3"
+ },
+ "qeEvtFullXi": {
+  "tex": "0.254",
+  "value": 0.25444397613413167,
+  "source": "evt_diagnostics[full,0.95].xi",
+  "kind": "number3"
+ },
+ "qeEvtRecentN": {
+  "tex": "63",
+  "value": 63,
+  "source": "evt_diagnostics[recent,0.95]",
+  "kind": "count"
+ },
+ "qeEvtFullN": {
+  "tex": "274",
+  "value": 274,
+  "source": "evt_diagnostics[full,0.95]",
+  "kind": "count"
+ },
+ "qeEvtSparseN": {
+  "tex": "31",
+  "value": 31,
+  "source": "evt_diagnostics[recent,0.975]",
+  "kind": "count"
+ },
+ "qeDevBootVarLow": {
+  "tex": "1.31\\%",
+  "value": 0.0131261243070786,
+  "source": "step7 table_03 full_development 0.99 pure_pot var_p025",
+  "kind": "percent2"
+ },
+ "qeDevBootVarHigh": {
+  "tex": "1.75\\%",
+  "value": 0.0174503053282001,
+  "source": "step7 table_03 full_development 0.99 pure_pot var_p975",
+  "kind": "percent2"
+ },
+ "qeDevBootEsLow": {
+  "tex": "1.75\\%",
+  "value": 0.0174834950794881,
+  "source": "step7 table_03 full_development 0.99 pure_pot es_p025",
+  "kind": "percent2"
+ },
+ "qeDevBootEsHigh": {
+  "tex": "2.70\\%",
+  "value": 0.0270058252624904,
+  "source": "step7 table_03 full_development 0.99 pure_pot es_p975",
+  "kind": "percent2"
+ },
+ "qeDevBootFinite": {
+  "tex": "62",
+  "value": 62,
+  "source": "step7 table_03 full_development 0.95 pure_pot",
+  "kind": "count"
+ },
+ "qeBaselSelHs": {
+  "tex": "10",
+  "value": 10,
+  "source": "period_backtests[selection,historical].basel",
+  "kind": "count"
+ },
+ "qeBaselSelNormal": {
+  "tex": "14",
+  "value": 14,
+  "source": "period_backtests[selection,parametric_normal].basel",
+  "kind": "count"
+ },
+ "qeHsSelInd": {
+  "tex": "$8.4\\times10^{-4}$",
+  "value": 0.0008410996838938709,
+  "source": "coverage[selection,historical,0.99].p_ind",
+  "kind": "pvalue"
+ },
+ "qeHsFullExpected": {
+  "tex": "49.9",
+  "value": 49.870000000000005,
+  "source": "n_valid * 0.01",
+  "kind": "number1"
+ },
+ "qeHsEvalExpected": {
+  "tex": "14.6",
+  "value": 14.64,
+  "source": "n_valid * 0.01",
+  "kind": "number1"
+ },
+ "qeAllocEqualEs": {
+  "tex": "2.99\\%",
+  "value": 0.02989986879687027,
+  "source": "allocation_comparisons[equal_weight].es_loss",
+  "kind": "percent2"
+ },
+ "qeAllocSixtyEs": {
+  "tex": "2.50\\%",
+  "value": 0.025047974114300337,
+  "source": "allocation_comparisons[benchmark_60_40].es_loss",
+  "kind": "percent2"
+ }
+}

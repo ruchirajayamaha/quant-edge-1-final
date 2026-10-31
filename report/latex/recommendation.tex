@@ -1,0 +1,37 @@
+% One-page plain-English recommendation (official brief, section 8.6).
+\documentclass[11pt,a4paper]{article}
+\usepackage[top=17mm,bottom=17mm,left=23mm,right=23mm,footskip=7mm]{geometry}
+\usepackage{style/quantedge}
+\input{generated/metrics.tex}
+\hypersetup{pdftitle={Quant Edge: Investment Recommendation},pdfauthor={Quant Edge research team}}
+\qefooter{Quant Edge 1.0 \textbar\ Evidence to 30 Oct 2026 \textbar\ Bundle \qeBundle}
+\begin{document}
+\qekicker{Serendib University Endowment \textperiodcentered{} USD 10 million}\par\vspace{1pt}
+{\sffamily\bfseries\LARGE\color{qeink} Investment recommendation\par}
+\qedecision{Adjust before investing}{We propose to keep the seven-fund universe and the constrained minimum-variance rule as a candidate, but not to commit capital until the spending plan, loss limits and holdings policy below are settled. We are not recommending acceptance as proposed, and we are not recommending rejection.}
+
+\subsection{What we assumed}
+A ten-year horizon, \qeSpending{} spending, \qeInflation{} inflation, a separate \qeFee{} mandate fee and no real growth. Together these give a \qeHurdle{} annual return hurdle. These are our planning assumptions. Neither the organiser nor the university supplied them, and the hurdle is not a forecast.
+
+\subsection{What the evidence shows}
+\begin{itemize}
+\item \textbf{Growth is close, not comfortable.} The unchanged rule earned \qeEvalCagr{} a year in 2021--2026 and \qeSelCagr{} in 2017--2020, but \qeDevCagr{} in 2007--2016, just under the hurdle. History is evidence of a trade-off, not a promise.
+\item \textbf{Income does not cover spending.} The historical path ended with a cash yield of \qeIncomeYield{} against \qeSpending{} spending, so spending would also rely on planned asset sales.
+\item \textbf{Daily loss estimates sit slightly above our budgets.} On USD 10 million, the estimated 99\% one-day loss is \qeVarUsd{} against \qeBudgetVarUsd{}, and the average loss on the worst 1\% of days is \qeEsUsd{} against \qeBudgetEsUsd{}. Including the 2008 and 2020 crises raises that average to \qeFullEsUsd{}.
+\item \textbf{Crises hurt more than endpoints suggest.} Today's weights, replayed through the Global Financial Crisis, end at \qeGfcReturn{} after a deepest drawdown of \qeGfcDrawdown{}, past our \qeBudgetDrawdown{} review line. A 60/40 portfolio reached \qeGfcDrawdownSixty{}.
+\item \textbf{The risk model has a mixed record.} Its latest 250-day check is green with \qeBaselHs{} exceptions, but over the full history it failed tests of both how often and how closely together large losses occurred.
+\end{itemize}
+
+\subsection{What we ask the committee to decide}
+\begin{enumerate}
+\item Approve a spending and liquidity plan that does not rely on distributions alone.
+\item Set explicit loss limits, and test feasible reallocations within the seven funds. Do not raise limits simply so that the portfolio passes.
+\item Decide whether holdings may drift between monthly rebalances. They passed a target cap on \qeDriftSessions{} of \qeActiveSessions{} historical sessions.
+\end{enumerate}
+Any change to the rule must be tested separately. We did not switch strategy after seeing the results.
+
+\subsection{How we would monitor it}
+Review quarterly and rebalance monthly. Escalate if the 99\% tail estimate exceeds \qeBudgetEs{}, if drawdown exceeds \qeBudgetDrawdown{}, if holdings pass a target cap, if data is missing, or if large losses cluster.
+
+\qenote{Status: an AI-assisted proposal. Independent human validation is pending, and the team has yet to evaluate and own it. No university committee has approved it. Capital protection and sustainable spending are not guaranteed. The investment memo sets out methods, evidence and limitations.}
+\end{document}

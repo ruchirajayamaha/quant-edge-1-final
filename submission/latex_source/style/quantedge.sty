@@ -1,0 +1,88 @@
+% Shared typography and components for the Quant Edge documents. Compile with XeLaTeX.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{style/quantedge}[2026/11/01 Quant Edge report style]
+
+\RequirePackage{fontspec}
+\RequirePackage{unicode-math}
+\setmainfont{LibertinusSerif}[
+  Extension=.otf, UprightFont=*-Regular, BoldFont=*-Semibold, ItalicFont=*-Italic,
+  BoldItalicFont=*-SemiboldItalic, Numbers=Lining]
+\setsansfont{LibertinusSans}[
+  Extension=.otf, UprightFont=*-Regular, BoldFont=*-Bold, ItalicFont=*-Italic, Numbers=Lining]
+\setmonofont{LibertinusMono-Regular.otf}[Scale=0.9]
+\setmathfont{LibertinusMath-Regular.otf}
+
+\RequirePackage{xcolor}
+\definecolor{qeink}{HTML}{16263D}
+\definecolor{qebody}{HTML}{22303F}
+\definecolor{qemuted}{HTML}{5F6978}
+\definecolor{qerule}{HTML}{CFC6B4}
+\definecolor{qepaper}{HTML}{F6F1E6}
+\definecolor{qeteal}{HTML}{0F6B6B}
+\definecolor{qeamber}{HTML}{A86A12}
+\definecolor{qered}{HTML}{A8322A}
+
+\RequirePackage{graphicx}
+\RequirePackage{array}
+\RequirePackage{booktabs}
+\RequirePackage{tabularx}
+\RequirePackage{siunitx}
+\RequirePackage{microtype}
+\RequirePackage{caption}
+\RequirePackage{enumitem}
+\RequirePackage{titlesec}
+\RequirePackage{fancyhdr}
+\RequirePackage{xurl}
+\RequirePackage[hidelinks]{hyperref}
+\RequirePackage[capitalise,noabbrev]{cleveref}
+\hypersetup{colorlinks=true,linkcolor=qeteal,citecolor=qeteal,urlcolor=qeteal}
+
+\sisetup{mode=text,table-number-alignment=center,group-digits=false}
+\setlength{\heavyrulewidth}{0.7pt}
+\setlength{\lightrulewidth}{0.35pt}
+\setlength{\cmidrulewidth}{0.35pt}
+\renewcommand{\arraystretch}{1.08}
+\setlength{\tabcolsep}{4.5pt}
+
+\color{qebody}
+\frenchspacing
+\AtBeginDocument{\color{qebody}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5.5pt plus 1pt minus 0.5pt}
+\clubpenalty=8000
+\widowpenalty=8000
+\displaywidowpenalty=8000
+
+\titleformat{\section}{\sffamily\bfseries\large\color{qeink}}{\thesection}{0.7em}{}
+\titlespacing*{\section}{0pt}{13pt plus 3pt minus 2pt}{4pt}
+\titleformat{\subsection}{\sffamily\bfseries\normalsize\color{qeink}}{}{0pt}{}
+\titlespacing*{\subsection}{0pt}{8pt plus 2pt minus 1pt}{2pt}
+
+\captionsetup{font={small,sf},labelfont={bf,color=qeink},textfont={color=qebody},labelsep=period,justification=raggedright,singlelinecheck=false,skip=4pt}
+\captionsetup[table]{position=top}
+\captionsetup[figure]{position=bottom}
+\setlist{nosep,leftmargin=1.2em,itemsep=2pt,topsep=2pt}
+
+% Status words in tables.
+\newcommand{\qeabove}{\textcolor{qered}{\sffamily\bfseries Above}}
+\newcommand{\qewithin}{\textcolor{qeteal}{\sffamily Within}}
+\newcommand{\qezone}[1]{%
+  \ifnum\pdfstrcmp{#1}{green}=0\textcolor{qeteal}{\sffamily Green}\fi
+  \ifnum\pdfstrcmp{#1}{yellow}=0\textcolor{qeamber}{\sffamily\bfseries Yellow}\fi
+  \ifnum\pdfstrcmp{#1}{red}=0\textcolor{qered}{\sffamily\bfseries Red}\fi}
+
+\newcommand{\qenote}[1]{\par\vspace{2pt}{\sffamily\footnotesize\color{qemuted}#1\par}}
+\newcommand{\qekicker}[1]{{\sffamily\footnotesize\color{qemuted}\addfontfeatures{LetterSpace=7}\MakeUppercase{#1}}}
+
+% A rule-led decision panel, used on the first page of every document.
+\newcommand{\qedecision}[2]{%
+  \par\vspace{3pt}\noindent\colorbox{qepaper}{\parbox{\dimexpr\linewidth-2\fboxsep}{\vspace{2pt}%
+    {\sffamily\bfseries\large\color{qeteal}#1}\par\vspace{2pt}{#2}\par\vspace{2pt}}}\par\vspace{4pt}}
+
+\newcommand{\qefooter}[1]{%
+  \pagestyle{fancy}\fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0.3pt}
+  \renewcommand{\footrule}{{\color{qerule}\hrule width\headwidth height\footrulewidth\vskip-\footrulewidth}}
+  \fancyfoot[L]{\sffamily\scriptsize\color{qemuted}#1}
+  \fancyfoot[R]{\sffamily\scriptsize\color{qemuted}\thepage}}

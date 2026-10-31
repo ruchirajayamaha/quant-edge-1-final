@@ -2,7 +2,7 @@
 
 Provide the organiser with:
 
-1. `investment_memo.pdf` -12 pages.
+1. `investment_memo.pdf` -11 pages.
 2. `tear_sheet.pdf` -1 page.
 3. `recommendation.pdf` - separate1-page plain-English section8.6 recommendation.
 4. Public repository: https://github.com/ruchirajayamaha/quant-edge-1-final
@@ -12,9 +12,14 @@ Provide the organiser with:
 `COMPLIANCE_MATRIX.md` maps every official layer to actual outputs. Numerical
 authority is `results/final/reference.json` and actual CSVs in the repository.
 PNG300dpi and vectorSVG figures are in `results/final/figures/`.
+The PDFs are compiled with XeLaTeX. `latex_source/` holds their sources and generated
+macros, tables and figures; repository build steps are in `report/latex/README.md`.
+`human_review/` holds the blank worksheet and form, understanding questions and the
+separate AI-prepared key. `PRESENTATION_CLOSURE.md` and the `presentation_*.json`
+files record the AI checks and their limits.
 
 Normal launch uses the frozen included dataset and does not need market downloads,
-an API key, paid services or optional PDF-rendering dependencies. The official
+an API key, paid services, TeX or optional report-build dependencies. The official
 challenge permits one-command local launch; no hosted-app URL is claimed.
 
 **Human review remains PENDING.** Complete VALIDATION_CHECKLIST.md with real names,
@@ -29,5 +34,6 @@ This folder contains prepared deliverables; no message or upload has been sent t
 competition organisers. A ZIP copy is created after the technical checks complete.
 
 Repository public access was verified without login (API and webpage HTTP200).
-publication.json records the check; clean_install.json records the new-environment
-132-test result and real local launch. artifact_manifest.json binds packaged files.
+publication.json records the check; clean_install.json records the earlier
+new-environment result, and presentation_clean_install.json the current one.
+artifact_manifest.json binds packaged files.

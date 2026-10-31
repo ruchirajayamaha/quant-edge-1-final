@@ -1,0 +1,23 @@
+{
+ "scope": "AI-run software evidence. Not independent human validation.",
+ "recorded_at_utc": "2026-10-31T19:14:53+00:00",
+ "sweep": {
+  "app_runs": 287,
+  "failures": [],
+  "states": {
+   "recent_es_99": "2.03%",
+   "full_es_99": "2.50%",
+   "pot_90_unavailable": true,
+   "historical_basel_final_250": true,
+   "normal_basel_final_250": true,
+   "short_range_basel_unavailable": true,
+   "empty_range_message": true
+  }
+ },
+ "controls": {
+  "clean_macro_failures": 0,
+  "clean_table_missing": 0,
+  "macro_change_of_5bp_detected": true,
+  "table_cell_change_detected": true
+ }
+}

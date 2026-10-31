@@ -1,4 +1,7 @@
-# Optional document/figure authoring only; not required to run the dashboard.
+# Optional report build only; not required to run the dashboard.
+# LaTeX reports also need a TeX distribution: see report/latex/README.md.
 matplotlib==3.11.2
+pypdf==6.21.4
+pypdfium2==5.14.0
+# Only for the superseded scripts/build_submission_pdfs.py --legacy-reportlab.
 reportlab==4.4.9
-pypdf==6.10.0

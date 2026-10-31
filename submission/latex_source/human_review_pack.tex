@@ -1,0 +1,99 @@
+% Printable human-review worksheet and form. Blank by design; outside the memo's page budget.
+\documentclass[11pt,a4paper]{article}
+\usepackage[top=18mm,bottom=19mm,left=22mm,right=22mm,footskip=8mm]{geometry}
+\usepackage{style/quantedge}
+\input{generated/metrics.tex}
+\input{generated/review_inputs.tex}
+\hypersetup{pdftitle={Quant Edge: Human Review Pack},pdfauthor={Prepared by AI as a review aid}}
+\qefooter{Quant Edge 1.0 \textbar\ Human review pack \textbar\ Status PENDING until completed by a named person}
+\newcommand{\answerline}[1]{\par\vspace{5pt}\noindent #1 \rule{62mm}{0.3pt}\par}
+\newcommand{\blankrow}[1]{#1 & & & & \\[5mm]\hline}
+\begin{document}
+\qekicker{Human review pack \textperiodcentered{} worksheet and form}\par\vspace{1pt}
+{\sffamily\bfseries\LARGE\color{qeink} Check it yourself\par}
+\qedecision{Status: PENDING}{Prepared by AI as a review aid. It records no review. It validates nothing until a named person does the work and writes down their own findings. Answers are in a separate AI-prepared key, so keep that closed until you have your own result.}
+
+Use a calculator, a spreadsheet or code you wrote. Check inputs against the named original file, not just this sheet. Disagreeing with the proposal is a valid finding.
+
+\section*{A. One-day return, 29 October 2026}
+From \texttt{weights\_before\_min\_variance.csv} and the active \texttt{simple\_returns.parquet}. Multiply each weight by its return and add them up.
+
+\begin{center}\small\begin{tabular}{@{}lrr@{}}\toprule ETF & Pre-return weight & Asset return \\\midrule
+\qeReviewTableA
+\bottomrule\end{tabular}\end{center}
+\answerline{Your answer:}
+
+\section*{B. Evaluation maximum drawdown}
+From \texttt{daily\_performance.csv}, \texttt{min\_variance}, from 4 January 2021. Compound \texttt{net\_return} from wealth 1, include that start in the running peak, and find the deepest fall.
+\answerline{Your answer, with peak and trough dates:}
+
+\section*{C. Recent Normal VaR at 99\%}
+Last 1,260 returns at \texttt{current\_weights.min\_variance}. Compute mean loss + quantile $\times$ standard deviation.
+\begin{itemize}
+\item Mean loss: \qeReviewMean
+\item Standard deviation, ddof = 1: \qeReviewStd
+\item Standard Normal 99\% quantile: 2.3263478740408408
+\end{itemize}
+\answerline{Your answer:}
+
+\section*{D. Recent Historical ES at 99\%}
+The worst 1\% of 1,260 sessions is 12.6 sessions of mass. Worst 13 losses, largest first:
+
+{\small\raggedright\qeReviewWorst\par}
+
+Compute (sum of the first 12 + 0.6 $\times$ the 13th) $\div$ 12.6.
+\answerline{Your answer:}
+
+\section*{E. GFC endpoint at the current target}
+9 October 2007 to 9 March 2009, buy and hold. Multiply each weight by its cumulative return, add them up, and give the USD result on \$10,000,000.
+
+\begin{center}\small\begin{tabular}{@{}lrr@{}}\toprule ETF & Current target & Cumulative return \\\midrule
+\qeReviewTableE
+\bottomrule\end{tabular}\end{center}
+\answerline{Your answer and USD:}
+
+\section*{F. Return hurdle}
+$1 + R - s - f = (1 + \pi)(1 + g)$ with spending 4\%, fee 0.25\%, inflation 2.5\% and real growth 0\%.
+\answerline{Your answer:}
+
+\newpage
+\qekicker{Human review form}\par\vspace{1pt}
+{\sffamily\bfseries\LARGE\color{qeink} Record what you actually did\par}\vspace{4pt}
+Complete one form per reviewer. Leave a field blank if the work was not done. Do not fill this in for someone else.
+
+\vspace{8pt}\noindent
+\begin{tabular}{@{}p{42mm}p{120mm}@{}}\hline
+Reviewer's real name & \\[4mm]\hline
+Date and time & \\[4mm]\hline
+Role in the team & \\[4mm]\hline
+\end{tabular}
+
+\section*{Calculations}
+\noindent{\small\begin{tabular}{|p{33mm}|p{34mm}|p{25mm}|p{25mm}|p{33mm}|}\hline
+\textbf{Item} & \textbf{File and dates} & \textbf{Method} & \textbf{Your result} & \textbf{Difference, finding} \\\hline
+\blankrow{A. One-day return}
+\blankrow{B. Drawdown}
+\blankrow{C. Normal VaR 99\%}
+\blankrow{D. Historical ES 99\%}
+\blankrow{E. GFC endpoint}
+\blankrow{F. Hurdle}
+\end{tabular}}
+
+\section*{Review}
+\noindent{\small\begin{tabular}{|p{62mm}|p{97mm}|}\hline
+\textbf{Topic} & \textbf{What you checked and found} \\\hline
+Mandate assumptions and budgets & \\[5mm]\hline
+Models and unavailable outputs & \\[5mm]\hline
+App launched and controls used & \\[5mm]\hline
+Memo, tear sheet, recommendation read & \\[5mm]\hline
+Understanding questions answered & \\[5mm]\hline
+\end{tabular}}
+
+\section*{Decision on the team's proposal}
+This records the team's own assessment of its competition proposal. It is not approval by a university investment committee.
+
+\fbox{\phantom{x}} Agree \qquad \fbox{\phantom{x}} Agree with changes \qquad \fbox{\phantom{x}} Disagree
+
+\vspace{4pt}Reasons and required changes:\par\vspace{10mm}
+\noindent Signature: \rule{70mm}{0.3pt}\qquad Date: \rule{40mm}{0.3pt}
+\end{document}

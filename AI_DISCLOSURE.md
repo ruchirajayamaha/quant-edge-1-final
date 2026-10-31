@@ -4,6 +4,21 @@ This document is updated incrementally at every project step in accordance with 
 
 ## Disclosure Table
 
+### Presentation and LaTeX report disclosure (November 2026)
+
+Claude Code (Claude Opus 5.5) redesigned the Streamlit presentation, wrote the LaTeX memo, tear
+sheet, recommendation and human review pack, generated their macros, tables and figures from the
+frozen results, added presentation tests, and updated the documents and package. It changed no
+analytical source, configuration, data snapshot, seed, window, cost, limit or `results/final` output.
+It replaced the earlier Codex ReportLab documents, which are archived unchanged in
+`audit/presentation_review/archive_reportlab_pdfs/`.
+
+The memo prose was rewritten by AI. The rule, proposed mandate and conditional ADJUST position are
+unchanged from the earlier work. The AI checks are recorded in
+`audit/presentation_review/PRESENTATION_CLOSURE.md`. They do not count as independent human
+validation, which remains **PENDING**. The review pack has blank answers and a blank form, and its
+answer key is labelled AI-prepared. No name, signature, approval or rehearsal has been invented.
+
 ### Final integration disclosure (31 October2026)
 
 OpenAI Codex (model identity not independently recorded) implemented the Step9

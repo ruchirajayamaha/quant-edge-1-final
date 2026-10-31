@@ -39,6 +39,6 @@ Keep remaining time for transitions; practise against an actual timer if selecte
 
 Launch `python scripts/launch.py`. Start Decision, then Performance/evaluation,
 Tail risk/recent vs full/99%, Backtesting/HS vs Normal, Risk budget & stress,
-and Assumptions & evidence. Show a90% pure-POT unavailable result and a short
+and Assumptions & Limitations. Show a90% pure-POT unavailable result and a short
 backtest range with unavailable Basel rather than pretending every control passes.
 Avoid claiming hosted deployment, unseen human approval or guaranteed competition rank.
