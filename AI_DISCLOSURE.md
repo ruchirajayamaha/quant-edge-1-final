@@ -17,6 +17,13 @@ This document is updated incrementally at every project step in accordance with 
 
 ## Disclosure Table
 
+### History rewrite disclosure (1 November 2026)
+
+At the owner's request, Claude Code (Claude Opus 5.5) removed one planning PDF from the whole Git history, which
+changed every commit hash. No other file changed, and the final file tree was identical before and after. The
+mapping and evidence are in `audit/history_rewrite/COMMIT_MAP.md`. The planning use of that document stays
+disclosed in the table below. Human validation remains **PENDING**.
+
 ### Final release disclosure (1 November 2026)
 
 Claude Code (Claude Opus 5.5) assembled `FINAL_SUBMISSION/`, re-read the brief against the memo, added a
@@ -62,7 +69,7 @@ have been invented. **Independent human validation remains PENDING.** Read and
 complete FINAL_SUBMISSION/supporting/Human_Review_Status.md before certifying this AI-assisted work.
 
 The conditional ADJUST text is AI-assisted committee research, not a claim that the
-team or a real investment committee already approved it. Rule/proposal commit782ec20
+team or a real investment committee already approved it. Rule/proposal commit782ec20 (now16181c0)
 preceded post-2016 investable-strategy outcomes; earlier whole-history asset EDA,
 RF evidence and fixed-exposure crisis inspection are explicitly disclosed.
 

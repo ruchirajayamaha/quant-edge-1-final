@@ -89,7 +89,7 @@ are already embedded. The proposal is in `submission/mandate_proposal.json`, not
 silently substituted for signed limits in the preserved config.
 
 The rule and proposal were committed before post-2016 strategy outcomes in
-`782ec20`. Earlier whole-history asset EDA, RF research and fixed-exposure stress
+`16181c0` (`782ec20` before the [history rewrite](audit/history_rewrite/COMMIT_MAP.md)). Earlier whole-history asset EDA, RF research and fixed-exposure stress
 inspection were already available. We report registered-rule evaluation and do
 not claim a pristine blind experiment or tune a winner on evaluation results.
 

@@ -2,6 +2,12 @@
 
 All notable milestone checkpoints for the Quant Edge 1.0 solo implementation are recorded incrementally in this file.
 
+## [1.0.3] - 2026-11-01 - History rewrite
+
+- Removed one planning PDF from all Git history at the owner's request. Every commit hash changed.
+- Recorded the old-to-new mapping in `audit/history_rewrite/COMMIT_MAP.md`, and updated the memo's commit citation.
+- Frozen results and analytical source are unchanged, so they still cite the earlier hash.
+
 ## [1.0.2] - 2026-11-01 - Public deployment
 
 - Deployed to https://quant-edge-1-final.streamlit.app/ and verified it signed out, including PDF hashes.

@@ -17,10 +17,16 @@
   "source": "metadata.config_hash",
   "kind": "text"
  },
- "qeProtocolCommit": {
+ "qeProtocolCommitOriginal": {
   "tex": "782ec20",
   "value": "782ec20",
   "source": "diagnostics.protocol_commit",
+  "kind": "text"
+ },
+ "qeProtocolCommit": {
+  "tex": "16181c0",
+  "value": "16181c0",
+  "source": "audit/history_rewrite/COMMIT_MAP.md",
   "kind": "text"
  },
  "qeHurdle": {

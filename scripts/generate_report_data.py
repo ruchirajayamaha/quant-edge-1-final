@@ -17,6 +17,7 @@ from quantedge.es import empirical_var_and_es
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "report/latex/generated"
+PROTOCOL_COMMIT = "16181c0"  # The frozen results cite this commit by its hash before the history rewrite.
 TABLES = OUT / "tables"
 NA = r"\textit{n/a}"
 MINUS = "\N{MINUS SIGN}"
@@ -185,7 +186,8 @@ def main() -> None:
     m.text("qeBundle", ref["metadata"]["bundle_id"], "metadata.bundle_id")
     m.text("qeDataset", dataset, "metadata.dataset_id")
     m.text("qeConfigHash", ref["metadata"]["config_hash"], "metadata.config_hash")
-    m.text("qeProtocolCommit", ref["diagnostics"]["protocol_commit"], "diagnostics.protocol_commit")
+    m.text("qeProtocolCommitOriginal", ref["diagnostics"]["protocol_commit"], "diagnostics.protocol_commit")
+    m.text("qeProtocolCommit", PROTOCOL_COMMIT, "audit/history_rewrite/COMMIT_MAP.md")
 
     # Mandate
     m.percent("qeHurdle", proposal["required_nominal_return_fraction"], "proposal.required_nominal_return_fraction")

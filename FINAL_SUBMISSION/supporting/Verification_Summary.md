@@ -44,7 +44,7 @@ target weights. That is arithmetic on frozen inputs. No model, parameter or resu
 ## Public app
 
 **Live at https://quant-edge-1-final.streamlit.app/** on Streamlit Community Cloud, from `main` with `streamlit_app.py`. App code revision
-`86ca30b`; later commits change documents and tests only. Bundle `1c7bd6007fe22b014b25`. The build log shows
+`a87dc76` (`86ca30b` before the history rewrite); later commits change documents and tests only. Bundle `1c7bd6007fe22b014b25`. The build log shows
 Python 3.11.18 and all pinned packages installed with no errors, and the frozen results passed their hash
 check on Linux.
 
@@ -77,8 +77,17 @@ reboot. The log's remaining warning is that `requirements.txt` and `pyproject.to
 Community Cloud may put an idle app to sleep, so a visitor can see a wake-up button first. Availability depends
 on that free service, and the local launch is the fallback.
 
+## History rewrite
+
+One planning PDF was removed from all Git history at the owner's request, so every commit hash changed. The
+rewritten tree matched the previous `main` exactly, each commit differed only by that PDF, and author, date and
+message were preserved. The frozen files still cite `782ec20`, which is now `16181c0`. See
+`audit/history_rewrite/COMMIT_MAP.md`.
+
 ## Limits and unresolved items
 
+- Commit `782ec20` no longer exists on `main`, so the ordering claim for the registered rule now rests on the
+  rewritten commit's preserved date and the mapping record, which can't independently prove when it was made.
 - **Human validation under brief section 8.7 is open.** It is a mandatory requirement, so the package is
   technically complete but not fully compliant.
 - Archived Federal Reserve H.15 pages support release dates and are disclosed, but are not named in section 9.1.

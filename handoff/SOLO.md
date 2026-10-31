@@ -1,5 +1,7 @@
 # Quant Edge 1.0 — Solo Checkpoint (`handoff/SOLO.md`)
 
+**Commit hashes below predate a history rewrite. See audit/history_rewrite/COMMIT_MAP.md.**
+
 **LATEST: FINAL_SUBMISSION/ is the one canonical package; submission/ now holds working
 evidence only.** The public app is live at https://quant-edge-1-final.streamlit.app/. Human validation is the open item.
 
