@@ -5,14 +5,15 @@
   - Step 1 (`D0` setup): `8e21cafedab6f9c07b77f1445c7c49f19b6ee01e` (`8e21caf`)
   - Step 2 (`A1` initial snapshot & quality): `8882ed153dfa5f97fd361fce5514a2afa53cd9ea` (`8882ed1`)
   - Step 2 bounded data-hardening pass (`r2_hardened`, `audit/step2_review/` remediation): `99e01938b379cd9f18c8784f307586ac77209be3` (`99e0193`)
-  - RF-only `r3_release_evidence` upgrade: **not yet committed** (working tree)
+  - RF-only `r3_release_evidence` upgrade and research artifacts: `aacad93bb5e91f52e81a241299d4e1159df462f2` (`aacad93`)
+- **GitHub checkpoint:** Private repository [ruchirajayamaha/quant-edge-1-final](https://github.com/ruchirajayamaha/quant-edge-1-final), branch `main`, remote `origin`. Temporary test directories and yfinance runtime caches are excluded; snapshot/evidence bytes are preserved by `.gitattributes`.
 - **Contract / schema version:** `1.1.0` (`CONTRACT_SCHEMA_VERSION = "1.1.0"`, package `quantedge==0.1.0`; frozen D0 analytical callback/helper signatures preserved; coordinated `DataManifest` / `DataBundle` / `DataConfig` provenance & policy fields added)
 - **Completed steps / milestones:**
   - **SOLO STEP 1 — Project Setup** (`04_D_LEAD_APP.txt` milestone `D0`)
   - **SOLO STEP 2 — Data + data-quality checks** (`01_A_DATA_VALIDATION.txt` milestone `A1`)
   - **SOLO STEP 2 Bounded Data-Hardening Pass (`r2_hardened`)** (`audit/step2_review/ANTIGRAVITY_FIX_PROMPT.txt`)
   - **RF-only `r3_release_evidence` upgrade** (`audit/rf_research/R3_IMPLEMENTATION_PROMPT.txt`)
-- **Next bounded task:** **SOLO STEP 3 — Portfolio construction** (`02_B_PORTFOLIO_DECISIONS.txt` milestone `B1`)
+- **Next bounded task:** Run the final-round strategy/prompt review in `audit/final_strategy_review/CLAUDE_CODE_FINAL_ROUND_REVIEW_PROMPT.txt`, integrate the reviewed prompt changes, then proceed to **SOLO STEP 3 — Portfolio construction** (`02_B_PORTFOLIO_DECISIONS.txt` milestone `B1`).
 - **Active dataset ID / preserved dataset IDs / bounds / manifest locations:**
   - **Active `dataset_id` (`r3_release_evidence`, schema `1.1.0`):** `qe1_20050101_20261030_r3_6c4633a7ba` (derived offline from `parent_dataset_id = "qe1_20050101_20261030_r2_cd2904443b"`; prices and simple/log returns equal `r2` exactly)
     - Active pointer: `data/processed/active_snapshot.json` -> `qe1_20050101_20261030_r3_6c4633a7ba/manifest.json`

@@ -2,6 +2,7 @@
 
 Quantitative portfolio construction, tail-risk modelling (VaR, Expected Shortfall, POT-GPD Extreme Value Theory), out-of-sample rolling validation, stress testing, and Streamlit decision support for a conservative **USD 10,000,000** university endowment.
 
+- **Private GitHub repository:** [ruchirajayamaha/quant-edge-1-final](https://github.com/ruchirajayamaha/quant-edge-1-final)
 - **Authoritative specification:** `Quant edge 1.0 Final Challenge 1.pdf`
 - **Canonical 7-ETF allocation universe:** `SPY, EFA, EEM, AGG, GLD, XLE, XLK`
 - **Contract / config schema version:** `1.1.0`
