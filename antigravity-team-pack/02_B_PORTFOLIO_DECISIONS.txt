@@ -1,0 +1,36 @@
+ROLE B: PORTFOLIO CONSTRUCTION, RISK BUDGETING AND STRESS EVIDENCE
+
+Read COMMON_CONTEXT.md and CONTRACTS.md once. Work from D's frozen baseline in your own clone/worktree on work/b-portfolio. Use synthetic data for tests until A's shared snapshot is ready; never export synthetic results as actual investment evidence.
+
+OWNERSHIP
+Edit only src/quantedge/portfolio.py, risk_budget.py, stress.py; tests/test_b_*.py; docs/sections/b_*.md; handoff/B.md. D owns config/dependencies/contracts. A owns metrics and validation; C owns VaR/ES/EVT. Do not reimplement their modules or alter their files.
+
+NEXT MILESTONE: B1 - FEASIBLE PORTFOLIO AND RETURN PATHS
+1. Implement constrained long-only fully-invested minimum variance with a documented covariance estimate. A simple Ledoit-Wolf covariance is reasonable; check symmetry, eigenvalues, solver status and feasibility. Expose mean-variance return/risk trade-offs with a small efficient-frontier grid and clearly stated expected-return assumptions. Explain CAPM expected returns versus realized alpha with A.
+2. Add equal-weight and monthly-rebalanced60/40SPY/AGG comparison paths. Use one shared path implementation. Label any benchmark violating proposed mandate constraints as an unconstrained reference. Do not recommend it as feasible without checking.
+3. All mandate caps/targets are provisional team assumptions, not official requirements. Report their implications and feasibility. For example, max35% equities implies AGG+GLD>=65%; with each ETF capped at40%, both AGG and GLD must be>=25%. Do not silently relax constraints, clip and renormalize an invalid solution, or claim a volatility/ES cap was met without calculating it.
+4. Use a prospective estimation/rebalance schedule. Estimate on past observations only, apply weights after the decision, let weights drift between rebalances, charge documented turnover costs. A provisional5bps cost must state whether turnover is sum(abs(trade_weights)) or half that sum; use the same convention everywhere. Include initial wealth in drawdown.
+5. Freeze development/selection/final evaluation boundaries before inspecting test performance. Final-current-weights historical diagnostics are distinct from investable walk-forward performance. Give A weights_before and the complete PortfolioPath metadata.
+6. Compare net annual return/volatility/drawdown, Sharpe and ES using A/C functions once available. Report training assumptions and observed out-of-sample outcomes separately. Do not select a strategy on the final test and label that same result untouched validation.
+7. Test feasible and infeasible constraints, weights summing to1, drift between rebalances, predictable turnover/costs and future-data invariance. Defer extra optimizers, risk parity and minimum-CVaR until the correct core is integrated.
+
+B2 - RISK CONTRIBUTIONS AND PRACTICAL SIZING
+Implement normal parametric VaR and ES Euler contributions, including the mean term, using the same mean/covariance convention as C. For historical ES contributions, consume C's empirical-tail-weight helper so the total exactly matches C's historical ES definition, including fractional tail mass and ties.
+
+Report marginal, component and percentage contributions per eligible ETF. Components must sum to the corresponding total; negative hedge contributions are valid. Do not force contribution percentages when total risk is zero, and do not take absolute values to hide hedges or sign errors.
+
+Build feasible position-sizing alternatives by redistributing among eligible ETFs under all constraints; show before/after weight, expected-return assumption, VaR/ES, estimated return sacrificed per risk reduction, and feasibility status. Limit calibration is a documented human choice. Do not quietly add cash. If no candidate satisfies a proposed cap, report infeasibility and provide evidence for the team to consider adjusted limits.
+
+Tests must verify the Euler identity and compare marginal derivatives to a separate finite-difference calculation on a nondegenerate synthetic case. Check that every proposed allocation remains feasible.
+
+B3 - HISTORICAL AND HYPOTHETICAL STRESS
+Replay actual daily crisis return paths on initial current weights, letting holdings drift under the contract's buy-and-hold replay convention. Use GFC2007-10-09 to2009-03-09, COVID2020-02-19 to2020-03-23 and rate shock2022-01-03 to2022-10-14; those exact endpoints are team assumptions. Retain the preceding close needed for the first return and start wealth at1. Do not substitute just one worst asset day or sum multi-day simple returns.
+
+Report total return, Max Drawdown, worst day, USD loss on10M and per-asset P&L contributions; compare60/40 under identical conventions. This is an ex-post current-allocation stress replay, not a claim that current weights were selected back then.
+
+Implement one explicit seven-ticker hypothetical shock vector from config. The illustrative stagflation vector is unsigned until the team justifies it. Treat XLE/XLK overrides explicitly. For a one-step shock verify portfolio return=weights@asset_shocks and component P&L adds to total. A deterministic scenario loss is not ES.
+
+Supply a decision-evidence table with suitable horizon/objective/constraint alternatives, risks, return trade-offs and monitoring triggers. Do not preselect accept/adjust/reject, promise capital preservation, or infer a return objective from spending without inflation/fee assumptions. Leave human reasoning/sign-off pending.
+
+HANDOFF
+Update handoff/B.md after each milestone with APIs, artifact/dataset IDs and actual checks. Deliver docs/sections/b_methodology.md, b_limitations.md and b_ai_log.md so D can assemble the memo. Human validation=PENDING. Share formula assumptions with A/C through the contract; request shared changes through D. End with a compact checkpoint.

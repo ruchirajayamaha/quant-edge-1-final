@@ -1,0 +1,47 @@
+ROLE D: SHARED BASELINE, STREAMLIT, INTEGRATION AND DOCUMENT ASSEMBLY
+
+Read COMMON_CONTEXT.md, CONTRACTS.md and REVIEW_AND_CORRECTIONS.md once. You are the only owner of shared architecture and integration. The other three developers use separate clones/worktrees from your baseline. Do not run all four agents against the same physical checkout. Work on work/d-integration.
+
+OWNERSHIP
+Shared contracts/config, __init__.py, minimal packaging/dependency files, src/quantedge/pipeline.py, app/, scripts/, tests/test_d_*.py, shared test fixtures, README, AI_DISCLOSURE.md, CHANGELOG, final exports and handoff/D.md. A/B/C own their analytical modules and uniquely named tests/docs. Do not rewrite their modules during parallel work; request a bounded fix from their owner.
+
+DO D0 FIRST - THEN SHARE THE BASELINE
+1. Keep antigravity-team-pack/ in the implementation repo so every clone has these instructions. Initialize a local Git repo if absent, preserving source documents and existing files; do not publish it. Create the minimal src/quantedge structure described in CONTRACTS.md, tests/, docs/sections/, handoff/, data/raw/, data/processed/ and results/. Create typed shared dataclasses and API declarations. Analytics stubs must explicitly raise NotImplementedError; never return fake production numbers.
+2. Freeze the normal-moment helper and empirical-ES-tail helper signatures with C/B. Fix contracts for DataBundle, PortfolioPath, RiskEstimate and the forecast callback. Publish the baseline/schema version; do not repeatedly regenerate the architecture in later sessions.
+3. Create config.yaml with canonical tickers, USD10M NAV, start2005-01-01, an explicit data-end policy, confidence90/95/99, primary historical VaR, documented estimation/rebalance/cost assumptions and seeds. A dashboard risk window around1260 observations and selected-model backtest window500 are provisional defaults; actual EVT exceedance counts still control availability.
+4. Make investment horizon, return target, portfolio caps, risk limits, hypothetical scenario rationale and final recommendation visibly provisional until the team supplies them. A runnable illustrative allocation can be labelled as such; it cannot masquerade as a signed investment recommendation. Define development/selection/evaluation dates and execution assumptions before evaluating test results. Do not import the old pack's preferred accept/adjust conclusion.
+5. Include actual runtime dependencies: yfinance, PyYAML, parquet support and compatible numerical/Streamlit libraries. Installable src layout is required. Verify pinned versions on Python3.11, request specific additions from owners, and do not fabricate successful installs. Do not add GARCH/EVT-export packages before needed. Plotly interactive charts avoid a core dependency on PNG export tooling.
+6. Document Windows setup: create/activate venv, install requirements and editable package as needed; then exactly `streamlit run app/Home.py`. Setup and data acquisition are prerequisites, not hidden extra app-launch commands. Provide PowerShell instructions; run.sh alone is insufficient.
+7. Make imports/config smoke-checkable without market access. Share the D0 baseline commit with A/B/C. For source material, the official challenge PDF wins; do not load the old13-page pack into every new context.
+
+D1 - UI SHELL AND PIPELINE ADAPTER
+While A/B/C implement, build page layout using clearly labelled test fixtures isolated from production paths. Six views: Portfolio, Risk, Backtest, Stress, Assumptions & Limitations, Recommendation. Sidebar confidence90/95/99, risk method, backtest date range, portfolio choice. Keep controls consistent across pages.
+
+Create one pipeline orchestrator that consumes owners' APIs. All charts and exports use the same result bundle, dataset ID, config hash and code version. Streamlit does not calculate a second set of analytics or independently fetch/fit on each page. No library module imports Streamlit.
+
+Display portfolio weights, benchmark-relative wealth/drawdown, KPIs, VaR/ES/EVT at the same confidence/window/horizon, USD loss on10M, risk contributions, EVT diagnostics, exception chart/tests, eligible99%250-day Basel diagnostic, crisis scenarios and decision evidence. Main backtest follows the sidebar; Basel remains explicitly99%250-day regardless of90/95 selection. EVT90%may be unavailable for a higher threshold: display the reason and valid diagnostics without crashing.
+
+For a sidebar method whose rolling backtest is not implemented, show that backtest as unavailable and separately offer the clearly labelled primary historical-model validation. Never relabel historical exceptions as MC/EVT results. The generic historical engine can support90%on demand; mandatory95/99exports remain available.
+
+Distinguish a returned warning from a successful estimate. On network failure show matching cache age/dates; on absent cache show unavailable. Never silently show UI fixtures, zero risk, a passed test or a default green light. Missing FRED need not erase otherwise valid price-risk panels; mark RF-dependent KPIs unavailable.
+
+D2 - REAL INTEGRATION AND COMPUTATION BUDGET
+Integrate in dependency order: A1data -> B1portfolio/A2KPIs/C1risk -> B2contributions/B3stress/C2EVT -> A3validation -> full UI/exports. C1 must ship before C2 so the team is not blocked by EVT.
+
+Cache downloads, weight paths, fixed-seed MC, EVT diagnostics/bootstrap and rolling forecasts by their actual inputs. Sidebar changes should retrieve cached results or trigger only the affected computation. Compute final report bundles deliberately outside repetitive UI reruns. Give progress/status and permit unavailable estimates instead of hiding expensive failures.
+
+Run actual relevant integration checks, including a real snapshot and disconnected-cache behavior when feasible. If any environment/dependency/data test cannot run, record that exact limitation. Ask the module owner for a bounded patch; merge one contributor at a time. Do not resolve conflicts by copying the largest answer or rewriting working modules from scratch.
+
+D3 - DOCUMENTS AND HUMAN DECISION SUPPORT
+Assemble sections supplied by A/B/C. Generate metric tables and figures from the same result bundle as the app. Complete README/run/reproduce instructions, a brief-to-code map, limitations page and truthful CHANGELOG.
+
+Create AI_DISCLOSURE.md including actual tools/models and purposes reported by the team; include upstream Claude prompt support and this Codex planning/review support if they are used. Do not claim an unknown underlying Antigravity model. Columns: tool(s), purpose, material generated components, human validation performed/status. Human validation staysPENDING until humans actually complete it; AI tests are not human validation.
+
+Produce a7-15page memo draft and one-page tear sheet draft containing real computed evidence. Human judgement paragraphs stay explicitly pending until supplied. Final paginated PDF/DOCX exports need visual/page-count checks; Markdown length alone does not satisfy the page requirement. Require the team to finish reasoning placeholders before calling the submission complete. A pitch/deck is additionally required if the team reaches the final five.
+
+Recommendation view shows evidence, assumptions and accept/adjust/reject alternatives until the team makes and substantiates its decision. Avoid inventing spending rates, inflation, objectives, human validation or deployment/GitHub links. GitHub publication/deployment is a separate action only if explicitly requested.
+
+D4 - FINAL CHECKPOINT
+Run05_INTEGRATE_AND_AUDIT.txt once the core is connected. Independently review B's chronology/constraints while A cross-reviews C and C cross-reviews A's LR/sign conventions. Confirm every official layer exists. Then choose at most one justified extension if time remains; do not sacrifice the memo, limitations or review budget.
+
+Update handoff/D.md after each milestone with baseline/schema versions, merged commits, actual commands/outcomes, artifacts, remaining dependencies and next task. End with a compact checkpoint, not another full-project plan or a request to approve work already authorized.

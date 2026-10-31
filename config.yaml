@@ -1,0 +1,171 @@
+# Quant Edge 1.0 — Shared Baseline Configuration (D0 / SOLO STEP 1)
+# Contract schema version: 1.0.0
+# Governance choices marked PROVISIONAL_* or PENDING_* are explicit placeholders
+# and must be reviewed, justified, and signed off by the human team.
+
+schema_version: "1.0.0"
+project_name: "Quant Edge 1.0 - Conservative University Endowment"
+
+mandate:
+  nav_usd: 10000000.0
+  canonical_tickers:
+    - "SPY"
+    - "EFA"
+    - "EEM"
+    - "AGG"
+    - "GLD"
+    - "XLE"
+    - "XLK"
+  equity_tickers:
+    - "SPY"
+    - "EFA"
+    - "EEM"
+    - "XLE"
+    - "XLK"
+  defensive_tickers:
+    - "AGG"
+    - "GLD"
+  market_proxy_ticker: "SPY"
+  benchmark_60_40_weights:
+    SPY: 0.60
+    AGG: 0.40
+  investment_horizon:
+    value: "Perpetual university endowment with multi-year strategic review cycle (provisional)"
+    status: "PROVISIONAL_TEAM_INPUT_REQUIRED"
+    note: "Endowment spending horizon and review cadence must be confirmed by the human team."
+  return_target:
+    annual_nominal_target: null
+    spending_rate_assumption: null
+    inflation_assumption: null
+    expense_drag_assumption: null
+    status: "PROVISIONAL_TEAM_INPUT_REQUIRED"
+    note: "Specify spending, inflation, expenses, and compounding conventions explicitly before feasibility sign-off."
+  final_recommendation:
+    decision: null
+    status: "PENDING_HUMAN_DECISION"
+    note: "No predetermined accept/adjust/reject conclusion. Awaits computed evidence and human team sign-off."
+
+data:
+  requested_start: "2005-01-01"
+  end_date_policy: "freeze_on_first_snapshot"
+  frozen_end_date: null
+  price_source: "yfinance"
+  price_adjustment: "auto_adjust_true_close"
+  no_implicit_forward_fill: true
+  fred_rf_series: "DTB3"
+  fred_csv_url: "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTB3"
+  rf_quote_basis: "annual_percent_discount_basis"
+  rf_conversion_formula: "(rate_pct / 100.0) / 252"
+  rf_trading_days_per_year: 252
+  rf_availability_lag_sessions: 1
+  rf_no_backfill: true
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  results_dir: "results"
+
+chronology:
+  status: "PROVISIONAL_FROZEN_BEFORE_EVALUATION"
+  development_start: "2005-01-01"
+  development_end: "2016-12-30"
+  selection_start: "2017-01-03"
+  selection_end: "2020-12-31"
+  evaluation_start: "2021-01-04"
+  evaluation_end: null
+  execution_assumption: "Close-to-close: weights decided using data through session t-1 apply to session t simple return; weights drift between scheduled rebalances."
+
+portfolio:
+  rebalance_frequency: "M"
+  estimation_window_days: 504
+  transaction_cost_bps_one_way: 5.0
+  annualization_days: 252
+  covariance_estimator_default: "sample_ddof1"
+  illustrative_weights:
+    label: "ILLUSTRATIVE_ONLY_NOT_A_RECOMMENDATION"
+    provisional: true
+    note: "Runnable illustrative allocation satisfying provisional caps; NOT an endorsed or signed investment recommendation."
+    weights:
+      SPY: 0.15
+      EFA: 0.08
+      EEM: 0.04
+      AGG: 0.40
+      GLD: 0.25
+      XLE: 0.04
+      XLK: 0.04
+  constraints:
+    status: "PROVISIONAL_TEAM_INPUT_REQUIRED"
+    long_only: true
+    fully_invested: true
+    min_weight_per_etf: 0.0
+    max_weight_per_etf: 0.40
+    max_equity_weight: 0.35
+    min_defensive_weight: 0.40
+    note: "With fully invested weights across the 7 ETFs, max_equity_weight=0.35 implies AGG+GLD>=0.65 (making min_defensive_weight=0.40 redundant) and max_weight_per_etf=0.40 forces both AGG>=0.25 and GLD>=0.25. Team must evaluate suitability."
+  risk_limits:
+    status: "PROVISIONAL_TEAM_INPUT_REQUIRED"
+    max_daily_var_95_fraction: null
+    max_daily_var_99_fraction: null
+    max_daily_es_99_fraction: null
+    max_annual_volatility_fraction: null
+    note: "Committee risk tolerances remain provisional until calibrated and justified by the team."
+
+risk:
+  confidence_levels:
+    - 0.90
+    - 0.95
+    - 0.99
+  mandatory_comparison_confidences:
+    - 0.95
+    - 0.99
+  horizon_days: 1
+  loss_convention: "loss = -simple_portfolio_return; positive values represent losses before transaction costs"
+  primary_backtest_model: "historical"
+  supported_models:
+    - "historical"
+    - "parametric_normal"
+    - "monte_carlo_normal"
+    - "evt_pot"
+  dashboard_risk_window_days: 1260
+  backtest_window_days: 500
+  basel_diagnostic_window_days: 250
+  basel_diagnostic_confidence: 0.99
+  normal_ddof: 1
+  monte_carlo_simulations: 25000
+  evt_threshold_quantile: 0.95
+  evt_min_exceedances: 50
+
+seeds:
+  global_seed: 20261031
+  monte_carlo: 202601
+  evt_bootstrap: 202602
+  backtest: 202603
+
+stress:
+  historical_scenarios:
+    - scenario_id: "gfc_2007_2009"
+      label: "Global Financial Crisis (2007-10-09 to 2009-03-09)"
+      start_date: "2007-10-09"
+      end_date: "2009-03-09"
+      provisional: true
+    - scenario_id: "covid_2020"
+      label: "COVID-19 Liquidity Shock (2020-02-19 to 2020-03-23)"
+      start_date: "2020-02-19"
+      end_date: "2020-03-23"
+      provisional: true
+    - scenario_id: "rate_shock_2022"
+      label: "Inflation & Rate Tightening Shock (2022-01-03 to 2022-10-14)"
+      start_date: "2022-01-03"
+      end_date: "2022-10-14"
+      provisional: true
+  hypothetical_scenario:
+    scenario_id: "hypothetical_stagflation_repricing"
+    label: "Illustrative Stagflation & Duration/Tech Repricing (Provisional)"
+    status: "PROVISIONAL_TEAM_INPUT_REQUIRED"
+    rationale: "PROVISIONAL: Illustrative simultaneous equity/duration drawdown with commodity/energy resilience; team must substantiate economic narrative and shock magnitudes."
+    shocks:
+      SPY: -0.25
+      EFA: -0.25
+      EEM: -0.25
+      AGG: -0.12
+      GLD: 0.10
+      XLE: 0.20
+      XLK: -0.30

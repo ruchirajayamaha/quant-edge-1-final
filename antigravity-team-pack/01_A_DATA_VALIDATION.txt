@@ -1,0 +1,39 @@
+ROLE A: DATA, KPIs AND INDEPENDENT MODEL VALIDATION
+
+Read COMMON_CONTEXT.md and CONTRACTS.md once. Work from D's frozen baseline in your own clone/worktree on work/a-data-validation. These instructions replace the old initial prompt's request to restate the entire project and ask five questions.
+
+OWNERSHIP
+Edit only src/quantedge/data.py, returns.py, kpis.py, backtest.py; tests/test_a_*.py; docs/sections/a_*.md; handoff/A.md; and your data snapshot/quality outputs. Request shared schema, dependency, benchmark API or config changes through D. Do not edit portfolio.py, var.py, es.py, evt.py or app files.
+
+NEXT MILESTONE: A1 - DATA HANDOFF FIRST
+1. Inspect the shared data schema and config. Fetch the seven ETFs' adjusted closes using yfinance auto_adjust=True and the configured FRED risk-free proxy. With auto_adjust=True, explicitly document that adjusted Close is the used series; handle ticker-column/MultiIndex shapes without silently mixing raw and adjusted closes.
+2. Request prices from 2005-01-01; persist actual first/last observations, acquisition times, adjustment settings and hashes. Build one reusable parquet snapshot and manifest for all four workstreams. No manual data edits.
+3. Validate unique sorted dates, positive observed prices and expected tickers. Establish the documented shared US trading-session grid, preserving missing observations. Compute returns with no implicit fill BEFORE excluding incomplete return rows. A missing price invalidates either adjacent return needing it; dropping a price date first would create a multi-session move falsely labelled1-day. Count missing-price rows and affected-return exclusions separately from outlier flags. Preserve gap metadata so later paths/tests do not claim uninterrupted coverage. Never turn missing observations into zero returns or ffill ETF prices.
+4. Compute simple and log asset returns. Document why portfolio arithmetic aggregation and simple-loss risk use simple returns. Add per-asset log-return ADF results, descriptive statistics and correlation table. ADF on prices is optional; do not interpret stationary returns as iid or constant volatility.
+5. Flag stale/flat sequences, robust-MAD jumps, large negatives and candidate structural breaks using explicit reproducible rules; suspected breaks are flags, not proof. Retain flagged returns; safely handle MAD=0. Produce a readable quality report.
+6. Preserve raw DTB3 annual-percent observations. Use the agreed lag and past-only forward alignment. A (rate/100)/252 daily proxy is acceptable only as a clearly named approximation to a discount-basis quotation, not an exact realized investment return. Do not backfill an initial missing rate. Record release/revision limitations.
+7. Handle network failure: matching cache + dated warning, or explicit unavailable state if no valid cache. Never replace production data with synthetic data.
+8. Add focused synthetic tests for alignment, missing rows, adjustments mapping, units, flags retained, and past-only RF alignment. Save quality/ADF outputs and the snapshot manifest. Hand off A1 immediately so B/C/D can use real data.
+
+A2 - KPIs, CAPM AND DIAGNOSTICS
+Implement Sharpe, Sortino, Treynor, Jensen alpha/beta, Information Ratio/tracking error, geometric annual return, annual volatility, Max Drawdown and Calmar. Use B's canonical portfolio and monthly-rebalanced 60/40 return paths; SPY is the CAPM market proxy. All comparisons use aligned dates and excess-return definitions.
+
+State formulas and annualization conventions. Sharpe uses arithmetic excess mean and volatility; geometric annual return is a separate statistic. Sortino downside deviation is defined over all observations relative to the chosen daily target, not the standard deviation of negative observations alone. Handle zero volatility/downside deviation, near-zero beta, zero drawdown and short samples explicitly. OLS intercept annualization/t-stat limitations must be explained. Include initial wealth when computing drawdown. Use hand-computable examples for substantive metric checks. Supply plain-language methodology and limitations to D.
+
+Once actual weights and the risk window are available, run/report the stationarity check on the actual portfolio-return series fed into C's models, with its sample and exposure context, plus log1p portfolio-return diagnostics. Distinguish this fixed-exposure modelling sample from the changing-weight strategy return path. Per-asset ADF alone is not a stationarity check of the modelled portfolio series; do not require a desired p-value or change the data to achieve one.
+
+A3 - ROLLING VALIDATION, AFTER B/C INTERFACES ARE AVAILABLE
+Implement generic rolling_backtest accepting C's forecast callback and B's weights_before. While waiting, develop tests against a deterministic synthetic callback; do not duplicate C's risk engine.
+
+For day t use only the previous configured observations, plus weights known before t. Re-estimate the risk of that exposure using that historical asset-return window. Compare against that day's gross market loss; performance costs are separately reported. Assert train_end<t. Keep failures/skips visible. Never use weights optimized using the test date's return.
+
+Core validation is historical VaR at95/99, or another primary method explicitly selected before evaluating the final test sample. A normal-model comparison is useful if time permits. The brief does not require daily rolling GARCH, conditional EVT or every MC variant.
+
+Implement Kupiec POF and Christoffersen independence with stable likelihood arithmetic and documented boundary conventions. Handle0/1transition counts, no exceptions, all exceptions, too-few observations and unidentifiable transition probabilities without accidental NaN or a fabricated pass. Conditional coverage is optional. State asymptotic/low-count limitations; a high p-value is not proof of safety.
+
+Basel standard0-4/5-9/10+ bands apply ONLY to250 consecutive valid1-day99% forecast pairs. Use the latest eligible block as of the requested backtest end date; insufficient history is unavailable. Never apply those bands to90/95%. Show expected exceptions and warn when few are expected.
+
+Meaningful checks: a spy callback proving maximum input date<t; modifying future returns must not alter earlier forecasts; hand-computed exception/transition tables; independent likelihood calculation; clustered versus dispersed exceptions with the same total count. Small fixed-seed Bernoulli checks can supplement these, but do not demand that a single random simulation reject at exactly5%.
+
+HANDOFF AND STOP RULE
+After each milestone update handoff/A.md with files, APIs, snapshot ID, commands actually run, failures and next step. Write docs/sections/a_methodology.md, a_limitations.md and a_ai_log.md. Human validation=PENDING. Do not invent the team's recommendation. If inputs are missing, record the dependency and continue tests or documentation that do not require it. Report only a compact checkpoint.

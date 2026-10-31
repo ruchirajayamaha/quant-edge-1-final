@@ -1,0 +1,49 @@
+PROJECT BRIEF: Quant Edge 1.0 Final Challenge (national STEM quantitative investment research competition)
+
+ROLE
+You are my senior quant developer and reviewer. I am a university student on a team of five. We have a few hours to build a competition-winning, end-to-end Python + Streamlit application. Everything must be correct, reproducible and explainable by me in a live viva, so prefer clear, well-documented code over clever code, and explain the logic of every non-trivial formula.
+
+THE SCENARIO
+We are the quant research division of an asset manager competing for a mandate to manage a USD 10 million portfolio for a conservative institutional investor: the Serendib University Endowment Fund. The client's priorities: capital preservation, risk management, resilience in adverse markets, income, and sustainable real growth. The committee's beliefs: "Avoiding large losses is more important than maximizing gains" and "A good investment decision is not the one with the highest expected return, it is the one whose downside you have actually measured, tested, and can defend."
+
+INVESTABLE UNIVERSE (fixed, 7 ETFs)
+SPY (US large cap), EFA (intl developed), EEM (emerging markets), AGG (US IG bonds), GLD (gold), XLE (energy), XLK (technology). Any single fund or combination is allowed.
+
+DATA RULES
+Only approved sources: Yahoo Finance via yfinance (adjusted close, auto_adjust=True), FRED (DTB3, 3-month T-bill, as the risk-free rate; use the public CSV endpoint, no API key), and optionally World Bank/IMF for memo context. No undisclosed or paid data. Mandatory cleaning: adjusted prices; align trading calendars and document handling; log returns for statistical work (state clearly where simple returns are used and why); FLAG suspected errors (stale prices, jumps, big negatives) but never silently delete; ADF stationarity test on modelling returns; every cleaning step reproducible from code with no manual edits. Use a 2005-01-01 start so the 2008 GFC, March 2020 COVID crash and 2022 rate-hiking drawdown are all covered.
+
+REQUIRED METHODOLOGY (all five layers, plus a decision layer)
+1. Foundations: Markowitz mean-variance and CAPM; compute and interpret Sharpe, Sortino, Treynor, Jensen's alpha, Information Ratio, Max Drawdown, Calmar.
+2. VaR: Historical, Parametric and Monte Carlo on the same portfolio at 95% and 99%, with an explicit discussion of where and why they disagree.
+3. Expected Shortfall (CVaR) with a rationale for reporting it alongside VaR.
+4. Extreme Value Theory: peaks-over-threshold with a GPD fit; the threshold must be justified (mean residual life plot, parameter stability, goodness of fit), not arbitrary; compare against conventional measures.
+5. Backtesting: out-of-sample, rolling, strictly no look-ahead; Kupiec POF, Christoffersen independence, Basel traffic-light.
+6. Decision layer: risk budgeting and position sizing via marginal/component VaR and ES; stress tests replaying the 2008 GFC, March 2020 COVID and 2022 rate-hike paths plus one hypothetical scenario we design; a clear investment recommendation (accept the mandate as proposed / adjust the risk limit / reject) with a quantified return-versus-risk trade-off, a defined investment horizon, return objective and risk constraints, all justified and with assumptions stated.
+
+INNOVATION GOALS (only after the core works)
+Conditional EVT (GARCH-t filter then GPD on standardised residuals), automatic EVT threshold selection compared with fixed percentiles, an ES backtest, regime-conditioned risk with a rule-based de-risking overlay (backtested honestly), and a reverse stress test.
+
+STREAMLIT APP (must run with ONE command: streamlit run app/Home.py)
+Sidebar: confidence level (90/95/99), VaR methodology, backtest date range. Panels: (1) portfolio weights, cumulative return, drawdown chart; (2) risk dashboard with VaR, ES and EVT estimates side by side at the same confidence level so the gap is visually obvious; (3) backtesting panel with Kupiec/Christoffersen results and a traffic-light indicator; (4) stress-test panel for each crisis scenario; (5) a clearly labelled "Assumptions & Limitations" page in plain language saying what the model does not capture; (6) a recommendation page. Audience is a non-technical investment committee.
+
+DELIVERABLES
+Clean documented GitHub-ready repo with README and one-command run; the Streamlit app; material to support a 7-15 page technical memo and a one-page tear sheet (generated from real computed outputs, with placeholders where the team's own reasoning must go); an AI_DISCLOSURE.md.
+
+GRADING (design priorities accordingly)
+Investment decision-making 30%, technical rigor and correctness 25%, software/interface quality 15%, innovation 15%, communication and defence 15%. A statistically wrong but pretty analysis must not win, so correctness beats polish.
+
+ENGINEERING RULES
+- Python 3.11; free-tier libs only (pandas, numpy, scipy, statsmodels, arch, scikit-learn, cvxpy, plotly, streamlit, pytest).
+- All logic in src/quantedge/ as typed, documented pure functions; Streamlit pages only call them. Parameters live in config.yaml.
+- Docstrings state the formula, sign convention (VaR/ES as positive loss numbers) and assumptions.
+- pytest tests for every module, using synthetic data with known answers (for example, parametric VaR against closed forms, GPD parameter recovery, Euler risk contributions summing to total, LR tests on simulated Bernoulli data).
+- No look-ahead bias, no hard-coded results, never invent numbers. If something cannot be computed, say so.
+- Cache raw data to parquet, but the fetch code is the source of truth; the app should degrade gracefully offline with a clear banner.
+- Keep a CHANGELOG and an AI_DISCLOSURE.md of what you generate. Do not claim any human validation was done.
+
+HOW WE WILL WORK
+I will give you stage-by-stage prompts. Right now do NOT write code. Do this first:
+1. Restate the project in your own words in under 200 words, so I can confirm you understood the goal.
+2. Propose the repo structure and a numbered implementation plan with milestones in the order: data, cleaning, KPIs, portfolio construction, VaR, ES, EVT, backtesting, risk budgeting, stress tests, Streamlit app, assumptions page, docs, audit.
+3. List any ambiguities, risks or technical traps you foresee (for example EFA/EEM non-synchronous trading, low power of 99% backtests over 250 days, EVT threshold bias-variance trade-off, optimiser corner solutions from noisy expected returns) and how you propose to handle each.
+4. Ask me at most five clarifying questions, then wait for my approval before implementing anything.
