@@ -1,0 +1,291 @@
+EXECUTE THIS TASK IN THE EXISTING REPOSITORY. DO NOT STOP AT A PLAN OR A DESIGN PROPOSAL.
+
+Repository: https://github.com/ruchirajayamaha/quant-edge-1-final
+Existing Windows checkout: C:/Users/ruchira/Desktop/qunt
+If running in a cloud checkout, use its actual repository root rather than hard-coding Windows paths.
+
+The owner is dissatisfied with the current visual quality. They want an excellent,
+credible investment-committee dashboard and a genuinely LaTeX-authored final report.
+They also want all feasible validation work completed and an easy, honest human
+review process. This is a deadline-sensitive presentation/documentation upgrade to
+an existing verified research project, not permission to rebuild or retune its models.
+
+ACT AS
+A senior investment-research editor, quantitative reviewer, LaTeX typesetter and
+Streamlit product designer. Use your judgment and execute the work end to end.
+Quality should come from sound evidence, readable typography, clear decisions and
+careful visual composition. Do not promise first place, claim unprecedented novelty,
+invent human approval, or conceal evidence that weakens the recommendation.
+
+1. READ THE REAL PROJECT BEFORE EDITING
+
+Read:
+- Quant edge 1.0 Final Challenge 1.pdf - authoritative official challenge.
+- README.md, AI_DISCLOSURE.md, submission/COMPLIANCE_MATRIX.md.
+- submission/mandate_proposal.json and submission/VALIDATION_CHECKLIST.md.
+- handoff/HUMAN_REVIEW_GUIDE.md and submission/DEFENCE_NOTES.md.
+- audit/step9_review/STEP9_CLOSURE.md, clean_install.json, verification.json,
+  publication.json and STEP9_PROTOCOL.json.
+- results/final/reference.json, manifest.json, actual CSVs and figures/.
+- app/Home.py, src/quantedge/reference.py, final_engine.py, pipeline.py.
+- scripts/build_submission_pdfs.py, export_final_figures.py, package_submission.py.
+- Relevant tests, including tests/test_d_integration.py.
+
+Check for a newer remote revision before starting. The release previously verified
+was c41b0eb; new handoff-document commits may follow it. Preserve unrelated local
+changes and earlier evidence. Old step-stop notes are historical; the user now
+authorises this final presentation/LaTeX upgrade. Do not redo Steps1-9 analytics.
+
+Known verified reference at handoff:
+- Bundle: 1c7bd6007fe22b014b25.
+- Dataset: qe1_20050101_20261030_r3_6c4633a7ba; schema1.1.0.
+- Config hash: 587ddbe363589fb6956c23c5fe8b2b544bac81d9224a0b4bb59f60f5fbc0a017.
+- Full release suite132 passed; independent clean-checkout/new-Python3.11 suite
+  132 passed in23.84s. These are historical checks; report your own new results.
+- Data hashes53/53; prior protected source/output files102/102 unchanged.
+- Public GitHub visibility and anonymous access were verified. A local launcher is
+  implemented; no hosted-app URL or organiser submission has been claimed.
+
+2. FREEZE THE NUMERICAL AUTHORITY
+
+Before editing, record a SHA-256 baseline for all src/quantedge/*.py, config.yaml,
+requirements.txt, the active data/evidence snapshots, all existing results/final/
+numerical JSON/CSV files, proposal and previous audit evidence. Preserve their bytes.
+
+Use results/final/reference.json and its CSV companions as the only final numerical
+authority. Do not use numbers transcribed from chat as the source. Do not redownload
+market data, change the active snapshot, relax limits, change seeds/costs/windows,
+switch the strategy, use evaluation outcomes to optimise a new allocation, or add
+unvalidated analytics to create a better-looking result.
+
+This is a UI/report task. Core analytics, frozen contracts and config stay unchanged.
+If a real numerical defect is found, record the exact file/input/effect and isolate
+it from presentation work. Continue unaffected work; do not silently change formulas
+or the result bundle. Explain any genuinely blocking issue precisely.
+
+Allowed edits: app/, presentation/export scripts, report sources and assets,
+report-only optional dependencies, tests for affected views/exports, documentation,
+review worksheets, packaging and new audit records. Do not alter old audit reports.
+
+3. BUILD A MUCH STRONGER STREAMLIT EXPERIENCE
+
+Preserve all existing capabilities and data conventions while redesigning the
+composition. This should feel like a carefully edited institutional research tool.
+
+Design direction:
+- Refined editorial typography, warm white/ivory surfaces, deep ink/navy text,
+  restrained teal, amber for review thresholds and red only for meaningful breaches.
+- Strong hierarchy, generous but purposeful spacing, consistent chart dimensions,
+  legible labels and disciplined alignment. Avoid a generic landing-page aesthetic,
+  oversized empty hero blocks, decorative gradients, emoji-heavy panels and raw
+  tables dominating every page.
+- First screen: decision, observed funding trade-off, actual dollar loss estimates,
+  risk-budget breaches, one relevant crisis comparison, and a concise explanation
+  of what needs adjusting. Provide the report downloads clearly.
+- Show human-review status honestly in a clear status area; detailed provenance
+  and long caveats can live in expandable sections and the assumptions view.
+  Do not hide unresolved validation or remove warnings to make the interface prettier.
+- Use readable portfolio/model names, consistent fraction/percent/USD formatting,
+  well-explained unavailable states and decision-oriented chart captions.
+- Keep scientific comparisons fair: same confidence, exposure, window and horizon.
+- Retain confidence90/95/99, portfolio, risk method, target dates and recent/full
+  sample controls. Keep the separate Historical/Normal rolling-model selector.
+- Performance/backtest dates select target periods and preserve warmup. Current
+  risk/stress uses the final-close prospective target, not historical holdings.
+- Normal MC is a sampling approximation, not a fat-tail model. Pure POT failures
+  must remain explicit; body/tail hybrid is separately labelled. Basel is99%/250
+  and educational, independently of the selected risk confidence.
+- Keep computations in the existing analytical library and use affected-input
+  caching. No new market downloads or repeated full-pipeline runs on sidebar reruns.
+- Make the main committee narrative useful before opening technical detail.
+
+4. CREATE A REAL LATEX DOCUMENT SYSTEM AND COMPILED PDFS
+
+The current PDFs were generated with ReportLab. The user now explicitly requests
+LaTeX. Produce genuine .tex sources and PDFs compiled by a real TeX engine.
+Do not rename an old PDF or generate a PDF with ReportLab and call it LaTeX.
+
+Deliver a source structure such as:
+report/latex/
+  main.tex
+  tear_sheet.tex
+  recommendation.tex
+  style/ or preamble.tex
+  generated/metrics.tex and generated/tables/*.tex
+  references.bib
+  README.md
+  build script / Makefile / latexmk configuration as appropriate
+
+Generate numerical macros/tables programmatically from the verified reference.
+Keep calculations out of the typesetting layer; it should format existing values.
+Escape LaTeX special characters; handle null/unavailable values with a reason,
+not zero. Format tiny p-values scientifically rather than rounding them to0.0000.
+
+Required final outputs at the existing download paths:
+- submission/investment_memo.pdf: total7-15 pages, preferably about10-12,
+  counting cover, references and any appendix within that bound.
+- submission/tear_sheet.pdf: exactly1 page.
+- submission/recommendation.pdf: exactly1 page, plain-English section8.6 decision.
+- Preserve compatible output/pdf/ copies if the documented workflow uses them.
+- Include the complete editable LaTeX sources and reproducible build instructions.
+
+There was no latexmk/pdflatex/xelatex/lualatex/tectonic on the local PATH at handoff.
+Detect your own environment. Use an available compiler, or install an appropriate
+minimal/portable compiler and needed packages through the normal permitted process.
+Document the actual engine/version and command. Prefer a user-local setup over
+unnecessary system-wide changes. If compilation cannot be completed, state that
+explicitly and preserve the accepted PDFs; uncompiled sources are not a compiled
+LaTeX deliverable. Do not stop without trying the feasible permitted route.
+
+Visual standard:
+- Professional research typography, a coherent text/math font pairing and full
+  glyph coverage. Use a tasteful accent colour, subtle rules and a consistent grid.
+- A restrained first-page masthead with substantive decision evidence; avoid a
+  mostly blank cover and no dedicated filler pages.
+- Body roughly10.5-11pt and tables readable at normal zoom. Do not cram tables
+  into tiny type to force a page count. Use booktabs-style tables, decimal alignment,
+  clear units, useful captions, figure/table numbers and working cross-references.
+- Natural pagination with balanced pages. Do not force a new page after every
+  short section as the current report does. Avoid excessive blank lower halves,
+  orphan headings, split captions and unexplained dense output dumps.
+- Replot from existing result data where visual quality needs improvement. Export
+  vector PDF figures for LaTeX plus PNG300dpi where useful. Existing SVGs can be
+  converted faithfully; do not ask an image generator to invent financial charts.
+- Label dates, sample sizes, weights/exposure, loss conventions and sources near
+  evidence. Distinguish historical investable paths from current-weight ex-post
+  replays and proposed budgets from organiser/client requirements.
+- References should be real and relevant. Verify unfamiliar citations from primary
+  sources; never invent papers, authors, DOIs, organiser rules or quotations.
+
+The memo must connect, in a coherent argument:
+1) mandate/return hurdle/risk budget;
+2) data quality and relevant limitations;
+3) portfolio construction, concentration, costs and chronology;
+4) performance/CAPM, income, inflation and funding trade-offs;
+5) VaR/ES same-sample comparisons, EVT domain/diagnostics and model uncertainty;
+6) actual rolling exceptions, Kupiec/Christoffersen and educational Basel results;
+7) marginal/component risk, feasible allocation evidence and historical/hypothetical stress;
+8) decision, implementation conditions, monitoring and limitations;
+9) reproducibility, sources and honest AI/human-review disclosure.
+
+Use existing current-target EVT diagnostics and earlier development-only QQ/PP /
+bootstrap evidence with their correct exposure/date labels. Do not relabel earlier
+uncertainty intervals as current-target confidence bands. A fitted positive shape
+is not by itself a formal Gaussian-rejection result.
+
+5. STRENGTHEN THE ARGUMENT WITHOUT CHANGING THE RESULTS
+
+Read these values from the reference; the following are regression checkpoints:
+- Primary evaluation CAGR7.6336%, annual volatility8.8026%, max drawdown-16.7828%.
+- Development CAGR6.6534%, versus proposed6.75% planning hurdle; do not show only
+  the evaluation period that exceeds the hurdle.
+- Recent Historical99% VaR1.539498%, ES2.031689%; full-history ES2.501847%.
+- Proposed VaR99 budget1.5%, ES99 budget2%: marginally breached, not guaranteed
+  risk boundaries. Current excesses are aboutUSD3,950 andUSD3,169 onUSD10M.
+- Current-target GFC terminal return-8.9299%, within-scenario drawdown-23.8736%.
+  Endpoint loss and drawdown must not be swapped.
+- Historical holdings drift beyond at least one target cap on2,771/4,987 sessions;
+  max ETF45.1393%. The rule controls monthly targets, not daily holdings caps.
+- Ending historical-path TTM distribution yield2.1938%, below proposed4% spending.
+  This is income context, not a second return added to adjusted prices or an exact
+  current prospective-target yield.
+- Final250 HS99 exceptions4/green; Normal99 exceptions9/yellow. Full-history
+  HS99 UC/IND rejection remains material despite that green recent light.
+- Evaluation HS99 UC/IND does not reject at5%; this is not proof of future safety.
+
+The proposed hurdle uses the explicit convention:
+1+R-spending-additional_fee=(1+inflation)*(1+real_growth).
+At zero real growth:4%+0.25%+2.5%=6.75%. This is not a return forecast.
+ETF expenses are already embedded; the extra0.25% is a separate proposed mandate fee.
+
+The existing conditional ADJUST recommendation has evidence behind it. You may
+improve its reasoning and clarity. Do not convert it to ACCEPT by hiding breaches
+or changing assumptions. Do not pretend a real client committee approved it.
+
+6. COMPLETE ALL POSSIBLE AI VALIDATION; PREPARE GENUINE HUMAN REVIEW
+
+The owner asks for human validation too. Be helpful and do the work you can actually
+perform, but AI cannot impersonate a human reviewer, sign for a person, or make
+independent human validation true merely by changing a status field.
+
+Do now:
+- Independently recompute representative return, drawdown, Normal VaR, exact-tail
+  ES and stress dollar loss from original frozen inputs, using a materially different
+  route from production helper calls. Record inputs, method, discrepancies and tolerance.
+- Check every headline and decision-relevant table across app, JSON, PDFs and sources.
+- Inspect chronology, units, target-versus-drift policy, same-window comparisons,
+  loss signs, income double-counting, RF/CPI caveats and limitations.
+- Run affected actual tests and real-data app controls; preserve explicit failures.
+- Record this accurately as AI-assisted numerical/editorial/technical verification.
+
+Create an easy human-review pack outside the memo's page budget, with:
+- Worked calculation inputs and an initially blank reviewer answer column.
+- A separate expected-answer key clearly marked AI-prepared, so reading it is
+  not misrepresented as performing an independent calculation.
+- Questions testing whether a member can explain the decision and limitations.
+- A clean review form with blank real name/date/method/finding/decision/signature
+  fields. No pre-ticked approval and no fabricated signature or committee minute.
+- Clear distinction between the team's assessment of its competition proposal
+  and approval by an actual university investment committee.
+- If a human supplies a real review later, record only their stated completed
+  actions and findings; generic delegation is not an independently completed review.
+
+Keep human validation PENDING until actual human evidence exists. Present that
+truth professionally; do not plaster giant alarming status labels across every
+chart, and do not hide the status in a way that implies approval.
+
+7. VERIFY DESIGN AND FUNCTION, THEN PACKAGE
+
+- Compile LaTeX successfully, resolve undefined references/missing citations and
+  fix material overfull boxes, missing glyphs, clipped figures and table overflow.
+- Render EVERY final PDF page to images. Inspect all pages, and inspect dense
+  pages at readable resolution. Compilation and text extraction alone are not
+  proof of acceptable layout. Iterate until the actual PDFs look polished.
+- Check memo7-15 pages and each one-page artifact exactly1 page.
+- Compare exported numerical macros/tables/headlines with the reference under
+  suitable numeric tolerances. Do not claim equality merely because labels match.
+- Exercise all six app views, confidence90/95/99 and exposed risk methods;
+  primary and references; recent/full; short-date and unavailable/error states.
+- Update AppTest assertions/selectors thoughtfully for the redesigned interface;
+  do not remove meaningful tests to get a green result. Preserve the pipeline's
+  domain/causality/availability tests. Run the full suite once after final edits.
+- Verify source/data/numerical baselines remained unchanged. Report any exceptions.
+- Keep Python app installation independent of optional TeX/report dependencies.
+- Keep the documented one-command offline launch working; do not invent a hosted URL.
+- Add exact LaTeX commands, engine/dependency notes and report regeneration steps
+  to README and report/latex/README.md. Ensure old build_submission_pdfs.py cannot
+  accidentally overwrite the LaTeX deliverables with ReportLab without a clear
+  explicit legacy option; choose a coherent authoritative report build entrypoint.
+- Update AI_DISCLOSURE.md, requirement trace, actual review record and package
+  instructions truthfully. The official rubric is30% decision,25% rigor,15% software,
+  15% innovation,15% communication. Make the evidence for each easy to locate;
+  do not write self-awarded judging scores.
+- Rebuild submission/artifact_manifest.json and QuantEdge_Final_Submission.zip,
+  including source/build instructions or a clearly identified report-source archive.
+  Ensure the app downloads the new PDFs and no stale document is packaged.
+- Verify ZIP integrity and every packaged checksum. Preserve the earlier accepted
+  PDF versions in an appropriately labelled archive before replacing them.
+- Check for secrets and large/temporary TeX build files before staging. Ignore
+  caches and intermediate .aux/.log/.out/.toc files as appropriate; retain sources,
+  generated tables needed for reproducibility, final PDFs and useful QA evidence.
+
+GitHub is already public by explicit owner authorisation. After the completed work
+is concrete and verified, commit and normally push the related changes to that same
+repository; no force push. Preserve unrelated edits and handle a newer remote safely.
+Do not send messages/upload anything to competition organisers. Do not deploy a paid
+service, alter numerical research, or invent a new permission flow for this already
+authorised presentation work.
+
+8. REQUIRED COMPLETION RESPONSE
+
+Return a concise evidence-based handoff with:
+- What materially improved in the app and the report.
+- Actual .tex paths and compiled PDF paths/page counts.
+- Actual compiler/version/build command; PDF image-review evidence.
+- Actual test results and representative control checks.
+- Numerical/source/data invariance results and any real limitations.
+- Updated ZIP path/checksum and verified GitHub commit/link, if pushed.
+- Completed AI verification versus still-pending genuine human review, explicitly.
+
+Execute now. Do not return only advice, an outline, a mockup, uncompiled LaTeX,
+fabricated approval, or a claim that everything is100% perfect.
