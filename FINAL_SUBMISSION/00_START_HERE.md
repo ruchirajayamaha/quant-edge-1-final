@@ -25,6 +25,8 @@ It runs offline from the frozen data and needs no API key, paid service or TeX.
 
 ## What else is here
 
+- [Named review draft: Nisal Induwara](supporting/Human_Review_Nisal_Induwara_DRAFT.pdf): corrected reference calculations and the user-requested typed name; reviewer confirmation remains pending.
+
 - [03_Links_and_Run_Instructions.md](03_Links_and_Run_Instructions.md): setup, launch and rebuild steps.
 - [COMPLIANCE_MATRIX.md](COMPLIANCE_MATRIX.md): each brief requirement and rubric area, with where to find the evidence.
 - [AI_DISCLOSURE.md](AI_DISCLOSURE.md): AI tools, purposes and material components.

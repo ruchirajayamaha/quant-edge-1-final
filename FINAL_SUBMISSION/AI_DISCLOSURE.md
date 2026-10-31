@@ -1,5 +1,18 @@
 # AI Assistance Disclosure & Human Validation Log
 
+## Named review draft added on 1 November2026
+
+At the user's request, OpenAI Codex prepared a corrected review draft for the
+user-supplied name Nisal Induwara and added that typed name to its signature line.
+The uploaded PDF used a different identity and an incorrect evaluation drawdown;
+the draft corrects it against the frozen path (-16.782839%, peak2021-11-12,
+trough2022-10-20). Unconfirmed professional credentials, Digital ID, review date
+and approval claims were not carried forward. Numerical checks and corrections
+are AI-assisted. The reviewer must confirm the corrected findings and actual work;
+human validation remains PENDING. No certificate-based signature or committee
+approval is claimed. The draft is linked from the app's existing Assumptions &
+Limitations disclosure and included in the canonical submission package.
+
 This document is updated incrementally at every project step in accordance with the official **Quant Edge 1.0** competition rules. Automated tests run by AI assistants verify code execution and mathematical invariants, **not** independent human validation or investment committee judgement. All human validation entries remain `PENDING` until explicitly reviewed, verified, and signed off by team members.
 
 ## Disclosure Table

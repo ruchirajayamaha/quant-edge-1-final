@@ -1,0 +1,47 @@
+{
+  "reviewer_name_supplied_by_user": "Nisal Induwara",
+  "signature": "Typed name requested by user; not a certificate-based digital signature",
+  "status": "DRAFT_AWAITING_REVIEWER_CONFIRMATION",
+  "human_validation": "PENDING",
+  "pages": 3,
+  "review_date": null,
+  "professional_credential": null,
+  "reviewer_role": null,
+  "bundle_id": "1c7bd6007fe22b014b25",
+  "numerical_reference_values": {
+    "OneDay": "-0.0023025187",
+    "OneDayPct": "-0.230252%",
+    "Drawdown": "-0.1678283922",
+    "DrawdownPct": "-16.782839%",
+    "PeakDate": "2021-11-12",
+    "TroughDate": "2022-10-20",
+    "PeakWealth": "1.0216333524",
+    "TroughWealth": "0.8501742694",
+    "NormalVar": "0.0129235514",
+    "NormalVarPct": "1.292355%",
+    "HistoricalEs": "0.0203168865",
+    "HistoricalEsPct": "2.031689%",
+    "Gfc": "-0.0892991335",
+    "GfcPct": "-8.929913%",
+    "GfcLossUsd": "892,991.34",
+    "GfcEndUsd": "9,107,008.66",
+    "WorstTwelveSum": "0.246755780467",
+    "ThirteenthLoss": "0.015394981956"
+  },
+  "output": "FINAL_SUBMISSION/supporting/Human_Review_Nisal_Induwara_DRAFT.pdf",
+  "output_sha256": "c5ababc3fdf0cf0338244f906db5504bd954b312db4c3cec7585487b49265c62",
+  "corrections": [
+    "Removed mismatched Alex Thorne/CFA/Digital ID identity claims",
+    "Corrected drawdown and peak/trough dates against frozen returns",
+    "Removed unsupported completed/verified/signed-off status",
+    "Clarified proposed budgets, breaches and non-forecast hurdle; left reviewer findings/decision/date blank"
+  ],
+  "verification": {
+    "tests": "146 passed, 1 skipped in 33.18s",
+    "skip_reason": "Optional pypdf absent from application venv; the named PDF was separately inspected with bundled pypdf",
+    "visual_review": "All three rendered pages inspected; signature fits on confirmation page",
+    "packaged_files_sha256_verified": 53,
+    "bundle_unchanged": "1c7bd6007fe22b014b25",
+    "zip_sha256": "6222c49a733128d1c1ad975dc7fe186934a1e2d6bca19082a5f539b4b70a694f"
+  }
+}

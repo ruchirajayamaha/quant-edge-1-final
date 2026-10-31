@@ -79,3 +79,13 @@ Passing the build does not prove the pages read well. Look at every rendered pag
 `--legacy-reportlab`, and it then writes only to `output/legacy_reportlab/`.
 
 The dashboard needs none of this. It only serves the published PDFs.
+
+## Named corrected review draft
+
+`python scripts/build_named_review.py` recomputes the reference values and compiles
+`review_nisal_induwara.tex` into
+`FINAL_SUBMISSION/supporting/Human_Review_Nisal_Induwara_DRAFT.pdf` (three pages).
+It uses the same TeX environment/font setup as the main reports. The reviewer name
+and typed signature were supplied by the user; the document explicitly awaits
+confirmation of actual review methods, date, findings and decision. It does not
+replace the blank review pack or certify independent human validation.

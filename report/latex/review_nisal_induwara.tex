@@ -1,0 +1,118 @@
+% Corrected reference draft with user-supplied identity. Not a human sign-off.
+\documentclass[11pt,a4paper]{article}
+\usepackage[top=19mm,bottom=20mm,left=22mm,right=22mm,footskip=8mm]{geometry}
+\usepackage{style/quantedge}
+\input{generated/metrics.tex}
+\input{generated/named_review_values.tex}
+\hypersetup{pdftitle={Review draft for Nisal Induwara},pdfauthor={AI-assisted corrections; reviewer name supplied by user}}
+\qefooter{Quant Edge 1.0 \textbar\ Corrected review draft \textbar\ Confirmation pending}
+\newcommand{\reviewblank}{\rule{95mm}{0.3pt}}
+\newcommand{\reviewbox}{\fbox{\rule{0pt}{1.2ex}\hspace{1.2ex}}}
+\begin{document}
+\qekicker{Review draft \textperiodcentered{} Nisal Induwara}\par
+{\sffamily\bfseries\LARGE\color{qeink} Corrected calculation reference\par}
+\qedecision{DRAFT: reviewer confirmation pending}{The user supplied the reviewer name and requested a typed signature. The calculations below are AI-assisted reference checks, not a claim that the named reviewer independently performed or approved them.}
+
+\textbf{Reviewer name supplied:} Nisal Induwara.\quad
+\textbf{Review date and role:} not supplied.\par
+The uploaded review contained a different identity and an incorrect drawdown. This copy corrects those items and leaves the actual review findings and decision for the named reviewer to confirm.
+
+\section*{A. One-day return, 29 October 2026}
+Using actual pre-return weights and simple asset returns:
+\[
+R_p=\sum_i w_{i,t-}r_{i,t}=\nrOneDay
+\]
+\textbf{Reference: \nrOneDayPct.} That day's trading cost is zero, so gross and net returns agree. Source: \path{results/final/weights_before_min_variance.csv} and the active return snapshot.
+
+\section*{B. Evaluation maximum drawdown}
+Compound net returns from 4 January 2021, including initial wealth 1 in the running peak.
+\[
+\operatorname{DD}=\frac{\nrTroughWealth}{\nrPeakWealth}-1=\nrDrawdown
+\]
+\textbf{Correct reference: \nrDrawdownPct.}\par
+Peak: \nrPeakDate.\quad Trough: \nrTroughDate.\par
+The uploaded \textbf{-12.84\%} value and its stated January/October dates do not match this frozen evaluation path. Its claimed recovery date has not been independently confirmed and is not repeated here.
+
+\section*{C. Recent Normal VaR at 99\%}
+At the prospective target over the recent 1,260 sessions:
+\[
+\operatorname{VaR}_{0.99}=\bar L+2.3263478740408408\,s_L=\nrNormalVar
+\]
+\textbf{Reference: \nrNormalVarPct.} Sample standard deviation uses ddof 1; this is a one-day pre-cost fitted loss quantile, not a maximum possible loss.
+
+\section*{D. Recent Historical ES at 99\%}
+Tail mass is 12.6 sessions. Sum of the worst 12: \nrWorstTwelveSum; the thirteenth loss is \nrThirteenthLoss.
+\[
+\operatorname{ES}_{0.99}=\frac{\sum_{j=1}^{12}L_{(j)}+0.6L_{(13)}}{12.6}=\nrHistoricalEs
+\]
+\textbf{Reference: \nrHistoricalEsPct.} The boundary receives fractional probability mass; this estimate alone does not prove a stable fat-tail model.
+
+\newpage
+\qekicker{Scenario and mandate checks}\par
+{\sffamily\bfseries\LARGE\color{qeink} Findings that need review\par}
+
+\section*{E. GFC endpoint at the prospective target}
+Buy and hold the same initial target weights from 9 October 2007 to 9 March 2009. Compound each asset first, then take the weighted sum.
+\[
+R_{p,\mathrm{GFC}}=\sum_i w_i\left[\prod_t(1+r_{i,t})-1\right]=\nrGfc
+\]
+\textbf{Endpoint return: \nrGfcPct.}\par
+On initial USD 10,000,000: \textbf{USD \nrGfcLossUsd\ loss}; terminal value \textbf{USD \nrGfcEndUsd}. The replay's within-window drawdown is \qeGfcDrawdown, which is deeper than the endpoint loss. AGG is a broad bond ETF, not a Treasury-only allocation.
+
+\section*{F. Proposed return hurdle}
+Under the stated beginning-NAV deduction convention:
+\[
+1+R-s-f=(1+\pi)(1+g)
+\]
+With spending 4\%, an additional fee of 0.25\%, inflation 2.5\% and zero real growth, the nominal planning hurdle is \textbf{6.75\%}. These are team-proposed assumptions; this arithmetic is not a forecast or proof that the hurdle is achievable.
+
+\section*{Corrected interpretation of the supplied findings}
+\begin{tabularx}{\linewidth}{@{}p{39mm}X@{}}\toprule
+Issue & Corrected reference / interpretation \\\midrule
+Reviewer identity & Nisal Induwara was supplied by the user. No CFA designation, Digital ID, role or review date has been supplied for this reviewer. \\[5pt]
+Drawdown & Evaluation drawdown is \nrDrawdownPct, with the peak and trough dates on page 1. \\[5pt]
+Investment policy & The proposal is not an independently supplied or signed investment policy statement. Its budgets need team evaluation. \\[5pt]
+Loss budgets & Recent Historical VaR99 is 1.54\% versus a 1.50\% proposed budget; ES99 is 2.03\% versus 2.00\%. The GFC replay drawdown also exceeds the proposed 20\% review threshold. \\[5pt]
+Approval wording & The uploaded ``completed'', ``verified'' and ``signed off'' labels are not carried forward as confirmed human approval. \\\bottomrule
+\end{tabularx}
+
+\vspace{10pt}
+\textbf{Numerical authority:} the unchanged frozen result bundle \texttt{\qeBundle}. The main investment memo, portfolio rule and analytical results have not been changed by this draft.
+
+\newpage
+\qekicker{Reviewer confirmation}\par
+{\sffamily\bfseries\LARGE\color{qeink} Record the work actually done\par}
+\qedecision{Awaiting reviewer confirmation}{Nisal Induwara should check the corrected values, record the methods and findings, and evaluate the proposal before this can be recorded as completed human review.}
+
+\begin{tabularx}{\linewidth}{@{}p{44mm}X@{}}\toprule
+Reviewer name & Nisal Induwara \\\midrule
+Actual review date/time & \rule{80mm}{0.3pt} \\[5mm]
+Role in the team & \rule{80mm}{0.3pt} \\\bottomrule
+\end{tabularx}
+
+\section*{Independent checks and findings}
+\small
+\begin{tabularx}{\linewidth}{|p{35mm}|X|X|}\hline
+\textbf{Item} & \textbf{Method and your own result} & \textbf{Difference / finding} \\\hline
+A. One-day return & & \\[6mm]\hline
+B. Drawdown and dates & & \\[6mm]\hline
+C. Normal VaR99 & & \\[6mm]\hline
+D. Historical ES99 & & \\[6mm]\hline
+E. GFC endpoint & & \\[6mm]\hline
+F. Hurdle and assumptions & & \\[6mm]\hline
+\end{tabularx}
+\normalsize
+
+\section*{App, documents and understanding}
+Record the app controls used, documents read, questions answered and any concerns:\par
+\vspace{6mm}\rule{\linewidth}{0.3pt}
+
+\section*{Decision on the team's proposal}
+\reviewbox\ Agree\qquad \reviewbox\ Agree with changes\qquad \reviewbox\ Disagree\par
+Reasons / required changes:\par\vspace{6mm}\rule{\linewidth}{0.3pt}
+
+\vspace{10pt}
+\textbf{Signature (typed name, requested by user):} \textit{Nisal Induwara}\par
+\textbf{Confirmation date:} \rule{52mm}{0.3pt}\par
+{\small This typed name is not a certificate-based digital signature or independent proof of completed review. It records no university investment-committee approval.}
+\end{document}

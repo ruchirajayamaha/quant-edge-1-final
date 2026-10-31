@@ -65,6 +65,9 @@ def test_limitations_page_uses_the_official_label_and_keeps_review_status():
     assert "## Assumptions & Limitations" in text
     assert "Independent human validation" in text and "Pending" in text
     assert "No real committee has approved it" in text
+    assert "Nisal Induwara" in text
+    assert "Human_Review_Nisal_Induwara_DRAFT.pdf" in text
+    assert "must confirm the corrected findings" in text
 
 
 def test_tail_view_keeps_failures_explicit_and_samples_labelled():

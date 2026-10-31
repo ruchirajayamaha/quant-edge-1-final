@@ -13,6 +13,8 @@ def sha(data):return hashlib.sha256(data).hexdigest()
 def main():
     shutil.copy2(ROOT/'AI_DISCLOSURE.md',FINAL/'AI_DISCLOSURE.md')
     source=FINAL/'latex_source'
+    if source.is_symlink() or source.resolve().parent != FINAL.resolve():
+        raise ValueError('Refusing to replace a LaTeX source path outside the canonical final folder')
     if source.exists():shutil.rmtree(source)
     shutil.copytree(ROOT/'report/latex',source,ignore=shutil.ignore_patterns(*INTERMEDIATES))
     sums=FINAL/'SHA256SUMS.txt'

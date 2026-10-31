@@ -5,6 +5,19 @@ AI-assisted work and a recommendation evaluated and defended by the team. AI can
 sign this record. User delegation of design choices is not evidence that calculations
 or the recommendation have already been independently evaluated.
 
+## Named review draft: Nisal Induwara
+
+[Download the corrected review draft — Nisal Induwara (PDF)](https://raw.githubusercontent.com/ruchirajayamaha/quant-edge-1-final/main/FINAL_SUBMISSION/supporting/Human_Review_Nisal_Induwara_DRAFT.pdf)
+
+The user supplied this reviewer name and requested a typed signature. The supplied
+PDF had a different reviewer identity and an incorrect evaluation drawdown. The
+corrected draft uses -16.782839%, peak2021-11-12 and trough2022-10-20, and removes
+unconfirmed credentials, Digital ID and approval claims. Calculations in the draft
+are AI-assisted reference checks. The reviewer must confirm the corrected findings
+and record the actual review date, methods and decision; those fields remain blank.
+The typed name is not a certificate-based digital signature or proof of completed
+human review. No university committee approval is recorded.
+
 The technical package is complete. Human validation is not.
 
 Before certifying or submitting, record the real reviewer's name, date, evidence and outcome below. The
