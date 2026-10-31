@@ -64,6 +64,25 @@ conditional; defence notes are preparation, not a completed rehearsal/deck.
 
 ## Clean-install and publication evidence
 
+The fresh-checkout/new-Python3.11-environment suite passed132 tests in23.84s.
+The documented editable installation completed, pip check was clean, and both the
+actual local health endpoint and HTML page returnedHTTP200 after one-command
+offline launch. See clean_install.json for exact scope and the initial missing-temp
+directory correction. Browser screenshot preview was unavailable because its tool
+kernel assets failed to initialise; AppTest real-data rendering/controls did run.
+
+Git attributes now preserve the exact historical source/artifact bytes across
+checkouts. This fixes core.autocrlf-induced hash drift without modifying the102
+protected working-file bytes; the fresh-clone independent verifier confirmed them.
+
 Fresh-checkout/new-environment and remote publication results are recorded in
 `clean_install.json` and `publication.json` only after those actions complete.
 The repository is not claimed public until independently verified there.
+
+**Publication completed:** the finished release was pushed, repository visibility
+changed at the user's explicit request, and anonymous GitHub API / webpage access
+both returnedHTTP200. A transient first post-change Git transport check failed;
+the immediate retry returned the expected remote commit. No credential was
+persisted or printed. Publication is separate from organiser submission, which
+has not been performed. Final packaging/push adds this evidence without changing
+analytical code, config, inputs or numerical results.

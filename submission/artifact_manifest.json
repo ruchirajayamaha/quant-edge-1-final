@@ -1,0 +1,26 @@
+{
+  "bundle_id": "1c7bd6007fe22b014b25",
+  "dataset_id": "qe1_20050101_20261030_r3_6c4633a7ba",
+  "human_validation": "PENDING",
+  "file_sha256": {
+    "AI_DISCLOSURE.md": "4f5b5aa47647af15e33d79af2ca1a54f475ac945d61ef97abb45683b2b70eecc",
+    "clean_install.json": "3523d439f1d2dd8e01fe0a146bb2192538923f4f8de0aa583397f842333928a2",
+    "COMPLIANCE_MATRIX.md": "f2babe83545ff038e5a3cb6d55982748f19be48b7692b8258aa147d65e3af2ff",
+    "DEFENCE_NOTES.md": "a1b4bfee77d32a3cfd2f279ca03b4e1a70e45cb55e01d0c56d8503813d4d1f6b",
+    "investment_memo.pdf": "b35d70d3cc8d18cee8f8b2cce4579a33ebe77756ea3f08e1562deafaa9b0220c",
+    "mandate_proposal.json": "79094cf28486c15249a7cda9295b62ec59fa8cdef16b7b9c3661522f2fc0f80a",
+    "publication.json": "0652f22edfbb8fdfe54895bc6b930632b81e3529a1c7830cce71d2d5c4fc4011",
+    "recommendation.pdf": "80cfbd8a370548e93a58bf349c109c6041f3fcbfa0fee3e39385809959c1b84c",
+    "REPOSITORY_README.md": "6205ba5038d8589ff2edd58055dcf8ef960382950ebb03c45e830495eb0474a6",
+    "SUBMIT_README.md": "384c75b722f047a13a4ce61b23b587b82233a8b014218ed4b08ff94704fbd74e",
+    "tables/coverage_summary.csv": "2656555fcb156b10ab84ad980a7404f78c3d32d367264c4f963c792a932cb7cf",
+    "tables/evt_diagnostics.csv": "66f1491e06d3f29c6d52ee3c12fd95e5e349fba500038d0729419d4c0d534a44",
+    "tables/period_kpis.csv": "553f77bf9afae59b73cb6770cee5f22a74e05c75489c3ae39a151dab9880ad5e",
+    "tables/reference.json": "4cd1f197e0aa4a6f9111f6de4312c23e6e844eb077db3ee122dde0ea14a36872",
+    "tables/risk_table.csv": "efa6f0eea08920b253ea2c7fdfe7ea8d6ed8ab084330a194bc40697e18b1e0b6",
+    "tables/stress_results.csv": "b2224503eeb00d88fd33e289ff90a1d01a24f0c17c958b330310a62032efad39",
+    "tear_sheet.pdf": "740e1824b984305f78fcc5cb7d6eb910d2fffe0fffa13ba03fd223c2b5a97f48",
+    "VALIDATION_CHECKLIST.md": "1ec9a4793654a1fc6a15212ca1c6759842878c825fa2fc640654dbaebdee5fba",
+    "verification.json": "28d12bcd7e2b343170f34725052955fbf85b7e24cff37ec0ac6eb1957dabccf5"
+  }
+}

@@ -19,7 +19,7 @@ Status refers to actual artifacts, not a guarantee of compliance before human re
 | GFC, COVID,2022 and hypothetical scenario | final stress_results.csv; app; memo page10 | Same current-target ex-post replays; duration/probability caveats |
 | Streamlit sidebar confidence, methodology and date range | app/Home.py; real AppTest controls | Implemented; target dates preserve training; separate rolling selector |
 | Weights, wealth/drawdown, comparative risk, backtests, stress, assumptions/limitations views | six app views; frozen result bundle | Implemented; actual real-data UI checks recorded in closure |
-| Public or judge-accessible repository | GitHub repository linked in README | Publication verified separately; no invented access claim |
+| Public or judge-accessible repository | GitHub repository linked in README; publication.json | Public; anonymous API and webpage HTTP200 verified31 Oct2026 |
 | Hosted app OR one-command local launch | scripts/launch.py; README clean setup | Local option selected; hosted deployment is not mandatory |
 | Investment memo7-15 pages | investment_memo.pdf |12 pages; rendered and visually inspected |
 | Tear sheet1 page | tear_sheet.pdf |1 page; rendered and visually inspected |

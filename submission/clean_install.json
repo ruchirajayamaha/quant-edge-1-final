@@ -1,0 +1,20 @@
+{
+  "tested_commit": "7f11b5f",
+  "checkout": "fresh git clone --no-hardlinks; updated by fast-forward to the test scratch-directory fix",
+  "environment": "new CPython 3.11.16 virtual environment, separate from development .venv",
+  "requirements": "58 pinned packages installed using uv offline wheel cache; editable package installed with the documented pip --no-deps -e . build-isolation step",
+  "test_command": "python -m pytest -q --basetemp tmp/pytest_clean_release2",
+  "test_result": "132 passed in 23.84s",
+  "dependency_check": "python -m pip check: No broken requirements found",
+  "offline_integrity_verifier": "53 source-data hashes and 102 prior protected files match; 5 independent headline values and 29,922 causal rolling rows verified",
+  "launch_command": "python scripts/launch.py --server.headless=true --server.port=8512 --server.address=127.0.0.1",
+  "http_checks": {
+    "http://127.0.0.1:8512/_stcore/health": 200,
+    "http://127.0.0.1:8512/": 200
+  },
+  "market_data_downloads_during_launch": false,
+  "app_checks": "All six real-data views, confidence90/95/99 by all five risk-only methodologies, equal-weight reference and short-range Basel state executed by AppTest",
+  "initial_issue_and_correction": "First custom --basetemp run encountered a missing ignored tmp parent (123 tests passed; 8 errors and 1 UI import failure). The integration test now creates its scratch parent during collection; full rerun passed.",
+  "not_claimed": "Cross-platform OS execution, hosted deployment, human validation or an actual browser screenshot; browser preview tool failed to initialise its own kernel assets.",
+  "human_validation": "PENDING"
+}

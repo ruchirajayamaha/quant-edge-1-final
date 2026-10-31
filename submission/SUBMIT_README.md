@@ -5,7 +5,7 @@ Provide the organiser with:
 1. `investment_memo.pdf` -12 pages.
 2. `tear_sheet.pdf` -1 page.
 3. `recommendation.pdf` - separate1-page plain-English section8.6 recommendation.
-4. Repository: https://github.com/ruchirajayamaha/quant-edge-1-final
+4. Public repository: https://github.com/ruchirajayamaha/quant-edge-1-final
 5. Launch instruction after the README installation: `python scripts/launch.py`.
 6. `AI_DISCLOSURE.md` from the repository and completed human-validation evidence.
 
@@ -27,3 +27,7 @@ and deck; DEFENCE_NOTES.md is a preparation outline, not an already rehearsed de
 
 This folder contains prepared deliverables; no message or upload has been sent to
 competition organisers. A ZIP copy is created after the technical checks complete.
+
+Repository public access was verified without login (API and webpage HTTP200).
+publication.json records the check; clean_install.json records the new-environment
+132-test result and real local launch. artifact_manifest.json binds packaged files.

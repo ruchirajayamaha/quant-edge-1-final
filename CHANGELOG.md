@@ -15,6 +15,9 @@ All notable milestone checkpoints for the Quant Edge 1.0 solo implementation are
 -132 tests passed before final UI headline refinement; final verification and
   clean-install/publication outcomes are recorded in Step9 closure. Human review
   remains PENDING; no organiser upload or hosted-app claim is made.
+- Release suite132 passed in21.57s; new Python3.11 environment / fresh checkout
+  suite132 passed in23.84s. One-command offline launch returnedHTTP200. Public
+  GitHub visibility and anonymous webpage/API access were verified.
 
 ## [0.8.0] - 2026-10-31 — Step 8 risk allocation and stress evidence
 

@@ -15,6 +15,9 @@ Independent human validation is **PENDING**; automated tests do not satisfy that
 [Requirement trace](submission/COMPLIANCE_MATRIX.md) ·
 [AI disclosure](AI_DISCLOSURE.md)
 
+Repository visibility is **public**, verified by anonymous GitHub API and webpage
+HTTP200 responses on31 October2026. Exact evidence: `audit/step9_review/publication.json`.
+
 ## Install and launch
 
 Use **Python3.11**. Setup needs package installation; normal app launch needs no
