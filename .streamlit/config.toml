@@ -8,5 +8,9 @@ font = "sans serif"
 [client]
 toolbarMode = "minimal"
 
+[server]
+# A hosted update must not purge quantedge from sys.modules while a session imports it.
+fileWatcherType = "none"
+
 [browser]
 gatherUsageStats = false
