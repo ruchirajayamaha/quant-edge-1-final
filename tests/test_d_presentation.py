@@ -38,7 +38,7 @@ def test_formatters_keep_signs_units_and_unavailable_states():
     assert ui.pvalue(None) == ui.UNAVAILABLE
 
 
-def test_decision_screen_shows_decision_budgets_crisis_and_honest_status():
+def test_decision_screen_shows_decision_budgets_and_crisis_without_review_banner():
     app = _app()
     assert not app.exception and not app.error
     metrics = {m.label: m for m in app.metric}
@@ -49,8 +49,10 @@ def test_decision_screen_shows_decision_budgets_crisis_and_honest_status():
     assert metrics["One-day ES at 99%, recent sample"].delta == "$3,169 above budget"
     assert metrics["Ending cash yield"].value == "2.19%"
     text = _text(app)
-    for expected in ("Conditional", "$3,950", "Above budget", "-23.87%", "-8.93%", "-$892,991", "2,771", "pending"):
+    for expected in ("Conditional", "$3,950", "Above budget", "-23.87%", "-8.93%", "-$892,991", "2,771"):
         assert expected in text, expected
+    assert "human validation" not in text.lower() and "human review." not in text.lower()
+    assert "review status are documented under Assumptions & Limitations" in text
     assert "approved by" not in text.lower().replace("no university committee has approved it", "")
     assert {button.label for button in app.get("download_button")} >= {"Investment memo", "One-page tear sheet", "Plain-English recommendation"}
 

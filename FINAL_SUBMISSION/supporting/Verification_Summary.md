@@ -44,7 +44,7 @@ target weights. That is arithmetic on frozen inputs. No model, parameter or resu
 ## Public app
 
 **Live at https://quant-edge-1-final.streamlit.app/** on Streamlit Community Cloud, from `main` with `streamlit_app.py`. App code revision
-`5304403`; later commits change documents and tests only. Bundle `1c7bd6007fe22b014b25`. The build log shows
+`86ca30b`; later commits change documents and tests only. Bundle `1c7bd6007fe22b014b25`. The build log shows
 Python 3.11.18 and all pinned packages installed with no errors, and the frozen results passed their hash
 check on Linux.
 
@@ -55,17 +55,18 @@ Tested in a browser that was not signed in to Streamlit, after the interface ren
 | Access | No login screen; the app rendered with viewer controls only |
 | Six views | All opened with charts and tables, 0 exceptions, 0 error messages |
 | Headlines | 7.63%, $203,169, 2.19%, recent VaR 1.54% and ES 2.03%, full-history ES 2.50%, 18 of 1,464 exceptions |
-| Confidence | 99 and 90 checked on the final code; 90% VaR 0.65%, ES 1.03% |
+| Confidence | 99, 95 and 90 all checked; 90% VaR 0.65% and ES 1.03%; 95% full-history VaR 0.88% and ES 1.42% |
 | Risk method | Pure POT shows Unavailable at 90% with its explanation, and 1.68% VaR at 99% on full history |
 | Sample window | Recent 1,260 and full 5,491 sessions |
 | Portfolio | 60/40 shows its reference notice and its own results |
-| Rolling model | Historical 18 and Normal 27 exceptions; final-250 Basel green and yellow |
+| Rolling model | At 99%, Historical 18 and Normal 27 exceptions; final-250 Basel green and yellow |
+| Review status | First screen points to Assumptions & Limitations, which shows human validation and team decision as Pending |
 | Short range | October 2026 only: 22 sessions and Basel unavailable, with no exception |
 | PDF downloads | Memo, tear sheet and recommendation served byte-identical to the packaged files (SHA-256 and size) |
 | Widths | Desktop 1360 and phone 375, with no horizontal page scroll |
 
-Portfolio and pure POT at 99% were last clicked before two display-only commits. Those commits changed styling
-and the file watcher, not calculations. 95% was covered by the automated sweep, not clicked on the live app.
+The risk-method dropdown itself was last clicked on an earlier revision, before changes that did not touch
+calculations. The 287-run sweep covers every method on the final code.
 
 The logs showed one real error. When an update arrived with a session open, Cloud logged an `ImportError` and
 `AttributeError` as `quantedge` was reloaded. The app kept working for new sessions. The file watcher was turned
