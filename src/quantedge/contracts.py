@@ -163,6 +163,10 @@ class DataBundle:
             with original observation dates.
         excluded_return_rows: Optional table recording session gaps / excluded return dates
             so continuity-sensitive diagnostics (e.g., 250-day Basel window) detect breaks.
+        rf_provenance: Optional per-return table of the decision cutoff, selected observation,
+            value, version, and availability evidence under versioned RF policies.
+        rf_accrual_sensitivity: Optional labelled 91-day bill accrual conversion sensitivity on
+            the same selected quotes. It is not the primary RF and not a realized return.
     """
 
     prices: pd.DataFrame
@@ -175,6 +179,8 @@ class DataBundle:
     excluded_return_rows: pd.DataFrame | None = None
     ex_post_rf_daily: pd.Series | None = None
     quarantined_prices: pd.DataFrame | None = None
+    rf_provenance: pd.DataFrame | None = None
+    rf_accrual_sensitivity: pd.Series | None = None
 
 
 @dataclass(frozen=True)

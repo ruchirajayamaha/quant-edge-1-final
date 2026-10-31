@@ -1,0 +1,81 @@
+Act as an independent quantitative-data reviewer of this EXISTING Quant Edge project.
+Investigate the remaining risk-free-data limitation and propose a concrete, evidence-backed
+solution. This is a bounded read-only research/review task, not a rebuild or another
+generic explanation of look-ahead bias. Do not implement changes or start Step 3 yet.
+
+WORKSPACE
+C:/Users/ruchira/Desktop/qunt
+
+READ THESE FIRST
+- audit/step2_review/STEP2_DATA_AUDIT.md
+- audit/step2_review/R2_VERIFICATION.md
+- audit/step2_review/r2_verification.json
+- handoff/SOLO.md
+- config.yaml
+- src/quantedge/returns.py, data.py and contracts.py
+- tests/test_a_data.py
+- The active snapshot manifest, rf_daily.parquet, rf_daily_ex_post.parquet,
+  and original raw DTB3 quotes.
+
+CURRENT VERIFIED STATE
+- Schema 1.1.0; active dataset qe1_20050101_20261030_r2_cd2904443b.
+- Previous four code findings have been addressed; 21 tests passed on verification.
+- RF forward alignment requires available_at <= previous-session decision_time,
+  using timezone-aware timestamps. In the absence of verified release timestamps,
+  it assumes next Federal Reserve publication business day at16:15 New York time,
+  compared with the preceding NYSE-session16:00 decision cutoff.
+- Ex-post RF is stored separately. Historical first-release timestamps and ALFRED
+  vintage revisions were NOT individually verified. Conversion of DTB3 annual-percent
+  discount yield by252 is an approximate daily proxy, not a measured realized return.
+- Original audited snapshot qe1_20050101_20261030_afb9ce5694 is preserved.
+
+QUESTIONS TO RESOLVE
+1. Can we obtain actual DTB3 vintage values and release-date evidence for the relevant
+   history, using approved FRED/ALFRED/Federal Reserve sources? Inspect real sample
+   responses and report actual coverage, gaps, revision evidence and access constraints.
+   Do not treat today's historical CSV as proof of what was known in the past.
+2. Distinguish observation date, source publication date/time, FRED ingestion/update
+   time and vintage date. An updated timestamp is not necessarily first publication;
+   a vintage date alone does not prove availability before a particular intraday close.
+3. Is our schedule-based assumption reasonable, unnecessarily delayed, or unsafe in
+   any demonstrated cases? Evaluate ordinary days, holidays, timezone/DST and early
+   equity closes where relevant. Separate a proven defect from an unverified assumption.
+4. What improvement is practical: vintage-aware daily as-of data plus a conservative
+   intraday cutoff, verified release timestamps where available, or retaining the
+   disclosed proxy? State exactly which uncertainty each option does and does not remove.
+5. Separately assess DTB3 discount-yield-to-daily-return conversion. If proposing a
+   different conversion or series, explain the required maturity/instrument assumptions,
+   comparison consistency and source eligibility. A different yield series does not
+   automatically become an exact realized daily risk-free return.
+6. Does any remaining issue actually block price-only minimum-variance construction
+   in Step 3, or only particular RF-dependent analyses/claims? Give a direct answer.
+
+PRIMARY STARTING REFERENCES - VERIFY CONTENT, DO NOT ASSUME PERFECT COVERAGE
+https://alfred.stlouisfed.org/series?seid=DTB3
+https://alfred.stlouisfed.org/help
+https://fred.stlouisfed.org/docs/api/fred/series_vintagedates.html
+https://fred.stlouisfed.org/docs/api/fred/series_observations.html
+https://www.federalreserve.gov/releases/h15/
+
+CONSTRAINTS
+- Preserve code/config and both existing snapshots. Save research artifacts separately
+  under audit/rf_research/. Do not change the active pointer or overwrite original data.
+- Prefer a no-key public route when available. If a registered API key is required,
+  document the requirement; never invent one, use a demonstration key as a real key,
+  expose secrets, or say a request succeeded if it did not.
+- No new allocation assets, undisclosed paid data or arbitrary extra lag presented as proof.
+- Do not declare exact historical point-in-time data without the supporting evidence.
+- Use existing Python3.11.venv for bounded sample checks. Do not run thousands of
+  expensive requests before checking access and sample feasibility.
+
+DELIVERABLE
+Write audit/rf_research/RF_RESEARCH_RECOMMENDATION.md with:
+- Direct verdict and whether Step 3 can proceed.
+- Primary-source links, actual sample dates/responses, coverage and failure evidence.
+- A short comparison of feasible solutions, effort and residual uncertainty.
+- Recommended minimal design, affected interfaces/files, snapshot-versioning approach
+  and specific acceptance tests, if an upgrade is supported by evidence.
+- What cannot currently be verified and what additional evidence/access would resolve it.
+
+Report concisely. Do not replace missing evidence with a confident promise, and do not
+rewrite working code merely because you prefer another architecture.

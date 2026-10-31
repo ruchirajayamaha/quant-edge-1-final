@@ -1,0 +1,996 @@
+You are now acting as an elite Quantitative Finance Research Team, Competition Strategist, Financial Risk Modeler, Statistician, Data Scientist, and Academic Research Supervisor.
+
+I have attached the official Quant Edge 1.0 Initial Screening Challenge PDF.
+
+DO NOT treat this as an ordinary university assignment.
+
+Our objective is to design a competition-grade project that maximizes our probability of being selected among the TOP 20 teams out of the 40 registered teams and, ideally, positions us strongly for the Main Challenge.
+
+The official challenge is:
+
+“Risk Across Tails and Timescales”
+
+We must:
+
+“Build a market-risk framework combining copulas and wavelets for a portfolio of your choice.”
+
+The official submission requirements include:
+- Maximum 10-page report excluding cover page and references
+- Complete Python or R code, ready to run
+- One command must reproduce every number and figure in the report
+- README
+- Dependency list
+- Data used OR a script that downloads the data from a public source
+- One final ZIP file, maximum 25 MB
+- Google Drive project link
+- AI usage must be disclosed
+- Deadline: 7 October 2026, 23:59 Sri Lanka time
+
+IMPORTANT:
+The attached PDF is the primary authoritative source for the competition requirements. Do not invent requirements and do not claim that something is mandatory if the official document does not state it.
+
+However, we want to go FAR beyond merely satisfying the minimum requirements.
+
+==================================================
+OUR GOAL
+==================================================
+
+Design a ZERO-TO-HERO, competition-winning-quality project.
+
+I want you to think like:
+1. A quantitative finance competition judge
+2. A senior quant researcher
+3. A portfolio risk manager
+4. A financial econometrician
+5. A wavelet/time-frequency specialist
+6. A copula/tail-risk specialist
+7. A machine-learning/data-science expert
+8. A highly critical academic reviewer
+9. A competition strategist
+
+Do NOT rush into coding.
+
+First understand the problem deeply, then strategically design the best possible project.
+
+==================================================
+CORE PRINCIPLE
+==================================================
+
+All teams receive essentially the same broad challenge.
+
+Therefore, merely using:
+- a portfolio,
+- wavelets,
+- a copula,
+- VaR,
+- Expected Shortfall
+
+is NOT enough to distinguish us.
+
+We need to identify where genuine competitive advantage can come from.
+
+Our project must demonstrate:
+
+• Excellent portfolio selection
+• Strong financial motivation
+• High-quality data
+• Strong statistical methodology
+• Correct wavelet methodology
+• Correct copula methodology
+• Genuine integration of wavelets and copulas
+• Tail-risk analysis
+• Multi-timescale analysis
+• Portfolio-level risk implications
+• Stress/crisis analysis where justified
+• Robustness checks
+• Model comparison
+• Statistical validation
+• Economic interpretation
+• Excellent visualization
+• Reproducibility
+• Clean software architecture
+• Concise but powerful reporting
+• Clear originality
+• Strong competition narrative
+
+==================================================
+PART 1 — DEEPLY ANALYZE THE OFFICIAL CHALLENGE
+==================================================
+
+Before proposing anything:
+
+1. Read the entire attached PDF carefully.
+2. Extract every explicit requirement.
+3. Separate:
+   A. Mandatory requirements
+   B. Recommended best practices
+   C. Optional enhancements
+   D. Things that are NOT specified and therefore must be decided by us
+4. Identify hidden opportunities in the wording of the challenge.
+5. Identify what a strong judging panel is likely to care about.
+6. Do not confuse your inference with official competition requirements.
+7. Clearly label:
+   - “Official requirement”
+   - “Our strategic recommendation”
+   - “Optional enhancement”
+
+Then explain:
+
+“What would make one team’s solution substantially stronger than another team’s solution when all teams are given the same Copula + Wavelet task?”
+
+Be extremely critical.
+
+==================================================
+PART 2 — FIND THE BEST POSSIBLE PORTFOLIO
+==================================================
+
+This is one of the MOST IMPORTANT parts.
+
+Do NOT simply choose 4–5 famous assets randomly.
+
+We want the portfolio itself to be strategically excellent.
+
+Develop a rigorous portfolio-selection framework.
+
+Consider, where relevant:
+
+• Liquidity
+• Data availability
+• Data quality
+• Historical length
+• Missing observations
+• Corporate actions
+• Trading-calendar compatibility
+• Market microstructure issues
+• Diversification
+• Cross-asset dependence
+• Sector concentration
+• Geographic diversification
+• Economic interpretation
+• Crisis sensitivity
+• Tail dependence potential
+• Different volatility characteristics
+• Different timescale behaviour
+• Ability to produce interesting wavelet results
+• Ability to produce meaningful copula results
+• Portfolio-level risk relevance
+• Reproducibility
+• Public accessibility of data
+• Stability of the data source
+• Computational feasibility
+• Suitability for a 10-page report
+• Originality
+• Competition storytelling
+• Potential for visually compelling results
+
+Consider multiple portfolio candidates.
+
+For example, investigate whether the strongest design would be:
+
+A. CSE-only portfolio
+B. Sri Lankan + global assets
+C. Multi-asset portfolio
+D. Equity + commodity + currency + bond/gold/crypto combination
+E. Sector-diversified portfolio
+F. Another strategically superior structure
+
+Do NOT assume any of these is best.
+
+Evaluate them objectively.
+
+Create a PORTFOLIO SELECTION SCORECARD.
+
+For each candidate portfolio, score factors such as:
+
+- Data quality
+- Research value
+- Tail-risk relevance
+- Wavelet suitability
+- Copula suitability
+- Diversification
+- Crisis behaviour
+- Originality
+- Financial interpretation
+- Reproducibility
+- Competition potential
+
+Use a transparent scoring system.
+
+Then recommend:
+
+1. BEST portfolio
+2. SECOND-BEST portfolio
+3. FALLBACK portfolio
+
+Most importantly:
+
+EXPLAIN WHY THE WINNING PORTFOLIO IS BETTER THAN THE ALTERNATIVES.
+
+Do not choose the portfolio based merely on convenience.
+
+==================================================
+PART 3 — DEFINE THE RESEARCH STORY
+==================================================
+
+Create a compelling central research question.
+
+The project should answer a meaningful financial question, not merely demonstrate statistical techniques.
+
+Develop:
+
+• Main research question
+• Sub-research questions
+• Objectives
+• Testable hypotheses where appropriate
+• Expected contribution
+• Financial interpretation
+
+The central story should connect:
+
+MARKET CONDITIONS
+↓
+RETURN DYNAMICS
+↓
+MULTI-TIMESCALE BEHAVIOUR
+↓
+DEPENDENCE STRUCTURE
+↓
+TAIL DEPENDENCE
+↓
+PORTFOLIO RISK
+↓
+RISK MANAGEMENT DECISION
+
+Make the story coherent from beginning to end.
+
+==================================================
+PART 4 — DESIGN THE COMPLETE MATHEMATICAL FRAMEWORK
+==================================================
+
+Now design the mathematical framework from first principles.
+
+Explain and justify:
+
+1. Price data
+2. Log returns
+3. Descriptive statistics
+4. Distributional characteristics
+5. Volatility characteristics
+6. Wavelet decomposition
+7. Choice of wavelet family
+8. Choice of decomposition levels
+9. Boundary effects
+10. Multi-resolution analysis
+11. Scale interpretation
+12. Marginal distribution modelling
+13. Probability integral transform
+14. Dependence modelling
+15. Copula selection
+16. Tail dependence
+17. Joint downside risk
+18. Portfolio aggregation
+19. VaR
+20. Expected Shortfall
+21. Stress testing
+22. Backtesting
+23. Robustness
+
+Most importantly, explain EXACTLY how the Wavelet component and Copula component are integrated.
+
+Do NOT give us two disconnected analyses.
+
+The final framework must genuinely answer:
+
+“How does dependence and tail risk change across timescales?”
+
+==================================================
+PART 5 — WAVELET STRATEGY
+==================================================
+
+Evaluate possible wavelet approaches.
+
+Consider relevant methods such as:
+
+• Discrete Wavelet Transform
+• Maximal Overlap Discrete Wavelet Transform
+• Continuous Wavelet Transform
+• Wavelet variance
+• Wavelet correlation
+• Wavelet covariance
+• Wavelet coherence
+• Wavelet cross-correlation
+• Other relevant methods
+
+Do not use all of them simply to look sophisticated.
+
+Select only methods that genuinely improve the research question.
+
+For every selected method explain:
+
+• Why it is appropriate
+• What question it answers
+• What its mathematical output means
+• How it connects to portfolio risk
+• How it will be visualized
+• What limitations it has
+
+Then select the BEST practical methodology.
+
+==================================================
+PART 6 — COPULA STRATEGY
+==================================================
+
+Do not automatically choose one copula.
+
+Compare relevant candidates, potentially including:
+
+• Gaussian Copula
+• Student-t Copula
+• Clayton
+• Gumbel
+• Frank
+• Other appropriate Archimedean or elliptical copulas
+• Vine copulas if genuinely justified
+
+Evaluate them based on:
+
+• Dependence structure
+• Lower-tail dependence
+• Upper-tail dependence
+• Financial suitability
+• Dimensionality
+• Interpretability
+• Parameter estimation
+• Goodness-of-fit
+• Computational complexity
+• Robustness
+
+Recommend the most appropriate model or model set.
+
+Explain why.
+
+If a t-Copula is recommended, do not merely say it captures tail dependence.
+
+Explain mathematically and financially why.
+
+==================================================
+PART 7 — MULTI-TIMESCALE COPULA FRAMEWORK
+==================================================
+
+This is potentially our strongest competitive advantage.
+
+Design a framework where dependence/tail risk can be evaluated at different timescales.
+
+For example:
+
+Short-term
+Medium-term
+Long-term
+
+But DO NOT blindly assume these are the correct scales.
+
+Determine the scales from the data/methodology.
+
+Show how we can compare:
+
+• Dependence
+• Tail dependence
+• Joint downside probability
+• VaR
+• Expected Shortfall
+• Portfolio risk
+
+across timescales.
+
+Design a clean conceptual diagram.
+
+The framework should answer:
+
+“Does diversification work equally well across all timescales?”
+
+and:
+
+“Does extreme downside dependence become stronger at particular timescales?”
+
+==================================================
+PART 8 — CRISIS / REGIME ANALYSIS
+==================================================
+
+Evaluate whether a market-regime analysis would materially strengthen the project.
+
+Potentially compare:
+
+• Normal periods
+• High-volatility periods
+• Crisis/stressed periods
+
+But do not arbitrarily choose periods.
+
+Define objective criteria.
+
+If regime analysis is included:
+
+• Define the regime mathematically
+• Explain why it is relevant
+• Avoid look-ahead bias
+• Compare dependence
+• Compare tail dependence
+• Compare portfolio risk
+• Interpret the economic meaning
+
+If a regime analysis does not improve the project, say so.
+
+==================================================
+PART 9 — PORTFOLIO CONSTRUCTION
+==================================================
+
+Do not simply assign equal weights without discussion.
+
+Evaluate possible approaches:
+
+• Equal weight
+• Minimum variance
+• Risk parity
+• Volatility targeting
+• Tail-risk-aware weighting
+• Other appropriate methods
+
+Determine which portfolio construction method is most suitable for this competition.
+
+If equal weighting is used, justify it.
+
+If optimization is used, avoid unnecessary over-complexity.
+
+The portfolio construction must remain defensible and reproducible.
+
+==================================================
+PART 10 — RISK METRICS
+==================================================
+
+Determine the strongest set of risk measures.
+
+Consider:
+
+• Volatility
+• VaR
+• Expected Shortfall / CVaR
+• Maximum drawdown
+• Tail dependence coefficient
+• Joint exceedance probability
+• Stress loss
+• Diversification benefit
+• Other relevant measures
+
+Do not overload the report.
+
+Select metrics that directly support the research question.
+
+Explain:
+
+“What should a portfolio manager learn from each metric?”
+
+==================================================
+PART 11 — VALIDATION AND ROBUSTNESS
+==================================================
+
+This section is CRITICAL.
+
+Design a robust validation framework.
+
+Consider:
+
+• Train/test split
+• Rolling-window analysis
+• Out-of-sample evaluation
+• VaR backtesting
+• Expected Shortfall validation
+• Alternative copula specifications
+• Alternative wavelet specifications
+• Alternative portfolio weights
+• Different time periods
+• Crisis vs normal periods
+• Parameter stability
+• Sensitivity analysis
+
+Identify which robustness checks give the highest value relative to the 10-page limit.
+
+Do not include meaningless tests just to make the project look complex.
+
+==================================================
+PART 12 — AVOID ALL COMMON MISTAKES
+==================================================
+
+Create a detailed “failure prevention checklist.”
+
+Look specifically for:
+
+• Look-ahead bias
+• Data leakage
+• Survivorship bias
+• Incorrect treatment of missing prices
+• Incorrect corporate-action treatment
+• Non-synchronous trading
+• Different market calendars
+• Boundary effects in wavelets
+• Incorrect interpretation of wavelet scales
+• Incorrect copula fitting
+• Incorrect marginal transformations
+• Poor tail estimation
+• Overfitting
+• Arbitrary crisis-period selection
+• Data snooping
+• Multiple-testing problems
+• Unjustified model complexity
+• Manual numbers in report
+• Figures not reproducible
+• Random seeds
+• Package/version problems
+• Broken code
+• Hidden local paths
+• Inaccessible data sources
+• ZIP size problems
+
+For every issue provide a prevention strategy.
+
+==================================================
+PART 13 — DATA STRATEGY
+==================================================
+
+Identify the BEST publicly accessible data sources.
+
+Do not just name a source.
+
+Evaluate:
+
+• Reliability
+• Historical coverage
+• Adjusted prices
+• API accessibility
+• Rate limits
+• Reproducibility
+• Stability
+• Licensing/usage considerations
+• Missing data
+• Market holidays
+• Corporate actions
+
+If current web research is necessary, explicitly research it.
+
+Do not fabricate data availability.
+
+Provide a final recommended data acquisition strategy.
+
+==================================================
+PART 14 — SOFTWARE ARCHITECTURE
+==================================================
+
+Design a professional project structure.
+
+For example:
+
+project/
+├── README.md
+├── requirements.txt
+├── main.py
+├── config.py
+├── data/
+├── src/
+├── results/
+├── figures/
+├── tables/
+├── report/
+└── tests/
+
+But optimize the structure for this competition.
+
+The final project must allow a judge to understand and reproduce it easily.
+
+==================================================
+PART 15 — ONE-COMMAND REPRODUCIBILITY
+==================================================
+
+The official requirement says one command must reproduce every number and figure in the report.
+
+Design the exact reproducibility pipeline.
+
+For example:
+
+python main.py
+
+should ideally:
+
+1. Acquire/load data
+2. Clean data
+3. Generate returns
+4. Run diagnostics
+5. Run wavelet analysis
+6. Fit marginals
+7. Fit copulas
+8. Calculate tail dependence
+9. Construct portfolio
+10. Calculate risk metrics
+11. Perform validation
+12. Generate figures
+13. Generate tables
+14. Save outputs
+
+Every number in the report should originate from the code.
+
+No manual copying.
+
+Explain how to guarantee this.
+
+==================================================
+PART 16 — VISUALIZATION STRATEGY
+==================================================
+
+Design a small number of extremely high-value figures.
+
+Do NOT create 30 meaningless plots.
+
+Recommend the most powerful figures, such as:
+
+• Portfolio performance
+• Return distribution
+• Correlation/dependence
+• Wavelet scale analysis
+• Wavelet coherence
+• Tail dependence comparison
+• Copula dependence visualization
+• Portfolio risk across timescales
+• Crisis vs normal comparison
+• VaR/Expected Shortfall
+• Risk heatmap
+
+For every proposed figure explain:
+
+• What question it answers
+• Why a judge would care
+• What data it uses
+• What the x/y axes should be
+• What the key interpretation is
+
+Then select the final figure set that fits within 10 pages.
+
+==================================================
+PART 17 — 10-PAGE REPORT STRATEGY
+==================================================
+
+Design an optimized 10-page report.
+
+Remember:
+
+Cover page and references are excluded from the 10-page limit.
+
+The report should NOT become a textbook.
+
+Every page must contribute to the competition argument.
+
+Create:
+
+Page 1:
+Introduction + research question
+
+Page 2:
+Data + portfolio construction
+
+Page 3:
+Preliminary analysis
+
+Page 4:
+Wavelet methodology/results
+
+Page 5:
+Copula methodology/results
+
+Page 6:
+Integrated multi-timescale framework
+
+Page 7:
+Tail-risk results
+
+Page 8:
+Portfolio risk + stress analysis
+
+Page 9:
+Robustness/validation
+
+Page 10:
+Conclusion + implications
+
+But modify this if you find a better structure.
+
+Provide an exact page-by-page blueprint including:
+
+• Text content
+• Equations
+• Tables
+• Figures
+• Approximate word count
+• What should NOT be included
+
+==================================================
+PART 18 — COMPETITION JUDGE PERSPECTIVE
+==================================================
+
+Act as a very strict judge.
+
+Create a hypothetical scoring framework.
+
+Separate:
+
+OFFICIAL REQUIREMENTS
+from
+LIKELY COMPETITIVE DIFFERENTIATORS.
+
+Then evaluate our proposed project against:
+
+• Technical rigor
+• Financial relevance
+• Statistical validity
+• Originality
+• Integration
+• Interpretation
+• Data quality
+• Robustness
+• Reproducibility
+• Visualization
+• Report quality
+• Practical usefulness
+• Complexity vs clarity
+
+Give each a score from 1–10.
+
+Then ask:
+
+“If 40 teams submit technically valid projects, why should the judges choose this team?”
+
+Give a brutally honest answer.
+
+Identify weaknesses.
+
+Then improve the design.
+
+==================================================
+PART 19 — COMPLEXITY CONTROL
+==================================================
+
+IMPORTANT:
+
+Do NOT equate “more complicated” with “better.”
+
+We have only a 10-page report and limited competition time.
+
+Use the principle:
+
+MAXIMUM INSIGHT
+with
+MINIMUM UNNECESSARY COMPLEXITY.
+
+For every advanced method, answer:
+
+1. What problem does it solve?
+2. Why is it necessary?
+3. What additional insight does it provide?
+4. Can we explain it clearly?
+5. Can we reproduce it?
+6. Can we validate it?
+7. Is it worth the implementation risk?
+
+Remove methods that fail this test.
+
+==================================================
+PART 20 — FINAL RECOMMENDED BLUEPRINT
+==================================================
+
+After all the analysis, produce ONE final recommended blueprint.
+
+It must include:
+
+1. Final project title
+2. One-sentence project pitch
+3. Portfolio composition
+4. Exact asset-selection rationale
+5. Data sources
+6. Data period
+7. Sampling frequency
+8. Data cleaning strategy
+9. Return calculation
+10. EDA
+11. Wavelet method
+12. Wavelet parameters
+13. Timescale definitions
+14. Marginal distribution method
+15. Copula candidates
+16. Copula selection method
+17. Tail-dependence methodology
+18. Portfolio construction
+19. Risk metrics
+20. Stress/regime analysis
+21. Validation
+22. Robustness tests
+23. Final figures
+24. Final tables
+25. Mathematical equations
+26. Algorithm/pseudocode
+27. Software architecture
+28. Reproducibility strategy
+29. README contents
+30. AI disclosure strategy
+31. 10-page report structure
+32. Final ZIP structure
+33. Submission checklist
+34. Timeline from now until submission
+
+==================================================
+PART 21 — IMPLEMENTATION ROADMAP
+==================================================
+
+Give us a step-by-step execution plan from ZERO to FINAL SUBMISSION.
+
+Break it into phases:
+
+PHASE 0 — Strategic decisions
+PHASE 1 — Portfolio and data
+PHASE 2 — Data cleaning
+PHASE 3 — EDA
+PHASE 4 — Wavelet analysis
+PHASE 5 — Copula modelling
+PHASE 6 — Integrated framework
+PHASE 7 — Risk analysis
+PHASE 8 — Validation
+PHASE 9 — Visualization
+PHASE 10 — Report
+PHASE 11 — Reproducibility
+PHASE 12 — Final audit
+PHASE 13 — Submission
+
+For every phase specify:
+
+• Objective
+• Tasks
+• Inputs
+• Outputs
+• Methods
+• Quality checks
+• Common mistakes
+• Completion criteria
+
+==================================================
+PART 22 — DO NOT HIDE ANYTHING
+==================================================
+
+I explicitly want the complete blueprint.
+
+Do NOT give me a superficial summary.
+
+Do NOT say “we can decide this later” unless the decision genuinely requires empirical data.
+
+Do NOT skip technical details.
+
+Do NOT assume that a complicated model is automatically superior.
+
+Do NOT invent competition rules.
+
+Do NOT fabricate data sources, results, statistics, citations, or expected findings.
+
+Do NOT present hypothetical results as real results.
+
+If something requires actual data analysis, clearly label it as:
+
+“TO BE DETERMINED EMPIRICALLY.”
+
+If a decision has multiple defensible alternatives:
+
+1. Explain the alternatives
+2. Compare them
+3. Give a recommendation
+4. Explain why
+5. Give a fallback option
+
+==================================================
+PART 23 — WEB RESEARCH
+==================================================
+
+Where appropriate, use up-to-date web research to verify:
+
+• Current data availability
+• Public data sources
+• Financial datasets
+• Relevant recent academic literature
+• Best practices in copula modelling
+• Best practices in wavelet-based financial analysis
+• Tail-risk methodologies
+• VaR/Expected Shortfall validation
+• Relevant financial-market context
+
+Clearly distinguish:
+
+A. Information from the official competition PDF
+B. External academic literature
+C. Current web research
+D. Your methodological recommendation
+E. Empirical results that must be calculated later
+
+Do not use external information to override the official competition document.
+
+==================================================
+PART 24 — ACADEMIC AND TECHNICAL QUALITY
+==================================================
+
+All equations must be mathematically correct.
+
+All statistical terminology must be used correctly.
+
+All financial terminology must be used correctly.
+
+Every methodological choice must have a reason.
+
+Every result must eventually have a financial interpretation.
+
+Avoid buzzwords.
+
+Avoid unnecessary machine learning simply to impress judges.
+
+If machine learning does not materially improve the core Copula + Wavelet framework, do not force it into the project.
+
+==================================================
+PART 25 — FINAL “WINNING PROJECT” TEST
+==================================================
+
+At the end, perform a brutal final audit.
+
+Ask:
+
+1. Is the portfolio strategically excellent?
+2. Is the research question meaningful?
+3. Is the Wavelet analysis genuinely useful?
+4. Is the Copula analysis genuinely useful?
+5. Are the two methods genuinely integrated?
+6. Are tail events properly addressed?
+7. Are different timescales meaningfully compared?
+8. Is portfolio risk quantified?
+9. Is there strong financial interpretation?
+10. Is there proper validation?
+11. Is there robustness?
+12. Is there no data leakage?
+13. Is the project reproducible?
+14. Is the report within 10 pages?
+15. Can a judge understand it quickly?
+16. Is there a clear competitive advantage?
+17. Is anything unnecessarily complicated?
+18. Is anything important missing?
+19. What would a skeptical judge attack?
+20. How do we fix every weakness?
+
+Then produce:
+
+“FINAL WINNING BLUEPRINT — VERSION 1.0”
+
+with the exact project design we should implement.
+
+==================================================
+IMPORTANT WORKING STYLE
+==================================================
+
+Do NOT jump straight to the final answer.
+
+Think through the problem systematically.
+
+Use structured sections, tables, decision matrices, equations, diagrams in text where useful, and implementation checklists.
+
+Be highly critical.
+
+Assume that other teams are also intelligent and may produce technically competent Copula + Wavelet projects.
+
+Our goal is not to merely participate.
+
+Our goal is to produce a technically rigorous, financially meaningful, statistically defensible, visually compelling, reproducible, competition-grade submission that stands out among the 40 teams.
+
+START BY READING THE ATTACHED OFFICIAL QUANT EDGE 1.0 PDF COMPLETELY.
+
+Then begin with:
+
+“STAGE 1 — OFFICIAL CHALLENGE DECONSTRUCTION”
+
+and proceed systematically through the entire blueprint.

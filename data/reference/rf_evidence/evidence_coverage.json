@@ -1,0 +1,60 @@
+{
+  "evidence_sha256": "bb8e96832a46faeed7f922d80a1aa70ffa406cf003ab754a2d0d5a41c3a016a0",
+  "events_sha256": "557e2ab64f25a8fcab857652a6662e213f76124f4cd164b5d5e6051833ed2f8b",
+  "published_vintages": 5142,
+  "vintages_retrieved": 5142,
+  "vintages_missing": [],
+  "files": {
+    "ledger_files": 338,
+    "legacy_files": 123
+  },
+  "daily_vintage_start": "2006-02-23",
+  "observations": 5493,
+  "versions": 5497,
+  "versions_by_kind": {
+    "initial": 5493,
+    "revision": 3,
+    "withdrawal": 1
+  },
+  "initial_by_basis": {
+    "calendar_and_vintage_same_day": 3613,
+    "vintage_later_than_calendar": 1531,
+    "calendar_fallback_sparse_vintages": 314,
+    "documented_no_release_day": 19,
+    "inferred_no_release_day": 6,
+    "calendar_later_than_vintage": 4,
+    "documented_omission_floor": 4,
+    "unresolved_source_conflict_floor": 2
+  },
+  "initial_by_tier": {
+    "vintage_supported": 3617,
+    "inferred": 1537,
+    "calendar_fallback": 314,
+    "documented": 23,
+    "unresolved": 2
+  },
+  "initial_by_status": {
+    "resolved_day_level": 5177,
+    "sparse_fallback": 314,
+    "unresolved": 2
+  },
+  "value_basis": {
+    "alfred_first_vintage": 5170,
+    "fed_archived_weekly_h15": 323,
+    "alfred_revision_vintage": 3,
+    "alfred_withdrawal": 1
+  },
+  "inexact_initial_versions": [],
+  "inexact_revisions": [],
+  "revisions": [
+    "2004-11-23 2.15 revision 2017-11-13",
+    "2004-11-30 2.19 revision 2017-11-13",
+    "2005-01-07 2.28 revision 2017-11-13",
+    "2011-04-22 nan withdrawal 2011-05-04"
+  ],
+  "archive_pages_parsed": 68,
+  "archive_observations": 323,
+  "archive_value_differs_from_first_vintage": [],
+  "archive_parse_failures": [],
+  "final_value_mismatches_against_r2_raw": []
+}

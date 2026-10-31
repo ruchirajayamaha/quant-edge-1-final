@@ -1,0 +1,346 @@
+{
+ "r3": "qe1_20050101_20261030_r3_6c4633a7ba",
+ "parent": "qe1_20050101_20261030_r2_cd2904443b",
+ "hashes_qe1_20050101_20261030_afb9ce5694": {
+  "files": 13,
+  "bad": []
+ },
+ "hashes_qe1_20050101_20261030_r2_cd2904443b": {
+  "files": 15,
+  "bad": []
+ },
+ "hashes_qe1_20050101_20261030_r3_6c4633a7ba": {
+  "files": 18,
+  "bad": []
+ },
+ "manifest": {
+  "policy_revision": "r3_release_evidence",
+  "parent_dataset_id": "qe1_20050101_20261030_r2_cd2904443b",
+  "schema_version": "1.1.0"
+ },
+ "evidence_sha_matches_manifest": true,
+ "identical_prices": true,
+ "identical_simple_returns": true,
+ "identical_log_returns": true,
+ "identical_quality_flags": true,
+ "identical_excluded_return_rows": true,
+ "identical_raw_etf": true,
+ "identical_raw_dtb3": true,
+ "identical_ex_post_rf": true,
+ "bruteforce_sessions": 5491,
+ "bruteforce_mismatches": [],
+ "all_selected_available_by_cutoff": true,
+ "missing_rf_sessions": 0,
+ "accrual_formula_error_max": 0.0,
+ "research_sample_first_vintage_agreement": {
+  "compared": 1281,
+  "disagree": 0
+ },
+ "initial_versions_first_seen_in_a_requests_first_column": 485,
+ "request_first_columns": 319,
+ "future_invariance_sessions_checked": 2517,
+ "future_invariance_changed": 0,
+ "cases": {
+  "2005-01-12": {
+   "decision_time_utc": "2005-01-11 21:00:00+00:00",
+   "obs_date": "2005-01-07 00:00:00",
+   "version_seq": "0",
+   "value_pct": "2.29",
+   "vintage_date": "2005-06-28 00:00:00",
+   "availability_date": "2005-01-10 00:00:00",
+   "availability_basis": "calendar_fallback_sparse_vintages",
+   "evidence_tier": "calendar_fallback",
+   "coverage_status": "sparse_fallback",
+   "r2_quote": 2.28
+  },
+  "2008-09-22": {
+   "decision_time_utc": "2008-09-19 20:00:00+00:00",
+   "obs_date": "2008-09-16 00:00:00",
+   "version_seq": "0",
+   "value_pct": "0.84",
+   "vintage_date": "2008-09-18 00:00:00",
+   "availability_date": "2008-09-18 00:00:00",
+   "availability_basis": "vintage_later_than_calendar",
+   "evidence_tier": "inferred",
+   "coverage_status": "resolved_day_level",
+   "r2_quote": 0.03
+  },
+  "2015-03-09": {
+   "decision_time_utc": "2015-03-06 21:00:00+00:00",
+   "obs_date": "2015-03-03 00:00:00",
+   "version_seq": "0",
+   "value_pct": "0.02",
+   "vintage_date": "2015-03-04 00:00:00",
+   "availability_date": "2015-03-04 00:00:00",
+   "availability_basis": "calendar_and_vintage_same_day",
+   "evidence_tier": "vintage_supported",
+   "coverage_status": "resolved_day_level",
+   "r2_quote": 0.01
+  },
+  "2016-01-28": {
+   "decision_time_utc": "2016-01-27 21:00:00+00:00",
+   "obs_date": "2016-01-20 00:00:00",
+   "version_seq": "0",
+   "value_pct": "0.26",
+   "vintage_date": "2016-01-21 00:00:00",
+   "availability_date": "2016-01-21 00:00:00",
+   "availability_basis": "calendar_and_vintage_same_day",
+   "evidence_tier": "vintage_supported",
+   "coverage_status": "resolved_day_level",
+   "r2_quote": 0.31
+  },
+  "2017-01-24": {
+   "decision_time_utc": "2017-01-23 21:00:00+00:00",
+   "obs_date": "2017-01-18 00:00:00",
+   "version_seq": "0",
+   "value_pct": "0.52",
+   "vintage_date": "2017-01-19 00:00:00",
+   "availability_date": "2017-01-19 00:00:00",
+   "availability_basis": "calendar_and_vintage_same_day",
+   "evidence_tier": "vintage_supported",
+   "coverage_status": "resolved_day_level",
+   "r2_quote": 0.51
+  },
+  "2018-09-20": {
+   "decision_time_utc": "2018-09-19 20:00:00+00:00",
+   "obs_date": "2018-09-14 00:00:00",
+   "version_seq": "0",
+   "value_pct": "2.12",
+   "vintage_date": "2018-09-17 00:00:00",
+   "availability_date": "2018-09-17 00:00:00",
+   "availability_basis": "calendar_and_vintage_same_day",
+   "evidence_tier": "vintage_supported",
+   "coverage_status": "resolved_day_level",
+   "r2_quote": 2.13
+  },
+  "2019-02-22": {
+   "decision_time_utc": "2019-02-21 21:00:00+00:00",
+   "obs_date": "2019-02-15 00:00:00",
+   "version_seq": "0",
+   "value_pct": "2.38",
+   "vintage_date": "2019-02-19 00:00:00",
+   "availability_date": "2019-02-19 00:00:00",
+   "availability_basis": "calendar_and_vintage_same_day",
+   "evidence_tier": "vintage_supported",
+   "coverage_status": "resolved_day_level",
+   "r2_quote": 2.41
+  },
+  "2020-08-24": {
+   "decision_time_utc": "2020-08-21 20:00:00+00:00",
+   "obs_date": "2020-08-18 00:00:00",
+   "version_seq": "0",
+   "value_pct": "0.09",
+   "vintage_date": "2020-08-19 00:00:00",
+   "availability_date": "2020-08-19 00:00:00",
+   "availability_basis": "calendar_and_vintage_same_day",
+   "evidence_tier": "vintage_supported",
+   "coverage_status": "resolved_day_level",
+   "r2_quote": 0.11
+  },
+  "2021-04-06": {
+   "decision_time_utc": "2021-04-05 20:00:00+00:00",
+   "obs_date": "2021-04-01 00:00:00",
+   "version_seq": "0",
+   "value_pct": "0.02",
+   "vintage_date": "2021-04-02 00:00:00",
+   "availability_date": "2021-04-02 00:00:00",
+   "availability_basis": "calendar_and_vintage_same_day",
+   "evidence_tier": "vintage_supported",
+   "coverage_status": "resolved_day_level",
+   "r2_quote": 0.03
+  },
+  "2023-09-15": {
+   "decision_time_utc": "2023-09-14 20:00:00+00:00",
+   "obs_date": "2023-09-11 00:00:00",
+   "version_seq": "0",
+   "value_pct": "5.32",
+   "vintage_date": "2023-09-12 00:00:00",
+   "availability_date": "2023-09-12 00:00:00",
+   "availability_basis": "calendar_and_vintage_same_day",
+   "evidence_tier": "vintage_supported",
+   "coverage_status": "resolved_day_level",
+   "r2_quote": 5.32
+  },
+  "2023-11-13": {
+   "decision_time_utc": "2023-11-10 21:00:00+00:00",
+   "obs_date": "2023-11-08 00:00:00",
+   "version_seq": "0",
+   "value_pct": "5.28",
+   "vintage_date": "2023-11-09 00:00:00",
+   "availability_date": "2023-11-09 00:00:00",
+   "availability_basis": "calendar_and_vintage_same_day",
+   "evidence_tier": "vintage_supported",
+   "coverage_status": "resolved_day_level",
+   "r2_quote": 5.28
+  },
+  "2025-12-29": {
+   "decision_time_utc": "2025-12-26 21:00:00+00:00",
+   "obs_date": "2025-12-22 00:00:00",
+   "version_seq": "0",
+   "value_pct": "3.56",
+   "vintage_date": "2025-12-23 00:00:00",
+   "availability_date": "2025-12-23 00:00:00",
+   "availability_basis": "calendar_and_vintage_same_day",
+   "evidence_tier": "vintage_supported",
+   "coverage_status": "resolved_day_level",
+   "r2_quote": 3.56
+  },
+  "2026-10-30": {
+   "decision_time_utc": "2026-10-29 20:00:00+00:00",
+   "obs_date": "2026-10-27 00:00:00",
+   "version_seq": "0",
+   "value_pct": "4.05",
+   "vintage_date": "2026-10-28 00:00:00",
+   "availability_date": "2026-10-28 00:00:00",
+   "availability_basis": "calendar_and_vintage_same_day",
+   "evidence_tier": "vintage_supported",
+   "coverage_status": "resolved_day_level",
+   "r2_quote": 4.05
+  }
+ },
+ "r2_selection_reproduced": true,
+ "changes_by_group": {
+  "r2_over_delayed": {
+   "sessions": 12,
+   "value_changed": 9,
+   "signed_mean_quote_bp": 0.75,
+   "mean_abs_quote_bp": 1.5833,
+   "max_abs_quote_bp": 5.0,
+   "max_abs_daily_return_bp": 0.01984,
+   "first": "2014-04-22",
+   "last": "2026-04-07"
+  },
+  "r2_too_early:documented:documented_no_release_day": {
+   "sessions": 19,
+   "value_changed": 16,
+   "signed_mean_quote_bp": -0.6316,
+   "mean_abs_quote_bp": 1.6842,
+   "max_abs_quote_bp": 5.0,
+   "max_abs_daily_return_bp": 0.01984,
+   "first": "2008-12-30",
+   "last": "2019-02-22"
+  },
+  "r2_too_early:documented:documented_omission_floor": {
+   "sessions": 4,
+   "value_changed": 3,
+   "signed_mean_quote_bp": -0.5,
+   "mean_abs_quote_bp": 1.0,
+   "max_abs_quote_bp": 2.0,
+   "max_abs_daily_return_bp": 0.00794,
+   "first": "2018-09-20",
+   "last": "2023-09-15"
+  },
+  "r2_too_early:inferred:inferred_no_release_day": {
+   "sessions": 6,
+   "value_changed": 3,
+   "signed_mean_quote_bp": 0.5,
+   "mean_abs_quote_bp": 0.8333,
+   "max_abs_quote_bp": 3.0,
+   "max_abs_daily_return_bp": 0.0119,
+   "first": "2017-01-24",
+   "last": "2024-12-27"
+  },
+  "r2_too_early:inferred:vintage_later_than_calendar": {
+   "sessions": 1529,
+   "value_changed": 1092,
+   "signed_mean_quote_bp": 0.242,
+   "mean_abs_quote_bp": 2.9745,
+   "max_abs_quote_bp": 81.0,
+   "max_abs_daily_return_bp": 0.32143,
+   "first": "2006-02-24",
+   "last": "2024-06-13"
+  },
+  "r2_too_early:unresolved:unresolved_source_conflict_floor": {
+   "sessions": 2,
+   "value_changed": 1,
+   "signed_mean_quote_bp": -2.0,
+   "mean_abs_quote_bp": 2.0,
+   "max_abs_quote_bp": 4.0,
+   "max_abs_daily_return_bp": 0.01587,
+   "first": "2025-12-29",
+   "last": "2025-12-30"
+  },
+  "same_obs_value_version": {
+   "sessions": 1,
+   "value_changed": 1,
+   "signed_mean_quote_bp": 1.0,
+   "mean_abs_quote_bp": 1.0,
+   "max_abs_quote_bp": 1.0,
+   "max_abs_daily_return_bp": 0.00397,
+   "first": "2005-01-12",
+   "last": "2005-01-12"
+  }
+ },
+ "changes_all": {
+  "sessions": 1573,
+  "value_changed": 1125,
+  "signed_mean_quote_bp": 0.232,
+  "mean_abs_quote_bp": 2.9326,
+  "max_abs_quote_bp": 81.0,
+  "max_abs_daily_return_bp": 0.32143,
+  "first": "2005-01-12",
+  "last": "2026-04-07"
+ },
+ "overall": {
+  "sessions": 5491,
+  "sessions_changed_any_selection": 1573,
+  "sessions_value_changed": 1125,
+  "signed_annual_bp": 0.06647,
+  "absolute_annual_bp": 0.8401,
+  "signed_mean_quote_bp_all_sessions": 0.0665,
+  "mean_abs_quote_bp_all_sessions": 0.8401,
+  "max_abs_quote_bp": 81.0,
+  "worst_date": "2008-09-22",
+  "by_era_mean_abs_quote_bp": {
+   "2005": 0.004,
+   "2006": 1.43,
+   "2007": 6.131,
+   "2008": 7.7,
+   "2009": 1.238,
+   "2010": 0.694,
+   "2011": 0.675,
+   "2012": 0.148,
+   "2013": 0.016,
+   "2014": 0.02,
+   "2015": 0.012,
+   "2016": 0.048,
+   "2017": 0.032,
+   "2018": 0.036,
+   "2019": 0.024,
+   "2020": 0.02,
+   "2021": 0.004,
+   "2022": 0.012,
+   "2023": 0.024,
+   "2024": 0.016,
+   "2025": 0.024,
+   "2026": 0.0
+  }
+ },
+ "accrual_sensitivity": {
+  "annual_gap_bp_full": 4.103,
+  "annual_gap_bp_2021_2026": 7.99,
+  "max_abs_session_bp": 4.876
+ },
+ "selected_sessions_by_tier": {
+  "vintage_supported": 3693,
+  "inferred": 1509,
+  "calendar_fallback": 288,
+  "documented": 1
+ },
+ "selected_sessions_by_status": {
+  "resolved_day_level": 5203,
+  "sparse_fallback": 288
+ },
+ "selected_sessions_by_basis": {
+  "calendar_and_vintage_same_day": 3691,
+  "vintage_later_than_calendar": 1509,
+  "calendar_fallback_sparse_vintages": 288,
+  "calendar_later_than_vintage": 2,
+  "documented_no_release_day": 1
+ },
+ "selected_sessions_by_value_basis": {
+  "alfred_first_vintage": 5194,
+  "fed_archived_weekly_h15": 297
+ },
+ "selected_version_gt0": 0
+}

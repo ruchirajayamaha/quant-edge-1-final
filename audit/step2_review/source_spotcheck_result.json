@@ -1,0 +1,80 @@
+{
+  "dataset_id": "qe1_20050101_20261030_afb9ce5694",
+  "yahoo_windows": [
+    {
+      "name": "covid_all_seven",
+      "tickers": [
+        "SPY",
+        "EFA",
+        "EEM",
+        "AGG",
+        "GLD",
+        "XLE",
+        "XLK"
+      ],
+      "start": "2020-03-06",
+      "end_exclusive": "2020-03-19",
+      "status": "compared",
+      "n_cells_compared": 63,
+      "n_expected_cells": 63,
+      "max_relative_difference": 4.979237823087182e-07,
+      "all_compared_cells_within_1bp": true,
+      "adjustment_method": "fresh unadjusted response Adj Close vs saved auto-adjusted Close"
+    },
+    {
+      "name": "recent_all_seven",
+      "tickers": [
+        "SPY",
+        "EFA",
+        "EEM",
+        "AGG",
+        "GLD",
+        "XLE",
+        "XLK"
+      ],
+      "start": "2026-10-19",
+      "end_exclusive": "2026-10-31",
+      "status": "compared",
+      "n_cells_compared": 70,
+      "n_expected_cells": 70,
+      "max_relative_difference": 0.0,
+      "all_compared_cells_within_1bp": true,
+      "adjustment_method": "fresh unadjusted response Adj Close vs saved auto-adjusted Close"
+    },
+    {
+      "name": "agg_gfc_extreme",
+      "tickers": [
+        "AGG"
+      ],
+      "start": "2008-10-09",
+      "end_exclusive": "2008-10-14",
+      "status": "compared",
+      "n_cells_compared": 3,
+      "n_expected_cells": 3,
+      "max_relative_difference": 8.754976657043488e-07,
+      "all_compared_cells_within_1bp": true,
+      "adjustment_method": "fresh unadjusted response Adj Close vs saved auto-adjusted Close"
+    },
+    {
+      "name": "gold_extreme",
+      "tickers": [
+        "GLD"
+      ],
+      "start": "2026-01-29",
+      "end_exclusive": "2026-02-03",
+      "status": "compared",
+      "n_cells_compared": 3,
+      "n_expected_cells": 3,
+      "max_relative_difference": 0.0,
+      "all_compared_cells_within_1bp": true,
+      "adjustment_method": "fresh unadjusted response Adj Close vs saved auto-adjusted Close"
+    }
+  ],
+  "fred": {
+    "status": "compared",
+    "source": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTB3&cosd=2026-10-19&coed=2026-10-30",
+    "n_observations": 9,
+    "max_abs_annual_percent_difference": 0.0
+  },
+  "scope": "Source consistency of samples, not independent-vendor verification or proof of every historical observation."
+}

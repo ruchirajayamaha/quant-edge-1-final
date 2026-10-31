@@ -1,0 +1,227 @@
+QUANT EDGE 1.0 FINAL ROUND - INDEPENDENT COMPETITION STRATEGY AND PROMPT REVIEW
+
+Act as an independent quantitative-research reviewer, investment-committee judge,
+software reviewer and competition strategist. Our ambition is a submission capable of
+contending for first place: correct, financially useful, reproducible, distinctive and
+exceptionally clear. Translate that ambition into verifiable work, not hype, guaranteed
+rankings or invented claims of perfection. You do not know competitors' private work.
+
+TASK
+Review the OFFICIAL FINAL brief, our existing implementation/prompt plan and actual
+progress. Identify precisely what should be kept, corrected, strengthened, added,
+deferred or removed to make the strongest feasible final-round submission.
+Recommend concrete changes to the prompts we will give Antigravity.
+
+This is a review/design task. Do not implement analytics, edit existing prompt files,
+change config/snapshots/active pointers, publish or deploy. Put review outputs only in
+audit/final_strategy_review/claude_output/. Preserve completed work. Do not restart
+from zero or propose a wholesale rewrite without evidence that a bounded change fails.
+
+WORKSPACE AND SOURCE PRIORITY
+Workspace: C:/Users/ruchira/Desktop/qunt
+
+1. PRIMARY AUTHORITY - read ALL 10 pages:
+   C:/Users/ruchira/Desktop/qunt/Quant edge 1.0 Final Challenge 1.pdf
+   Preserve page references when extracting requirements. Inspect visual tables when
+   text extraction is ambiguous. Do not rely on this prompt's summaries over the PDF.
+2. CURRENT REALITY - inspect actual files, not just old plans:
+   handoff/SOLO.md; data/processed/active_snapshot.json; config.yaml; README.md;
+   requirements.txt; pyproject.toml; AI_DISCLOSURE.md; src/quantedge/; tests/; app/.
+   Distinguish implemented functions from NotImplementedError stubs, verified results
+   from pasted claims, and completed work from future deliverables.
+3. EXISTING PLAN TO REVIEW:
+   antigravity-team-pack/COMMON_CONTEXT.md, CONTRACTS.md, SOLO_START_HERE.md,
+   REVIEW_AND_CORRECTIONS.md, 01_A_DATA_VALIDATION.txt,
+   02_B_PORTFOLIO_DECISIONS.txt, 03_C_RISK_EVT.txt, 04_D_LEAD_APP.txt,
+   05_INTEGRATE_AND_AUDIT.txt and the handoff template.
+   Also inspect initial prompt.txt and the original Antigravity prompt-pack PDF where
+   useful for identifying omissions or scope inflation. These are secondary plans.
+4. CURRENT RF WORK - read the conclusions without repeating the entire research:
+   audit/step2_review/STEP2_DATA_AUDIT.md and R2_VERIFICATION.md;
+   audit/rf_research/RF_RESEARCH_RECOMMENDATION.md, R3_PLAN_REVIEW.md and
+   R3_IMPLEMENTATION_PROMPT.txt. Do not spend this strategy review re-pulling hundreds
+   of RF vintages. Treat r3 as pending unless actual current files prove completion.
+5. STYLE/AMBITION REFERENCE ONLY:
+   audit/final_strategy_review/reference/INITIAL_ROUND_PROMPT.txt
+   This was our earlier SCREENING-round prompt. Borrow its depth, critical thinking
+   and financial narrative, not its challenge-specific rules.
+
+CRITICAL ROUND BOUNDARY
+Do NOT import the screening round's mandatory copula/wavelet integration, free choice
+of assets, Python-or-R permission, 10-page maximum, 25MB ZIP, Google Drive requirement,
+top20-of40 selection objective or7October2026deadline into the FINAL round unless the
+final PDF or a supplied authoritative final-round addendum explicitly requires them.
+Copulas/wavelets are at most optional proposals here, and need a clear value/effort case.
+Do not invent a final deadline, deployment requirement, file limit or guaranteed award.
+Separate coding by one developer from the official team-composition requirement.
+
+RULES AND RUBRIC - VERIFY AGAINST THE PDF
+The final mandate is a conservative USD10M Serendib University Endowment portfolio,
+capital preservation, resilience, income and sustainable real growth. Eligible funds:
+SPY,EFA,EEM,AGG,GLD,XLE,XLK. A single eligible fund or combination is permitted.
+Python and Streamlit are required. Approved core sources are Yahoo via yfinance and
+FRED; WorldBank/IMF context where relevant. Preserve the free-toolkit/data/compute
+fairness requirements as actually written; do not invent extra prohibitions.
+
+Official grading on page10:
+- Investment decision-making30%.
+- Technical rigor and correctness25%.
+- Software and interface quality15%.
+- Innovation and ambition15%.
+- Communication and defence15%.
+Decision usefulness plus correctness carry55%; presentation must expose strong evidence.
+
+Verify complete coverage of every layer and investor deliverable:
+- Markowitz mean-variance/CAPM and interpreted performance KPIs.
+- Historical,parametric,MonteCarlo VaR on the same portfolio at95%and99%, with an
+  evidence-based explanation of agreement/disagreement, plus ES and its rationale.
+- EVT with justified threshold, diagnostics, tail-domain/sample validity and limitations.
+- Selected-model out-of-sample validation: Kupiec,Christoffersen independence,Basel.
+- Marginal/component VaR/ES risk budgeting, position-sizing actions and trade-offs.
+- Actual historical crisis return paths and one justified hypothetical scenario.
+- Defended horizon, objective, constraints and accept/adjust/reject recommendation.
+- Required confidence/method/date sidebar, portfolio/risk/backtest/stress views and
+  clearly labelled plain-language Assumptions & Limitations page.
+- Judge-accessible reproducible repo; one-command app after documented setup;
+  actual7-15page memo; actual1-page tear sheet; required AI disclosure/human validation;
+  final-five10-12minute pitch/deck as applicable.
+- Trace section8.6's one-page plain-English investment recommendation explicitly.
+  Explain how the tear sheet/executive recommendation satisfies its required content,
+  rather than silently omitting it or inventing unnecessary duplicate deliverables.
+- Adjusted prices, calendar/return discipline, flagged data problems, stationarity of
+  the modelling series, disclosed simple-return exceptions and reproducible cleaning.
+Map the exact official text yourself: the above is a checklist, not a substitute PDF.
+
+CURRENT EXECUTION CONTEXT
+We now have one developer using Antigravity sequentially. A/B/C/D files name work areas,
+not four simultaneous developers. Keep the solo workflow unless evidence/user input
+changes it. Setup/data work exists; core portfolio/risk/app functions may still be stubs.
+Our latest verified baseline was schema1.1.0/r2; RF research found publication-calendar
+exceptions and a revision-value issue. Read the live handoff before declaring the state.
+R3 work may now be in progress in uncommitted files. Record the reviewed commit/status;
+do not overwrite that work or count it as verified completion without evidence. If the
+implementation changes during your review, identify the conclusions needing recheck.
+Do not erase/fetch new history merely to make a strategy review look productive.
+Resource/time limits and final deadline are not confirmed here. State assumptions and
+give a feasible core-plus-extension plan instead of inventing hours, quotas or completion.
+
+REQUIRED REVIEW
+
+A. OFFICIAL COMPLIANCE AND CURRENT GAPS
+Build a requirements matrix: requirement ID, PDF page/section, obligation/allowed
+discretion, current evidence/file, status, gap, proposed action, verification artifact.
+Use statuses verified/implemented-unverified/planned/missing/ambiguous. Do not award
+compliance to a placeholder, draft skeleton, assumed future feature or unrun test.
+Separate actual rules, our implementation choices, external best practices and your
+inferences. Flag unresolved rules/addenda without blocking all independent review.
+
+B. WHAT WOULD MAKE THIS A SERIOUS FIRST-PLACE CONTENDER?
+For EACH rubric category explain:
+1. What an excellent submission would demonstrate, in concrete observable terms.
+2. Where our current plan is strong/weak and the evidence for that judgement.
+3. The highest-value improvement, its deliverable and objective acceptance check.
+4. The failure that could lose marks despite a polished app.
+Do not invent judge preferences or numerical score predictions. Clearly label any
+internal planning score as subjective prioritization, not official scoring or win probability.
+
+Give a concise project thesis linking client mandate -> allocation choice -> measured
+downside -> validation -> stress -> practical portfolio action -> monitoring/reconsideration.
+The thesis is a hypothesis/framework pending results; do not predetermine final weights,
+the best model or an accept/adjust/reject outcome. Negative findings can be decisive evidence.
+
+C. DIFFERENTIATION WITHOUT A METHOD COLLECTION
+Compare a SMALL shortlist of potential signature contributions. Candidates to evaluate,
+not predetermined selections, include:
+- A mandate-feasibility/return-versus-downside frontier with uncertainty and clear
+  explanations of when no eligible allocation meets the proposed client constraints.
+- Conditional EVT versus transparent baselines, with honest OOS/threshold evidence.
+- An interpretable lagged risk overlay using only eligible assets, with costs, false
+  alarms and an honest return-versus-protection comparison.
+- A well-defined reverse stress/scenario-loss tolerance tool or model-disagreement
+  decision panel, if it changes an actual committee decision.
+You may propose a stronger alternative. Rank them by rubric relevance, financial value,
+testability, implementation effort, failure risk, runtime, reproducibility and viva burden.
+Recommend ONE primary extension and at most ONE cheap complementary feature after
+the mandatory core. Give explicit keep/kill criteria and a simpler fallback.
+
+Distinguish standard methodology, thoughtful integration and genuine new empirical
+contribution. Never say 'nobody has done this', 'world first' or 'better than every team'
+without evidence. Use focused primary-source research to verify technical feasibility
+and relevant literature. Do not crawl competitor-private work or add paid data. Cite
+actual papers/official docs with links and explain their relevance. If research is
+unavailable, say so; do not fabricate references or claim novelty is established.
+
+D. DECISION QUALITY AND SCIENTIFIC DEFENSIBILITY
+Assess whether constraints/objectives fit the actual mandate rather than optimise a
+nice backtest. Check nominal/real/spending/fee arithmetic, feasibility, AGG duration
+risk, GLD income limitations, equity concentration/ETF overlap, benchmark fairness and
+allocation stability. Distinguish team assumptions from client-provided limits.
+
+Design validation before selection: frozen chronology, pre-return weights, holdings
+drift, costs, honest tuning/holdout treatment, fair same-sample comparisons, sensitivity
+to estimation windows/thresholds/constraints and quantified uncertainty where useful.
+Do not use the final test to choose parameters and then call it untouched evaluation.
+Replaying current weights through an old crisis is a scenario, not an investable OOS record.
+
+Audit the PROMPTS for preventable scientific traps: simple/log P&L mismatch, loss signs,
+annualisation, shared normal moments and empirical ES tails, Euler consistency,
+EVT support/xi limits/modified scale/sufficient exceedances, valid fitted-GPD GOF,
+90% requests below a tail threshold, Basel99%/250-day applicability and low power,
+RF observation/version/publication distinctions, and deterministic scenario loss vs ES.
+Normal analytic VaR and normal MC should agree within simulation error; do not manufacture
+model disagreement. Each suggested advanced method needs an independent check and
+a plain-language explanation that a student team can defend.
+
+E. COMMITTEE EXPERIENCE, REPORT AND VIVA
+Design the first90seconds of the judge's experience using REAL computed outputs once
+available: what decision is being considered, the return/downside trade-off, losses in
+USD on10M, key stress failures, uncertainty and evidence behind the recommendation.
+Propose a restrained page/visual hierarchy and what each high-value figure teaches.
+Avoid number walls, misleading green badges, unsupported precision and cosmetic novelty.
+
+Provide a7-15page memo blueprint,1-page tear-sheet content hierarchy and final-five
+10-12minute pitch structure, each tied to rubric evidence. Plan final pagination checks;
+Markdown length alone is not a checked document. Include10skeptical viva questions
+with the evidence needed to answer; use answer frameworks, not invented results.
+Human judgement must remain human-developed/evaluated and AI assistance disclosed.
+
+F. EXACT CHANGES TO ANTIGRAVITY PROMPTS
+This is essential: do not finish with only a generic strategic essay.
+For each material change provide:
+- change ID; target file and milestone/section;
+- current weakness/conflict with evidence;
+- proposed concise replacement or insertion text, ready for us to apply later;
+- mandatory rule or rubric category served;
+- input/dependency, expected output and acceptance check;
+- effort/risk, whether now/core/post-core, and what to defer/remove to pay for it.
+
+Review the common rules, solo sequence, B1portfolio, A2KPIs/A3validation, C1risk/C2EVT,
+B2/B3decision evidence, D app/docs and final audit prompts. Make sure shared changes
+remain consistent across runtime contracts and callers. Older design docs do not
+authorise downgrading the current runtime schema or replacing validated snapshots.
+Keep completed milestones completed. Separate RF-r3 correctness work from competitive
+extensions. Budget attention according to materiality without hiding a known defect.
+
+Prioritise changes in three groups: must fix for rules/correctness; strongest competitive
+improvements; defer/cut. Reject features with weak decision value, weak evidence or
+excessive integration/viva cost. Identify a minimum complete defensible submission and
+the strongest feasible version above it. Do not call either guaranteed first place.
+
+OUTPUTS - WRITE NEW REVIEW FILES ONLY
+Under audit/final_strategy_review/claude_output/ produce:
+1. FINAL_ROUND_REVIEW.md: source/requirements matrix, rubric assessment, central thesis,
+   ranked differentiators, validation/communication design and priority roadmap.
+2. PROPOSED_PROMPT_CHANGES.md: precise unapplied per-file changes/replacement blocks.
+3. REVIEW_SUMMARY_FOR_CODEX.md: <=700words containing the essential corrections,
+   top differentiator with rationale/fallback, decisions still empirical, and ordered
+   next actions. This is the summary I will paste back into Codex for integration.
+
+Keep the main review focused, roughly2000-3500words plus necessary tables/change blocks.
+Use specific facts and trade-offs instead of repeated role-play or25generic sections.
+Label results requiring computation TO BE DETERMINED EMPIRICALLY. Do not ask broad
+questions before doing the available review; identify only genuinely decisive missing
+inputs, without treating elapsed time as an answer or approval.
+
+Finish by stating what should change in our CURRENT prompts, what should stay,
+the next bounded task, and what would make the first-place ambition credible in evidence.
+Stop after the review. Do not implement your proposed changes yet.

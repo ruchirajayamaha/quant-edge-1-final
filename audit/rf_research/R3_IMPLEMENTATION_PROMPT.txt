@@ -1,0 +1,63 @@
+Implement the RF-only r3 upgrade before RF-dependent SOLO STEP 4.
+This task does not authorize unrelated analytics, publication or architecture rewrites.
+
+Read:
+- audit/rf_research/RF_RESEARCH_RECOMMENDATION.md
+- audit/rf_research/R3_PLAN_REVIEW.md
+- Relevant existing evidence/scripts, current contracts/config and handoff/SOLO.md.
+
+Proceed with the evidence-calendar plus complete vintage-history approach, with these
+required corrections to the original recommended design:
+
+1. VALUE VINTAGES, NOT JUST AVAILABILITY DATES
+   Do not keep today's revised raw value and claim it was known at the first observation
+   appearance. Store supported observation versions with value, vintage/evidence date,
+   availability policy, source and coverage status. For each decision cutoff select the
+   eligible version of the most recent eligible observation. A late revision to an older
+   observation must not replace a newer available quote just because its revision arrived last.
+   Handle the documented2005-01-07original2.29% versus corrected2.28% case using archived
+   evidence; do not inject the2017correction into a2005decision. Label unresolved early
+   history rather than asserting complete historical point-in-time correctness.
+
+2. COMPLETE AND VALIDATE CHUNK BOUNDARIES
+   Reuse existing valid downloads. Use the tested ordinary ALFRED GET route, at most12
+   vintages per request, throttled and cached. Respect failures/rate limits and report gaps.
+   Validate exact requested/returned vintage headers, not merely response success/count.
+   Globally sort/deduplicate vintages and detect appearances/changes ACROSS chunk boundaries.
+   Do not reuse the sampled-analysis rule that discards everything already non-null in
+   each chunk's first vintage. Add a boundary regression.
+
+3. EVIDENCE-BASED AVAILABILITY
+   Correct documented closures, omitted Treasury releases and Good-Friday/blank-day
+   overgeneralizations. Combine publication evidence and vintage evidence conservatively
+   at day level, keeping the existing timezone-aware decision cutoff. Keep documented,
+   inferred and unresolved cases separate. Do not describe an absent ALFRED vintage as
+   independently proven Board closure or claim exact intraday history.
+   Retain explicit coverage/fallback labels for pre-2006sparse history; never delay all
+   old observations until the first June2005vintage. Save per-return provenance with
+   observation date, selected value/version, availability evidence and decision cutoff.
+
+4. BOUNDED RF-ONLY VERSIONING
+   Create r3_release_evidence derived from r2. Preserve v1/r2 and their manifests bit-for-bit.
+   Prices, simple returns and log returns must equal r2 exactly. Do not redownload ETF data.
+   Include evidence/policy hashes in provenance and cache identity; remove hard-coded_r2_
+   identifier assumptions. Update runtime contracts only if necessary, consistently.
+   Keep DTB3 /252 as primary. Add91-dayaccrual only as a clearly labelled conversion
+   sensitivity, separately from the availability correction. Neither is an exact realized return.
+
+5. REQUIRED CHECKS AND FINISH
+   Add focused tests for documented closure/omission cases, known January2005revision,
+   as-of version selection, chunk-boundary appearances, sparse-era fallback, future-data
+   invariance, original hash preservation and r2/r3cache isolation. Run existing tests,
+   independently recompute the RF selection on representative cases, and verify offline loading.
+   Report coverage gaps and confirmed/inferred case counts separately. Show signed and
+   absolute/per-session effects; signed average differences are not worst-case bounds.
+
+Build the candidate separately, then activate it only if actual integrity/regression/offline
+checks pass. Preserve old snapshots and truthful human-validation=PENDING status. Update
+config/manifest/quality notes, AI disclosure, changelog and handoff/SOLO.md. Correct current
+r2conservative wording while preserving earlier audit documents as historical records.
+
+Return a concise completion report: implementation files, parent/new dataset IDs,
+coverage/fallback counts, checks actually run/results, exact remaining limitations and
+next solo milestone. Do not promise a half-day completion or perfect evidence coverage.

@@ -11,7 +11,7 @@ import json
 from pathlib import Path
 
 from quantedge.config import DEFAULT_CONFIG_PATH, load_config
-from quantedge.data import derive_snapshot_from_existing, load_data
+from quantedge.data import activate_snapshot, derive_snapshot_from_existing, load_data
 
 
 def main() -> None:
@@ -38,11 +38,26 @@ def main() -> None:
         default=None,
         help="Derive a hardened policy-revision snapshot offline from an existing verified dataset_id.",
     )
+    parser.add_argument(
+        "--candidate",
+        action="store_true",
+        help="With --derive-from, leave the active snapshot pointer unchanged.",
+    )
+    parser.add_argument(
+        "--activate",
+        type=str,
+        default=None,
+        help="Point the active snapshot at this dataset_id after verifying it loads offline.",
+    )
     args = parser.parse_args()
 
     cfg = load_config(args.config)
-    if args.derive_from:
-        bundle = derive_snapshot_from_existing(cfg, source_dataset_id=args.derive_from)
+    if args.activate:
+        bundle = activate_snapshot(cfg, dataset_id=args.activate)
+    elif args.derive_from:
+        bundle = derive_snapshot_from_existing(
+            cfg, source_dataset_id=args.derive_from, activate=not args.candidate
+        )
     else:
         bundle = load_data(cfg, offline=args.offline, refresh=args.refresh)
     m = bundle.manifest

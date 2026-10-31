@@ -1,0 +1,5 @@
+# Snapshot manifests and release evidence verify exact bytes with SHA-256.
+# Preserve those bytes across Windows, Linux, and macOS checkouts.
+# Raw evidence also retains provider whitespace; code keeps normal whitespace checks.
+/data/** -text -whitespace
+/audit/** -text -whitespace

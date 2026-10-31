@@ -30,3 +30,8 @@ tmp/
 # OS metadata
 .DS_Store
 Thumbs.db
+
+# Local audit runtime caches; retain the actual audit reports and evidence
+audit/**/yfinance_cache/
+audit/**/pytest_temp*/
+audit/**/pytest_*_temp/

@@ -1,4 +1,4 @@
-# Quant Edge 1.0 — Shared Baseline Configuration (D0 / SOLO STEP 2 Hardened)
+# Quant Edge 1.0 — Shared Baseline Configuration (D0 / SOLO STEP 2 RF r3)
 # Contract schema version: 1.1.0
 # Governance choices marked PROVISIONAL_* or PENDING_* are explicit placeholders
 # and must be reviewed, justified, and signed off by the human team.
@@ -59,7 +59,9 @@ data:
   rf_quote_basis: "annual_percent_discount_basis"
   rf_conversion_formula: "(rate_pct / 100.0) / 252"
   rf_trading_days_per_year: 252
-  rf_alignment_policy: "h15_schedule_1615_ny_before_prev_nyse_close_1600_ny"
+  rf_alignment_policy: "r3_versioned_release_evidence_day_level"
+  rf_evidence_path: "data/reference/rf_evidence/dtb3_rf_versions.parquet"
+  rf_evidence_sha256: "bb8e96832a46faeed7f922d80a1aa70ffa406cf003ab754a2d0d5a41c3a016a0"
   rf_availability_lag_sessions: 1
   rf_decision_timezone: "America/New_York"
   rf_decision_cutoff_time: "16:00:00"

@@ -42,6 +42,7 @@ from quantedge.contracts import (
     DataBundle,
     DataManifest,
 )
+from quantedge.rf_evidence import RF_VERSION_TABLE_COLUMNS, rf_accrual_91d_sensitivity
 from quantedge.returns import (
     EXCLUDED_RETURN_COLUMNS,
     RFAlignmentMode,
@@ -50,7 +51,13 @@ from quantedge.returns import (
     compute_session_returns,
     expected_nyse_sessions,
     run_stationarity_diagnostics,
+    select_rf_versions_asof,
 )
+
+RF_POLICY_R2: str = "h15_schedule_1615_ny_before_prev_nyse_close_1600_ny"
+RF_POLICY_R3: str = "r3_versioned_release_evidence_day_level"
+POLICY_REVISION_R2: str = "r2_hardened"
+POLICY_REVISION_R3: str = "r3_release_evidence"
 
 
 class DataUnavailableError(RuntimeError):
@@ -737,9 +744,10 @@ def generate_quality_report_markdown(
         "- **Simple returns (`simple_returns`):** Used for cross-sectional portfolio aggregation (`R_{p,t} = sum_i w_{i,t-} R_{i,t}`) and committee simple-loss risk (`L_t = -R_{p,t}`), because dollar NAV P&L aggregates linearly across holdings at horizon `t` whereas `sum_i w_i log(1 + R_{i,t}) != log(1 + R_{p,t})` (Jensen's inequality).",
         "- **Log returns (`log_returns = log1p(simple_returns)`):** Additive across time (`log(P_T / P_0) = sum_t r_t`), used for time-series statistical diagnostics (ADF stationarity tests, correlation tables, and volatility-regime screening).",
         "- **US exchange close vs. foreign underlying hours (`EFA`, `EEM`):** All seven ETFs trade synchronously on US exchanges through the `16:00 America/New_York` close, so portfolio execution and NAV valuation share a synchronous US close; however, `EFA` and `EEM` hold foreign equities whose local cash markets close earlier, meaning their `16:00 ET` ETF closes embed US afternoon price discovery / fair-value adjustments relative to local foreign closes.",
-        f"- **Forward-decision risk-free proxy (`rf_daily.parquet`, policy `{m.rf_convention.get('alignment_policy')}`):** `{m.rf_convention['series']}` quoted in `{m.rf_convention['quote_basis']}`, converted via `{m.rf_convention['conversion_formula']}` (`no_backfill = {m.rf_convention['no_backfill']}`). Decision cutoff for return session `t` is the preceding NYSE close at `{m.rf_convention.get('decision_cutoff_time')} {m.rf_convention.get('decision_timezone')}`, compared against conservative Federal Reserve H.15 publication availability (`{m.rf_convention.get('assumed_h15_release_time')} {m.rf_convention.get('decision_timezone')}` on the `{m.rf_convention['availability_lag_sessions']}`-th Federal Reserve business day strictly after `obs_date`, requiring `available_at <= decision_time`). Because `16:15 ET > 16:00 ET`, observations posted on decision day `t_{{-1}}` at `16:15 ET` are excluded at `t_{{-1}}` `16:00 ET`.",
+        f"- **Forward-decision risk-free proxy (`rf_daily.parquet`, policy `{m.rf_convention.get('alignment_policy')}`):** `{m.rf_convention['series']}` quoted in `{m.rf_convention['quote_basis']}`, converted via `{m.rf_convention['conversion_formula']}` (`no_backfill = {m.rf_convention['no_backfill']}`). {m.rf_convention['lag_rule']}",
         f"- **Contemporaneous ex-post risk-free proxy (`rf_daily_ex_post.parquet`):** Matches `obs_date <= t` strictly for ex-post reference (never for forward decisions); differs from `rf_daily` on `{m.rf_convention.get('n_days_forward_differs_from_ex_post', 0)}` of `{len(bundle.simple_returns)}` return sessions.",
         f"- **Publication & vintage limitation:** {m.rf_convention['limitation_note']}",
+        *_rf_evidence_report_lines(m),
         "",
         "## 4. Augmented Dickey-Fuller (ADF) Stationarity Diagnostics on Log Returns",
         "> **Interpretation caveat:** Rejecting the unit-root null (`p < 0.05`) supports level/mean stationarity (`I(0)`) of daily log returns; it does **not** imply i.i.d. returns, Gaussian tails, or constant conditional variance (volatility clustering remains prominent).",
@@ -755,9 +763,28 @@ def generate_quality_report_markdown(
     return "\n".join(lines)
 
 
+def _rf_evidence_report_lines(m: DataManifest) -> list[str]:
+    """Render the coverage and conversion lines of a versioned RF snapshot's quality report."""
+    coverage = m.rf_convention.get("evidence_coverage")
+    if not coverage:
+        return []
+    return [
+        f"- **Evidence coverage of selected RF values (`rf_provenance.parquet`):** `{coverage}`",
+        (
+            f"- **Conversion sensitivity (`{m.rf_convention['accrual_sensitivity_file']}`):** "
+            f"{m.rf_convention['accrual_sensitivity_note']}"
+        ),
+    ]
+
+
+def _rf_policy_revision(rf_alignment_policy: str) -> str:
+    """Return the snapshot policy revision implied by the configured RF policy."""
+    return POLICY_REVISION_R3 if rf_alignment_policy == RF_POLICY_R3 else POLICY_REVISION_R2
+
+
 def _rf_policy_to_mode(rf_alignment_policy: str) -> RFAlignmentMode:
     """Map configuration ``rf_alignment_policy`` identifier to ``align_risk_free_rate`` mode."""
-    if rf_alignment_policy == "h15_schedule_1615_ny_before_prev_nyse_close_1600_ny":
+    if rf_alignment_policy in (RF_POLICY_R2, RF_POLICY_R3):
         return "forward_decision"
     if rf_alignment_policy == "ex_post_same_date":
         return "ex_post"
@@ -845,7 +872,7 @@ def _build_dataset_id(
     prices: pd.DataFrame,
     raw_rf: pd.DataFrame | None,
     *,
-    policy_revision: str = "r2_hardened",
+    policy_revision: str = POLICY_REVISION_R2,
 ) -> str:
     """Compute a deterministic policy-aware dataset identifier from bounds, policy, and content hashes."""
     hasher = hashlib.sha256()
@@ -862,6 +889,8 @@ def _build_dataset_id(
         "rf_decision_cutoff_time": cfg.data.rf_decision_cutoff_time,
         "rf_release_time": cfg.data.rf_release_time,
     }
+    if cfg.data.rf_alignment_policy == RF_POLICY_R3:
+        policy_meta["rf_evidence_sha256"] = cfg.data.rf_evidence_sha256
     hasher.update(json.dumps(policy_meta, sort_keys=True, separators=(",", ":")).encode("utf-8"))
     hasher.update(prices.to_csv(float_format="%.12g").encode("utf-8"))
     if raw_rf is not None and not raw_rf.empty:
@@ -869,7 +898,8 @@ def _build_dataset_id(
     short_sha = hasher.hexdigest()[:10]
     s_clean = cfg.data.requested_start.replace("-", "")
     e_clean = actual_end.replace("-", "")
-    return f"qe1_{s_clean}_{e_clean}_r2_{short_sha}"
+    revision_tag = policy_revision.split("_", 1)[0]
+    return f"qe1_{s_clean}_{e_clean}_{revision_tag}_{short_sha}"
 
 
 def _persist_snapshot(
@@ -891,11 +921,18 @@ def _persist_snapshot(
     ex_post_rf_daily: pd.Series,
     quality_flags: pd.DataFrame,
     retrieved_at_utc: str,
-    policy_revision: str = "r2_hardened",
+    policy_revision: str = POLICY_REVISION_R2,
     parent_dataset_id: str | None = None,
     extra_notes: Sequence[str] = (),
+    rf_version_table: pd.DataFrame | None = None,
+    rf_provenance: pd.DataFrame | None = None,
+    rf_accrual_sensitivity: pd.Series | None = None,
+    activate: bool = True,
 ) -> DataBundle:
-    """Write raw & processed snapshot files, compute SHA-256 hashes, and write ``manifest.json``."""
+    """Write raw & processed snapshot files, compute SHA-256 hashes, and write ``manifest.json``.
+
+    With ``activate=False`` the snapshot is a candidate: the active pointer is left unchanged.
+    """
     actual_start = grid_prices.index[0].strftime("%Y-%m-%d")
     actual_end = grid_prices.index[-1].strftime("%Y-%m-%d")
 
@@ -917,6 +954,19 @@ def _persist_snapshot(
     snap_proc_dir.mkdir(parents=True, exist_ok=True)
 
     written_files: list[Path] = []
+
+    if rf_version_table is not None:
+        versions_path = snap_raw_dir / "dtb3_rf_versions.parquet"
+        rf_version_table.to_parquet(versions_path, engine="pyarrow", index=False)
+        written_files.append(versions_path)
+    if rf_provenance is not None:
+        provenance_path = snap_proc_dir / "rf_provenance.parquet"
+        rf_provenance.to_parquet(provenance_path, engine="pyarrow", index=True)
+        written_files.append(provenance_path)
+    if rf_accrual_sensitivity is not None:
+        accrual_path = snap_proc_dir / "rf_daily_accrual_91d_sensitivity.parquet"
+        rf_accrual_sensitivity.to_frame().to_parquet(accrual_path, engine="pyarrow", index=True)
+        written_files.append(accrual_path)
 
     raw_prices_path = snap_raw_dir / "etf_prices_raw.parquet"
     observed_prices.to_parquet(raw_prices_path, engine="pyarrow", index=True)
@@ -1070,6 +1120,55 @@ def _persist_snapshot(
         ).sum()
     )
 
+    if cfg.data.rf_alignment_policy == RF_POLICY_R3:
+        release_calendar = (
+            "evidence_calendar_documented_and_inferred_no_release_days_alfred_listed_good_fridays"
+        )
+        verification = "day_level_vintage_and_notice_evidence_intraday_unverified"
+        lag_rule = (
+            f"Decision cutoff for return session t is the preceding NYSE session close at "
+            f"{cfg.data.rf_decision_cutoff_time} {cfg.data.rf_decision_timezone}. Each DTB3 "
+            f"observation version is usable from {cfg.data.rf_release_time} "
+            f"{cfg.data.rf_decision_timezone} on its availability date. From the daily-vintage era "
+            f"that date is the latest of the evidence calendar, the ALFRED vintage date, and any "
+            f"documented omission date; sparse early history keeps the schedule calendar as a "
+            f"labelled fallback. At each cutoff the most recent eligible observation is selected, "
+            f"using its latest eligible version, with zero backfill."
+        )
+        limitation_note = (
+            "DTB3 is quoted in annual percent on a 360-day bank-discount basis; "
+            "(rate_pct / 100.0) / 252 is an approximate trading-day risk-free proxy, not an exact "
+            "realized T-bill holding-period return. Availability is day-level evidence, not a "
+            "verified intraday first-release time: ALFRED vintage dates can trail or precede the "
+            "source release. Sparse history before the daily-vintage era is a labelled calendar "
+            "fallback, and cases marked inferred or unresolved in rf_provenance.parquet are not "
+            "proven. This is not exact historical point-in-time data."
+        )
+    else:
+        release_calendar = (
+            "us_federal_reserve_h15_opm_holidays_plus_good_friday_and_special_closures"
+        )
+        verification = "unverified_schedule_proxy_alfred_vintages_not_fetched"
+        lag_rule = (
+            f"Decision cutoff for return session t is the preceding NYSE session close at "
+            f"{cfg.data.rf_decision_cutoff_time} {cfg.data.rf_decision_timezone}. Under "
+            f"policy={cfg.data.rf_alignment_policy}, observation dated d becomes usable on the "
+            f"{cfg.data.rf_availability_lag_sessions}-th Federal Reserve H.15 publication "
+            f"business day strictly after d at {cfg.data.rf_release_time} "
+            f"{cfg.data.rf_decision_timezone}, requiring available_at <= decision_time "
+            f"(backward merge_asof; zero backfill). Contemporaneous ex-post proxy (obs_date <= t) "
+            f"is stored separately in rf_daily_ex_post.parquet."
+        )
+        limitation_note = (
+            "DTB3 is quoted in annual percent on a 360-day bank-discount basis; "
+            "(rate_pct / 100.0) / 252 is an approximate trading-day risk-free proxy, not an "
+            "exact realized T-bill holding-period return. Historical first-release timestamps "
+            "and ALFRED vintage revisions were NOT individually verified across 2004-2026; "
+            "forward-decision availability uses a Federal Reserve H.15 16:15 America/New_York "
+            "schedule proxy and US federal holiday calendar, which misses Board closures and "
+            "omitted Treasury data."
+        )
+
     rf_convention: dict[str, Any] = {
         "series": cfg.data.fred_rf_series,
         "quote_basis": cfg.data.rf_quote_basis,
@@ -1080,34 +1179,33 @@ def _persist_snapshot(
         "decision_timezone": cfg.data.rf_decision_timezone,
         "decision_cutoff_time": cfg.data.rf_decision_cutoff_time,
         "assumed_h15_release_time": cfg.data.rf_release_time,
-        "release_calendar": (
-            "us_federal_reserve_h15_opm_holidays_plus_good_friday_and_special_closures"
-        ),
-        "release_timestamp_verification": (
-            "unverified_schedule_proxy_alfred_vintages_not_fetched"
-        ),
+        "release_calendar": release_calendar,
+        "release_timestamp_verification": verification,
         "ex_post_series_file": "rf_daily_ex_post.parquet",
         "n_days_forward_differs_from_ex_post": n_rf_diff_days,
-        "lag_rule": (
-            f"Decision cutoff for return session t is the preceding NYSE session close at "
-            f"{cfg.data.rf_decision_cutoff_time} {cfg.data.rf_decision_timezone}. Under "
-            f"policy={cfg.data.rf_alignment_policy}, observation dated d becomes usable on the "
-            f"{cfg.data.rf_availability_lag_sessions}-th Federal Reserve H.15 publication "
-            f"business day strictly after d at {cfg.data.rf_release_time} "
-            f"{cfg.data.rf_decision_timezone}, requiring available_at <= decision_time "
-            f"(backward merge_asof; zero backfill). Contemporaneous ex-post proxy (obs_date <= t) "
-            f"is stored separately in rf_daily_ex_post.parquet."
-        ),
+        "lag_rule": lag_rule,
         "no_backfill": cfg.data.rf_no_backfill,
-        "limitation_note": (
-            "DTB3 is quoted in annual percent on a 360-day bank-discount basis; "
-            "(rate_pct / 100.0) / 252 is an approximate trading-day risk-free proxy, not an "
-            "exact realized T-bill holding-period return. Historical first-release timestamps "
-            "and ALFRED vintage revisions were NOT individually verified across 2004-2026; "
-            "forward-decision availability uses the conservative Federal Reserve H.15 16:15 "
-            "America/New_York publication schedule and US federal holiday calendar."
-        ),
+        "limitation_note": limitation_note,
     }
+    if rf_version_table is not None and rf_provenance is not None:
+        rf_convention.update(
+            {
+                "evidence_sha256": cfg.data.rf_evidence_sha256,
+                "evidence_source_path": cfg.data.rf_evidence_path,
+                "evidence_coverage": {
+                    "selected_sessions_by_tier": rf_provenance["evidence_tier"].value_counts().to_dict(),
+                    "selected_sessions_by_status": rf_provenance["coverage_status"].value_counts().to_dict(),
+                    "versions_by_tier": rf_version_table["evidence_tier"].value_counts().to_dict(),
+                    "versions_by_kind": rf_version_table["version_kind"].value_counts().to_dict(),
+                },
+                "accrual_sensitivity_file": "rf_daily_accrual_91d_sensitivity.parquet",
+                "accrual_sensitivity_note": (
+                    "91-day bill accrual on the same selected quotes, (1/P)^(calendar_days/91)-1 with "
+                    "P=1-d*91/360. A labelled conversion sensitivity under a fixed-term assumption, "
+                    "not the primary RF and not an exact realized Treasury return."
+                ),
+            }
+        )
 
     cal_note = (
         f"Expected NYSE sessions in requested window [{cfg.data.requested_start}, "
@@ -1155,6 +1253,8 @@ def _persist_snapshot(
         excluded_return_rows=excl_to_save,
         ex_post_rf_daily=ex_post_rf_daily,
         quarantined_prices=quarantined_to_save,
+        rf_provenance=rf_provenance,
+        rf_accrual_sensitivity=rf_accrual_sensitivity,
     )
 
     report_md = generate_quality_report_markdown(
@@ -1183,24 +1283,55 @@ def _persist_snapshot(
         encoding="utf-8",
     )
 
-    pointer_path = processed_dir / "active_snapshot.json"
+    if activate:
+        _write_active_pointer(processed_dir, final_manifest, cfg.data.rf_alignment_policy)
+
+    return replace(prelim_bundle, manifest=final_manifest)
+
+
+def _write_active_pointer(
+    processed_dir: Path,
+    manifest: DataManifest,
+    rf_alignment_policy: str,
+) -> None:
+    """Point ``active_snapshot.json`` at ``manifest``'s snapshot."""
     pointer_payload = {
-        "dataset_id": dataset_id,
+        "dataset_id": manifest.dataset_id,
         "schema_version": CONTRACT_SCHEMA_VERSION,
-        "policy_revision": policy_revision,
-        "parent_dataset_id": parent_dataset_id,
-        "rf_alignment_policy": cfg.data.rf_alignment_policy,
-        "manifest_relpath": f"{dataset_id}/manifest.json",
-        "actual_start": actual_start,
-        "actual_end": actual_end,
-        "retrieved_at_utc": retrieved_at_utc,
+        "policy_revision": manifest.policy_revision,
+        "parent_dataset_id": manifest.parent_dataset_id,
+        "rf_alignment_policy": rf_alignment_policy,
+        "manifest_relpath": f"{manifest.dataset_id}/manifest.json",
+        "actual_start": manifest.actual_start,
+        "actual_end": manifest.actual_end,
+        "retrieved_at_utc": manifest.retrieved_at_utc,
     }
-    pointer_path.write_text(
+    (processed_dir / "active_snapshot.json").write_text(
         json.dumps(pointer_payload, indent=2, sort_keys=True),
         encoding="utf-8",
     )
 
-    return replace(prelim_bundle, manifest=final_manifest)
+
+def activate_snapshot(
+    config: AppConfig | dict[str, Any] | Path | str,
+    *,
+    dataset_id: str,
+    repo_root: Path | None = None,
+) -> DataBundle:
+    """Point the active snapshot at ``dataset_id`` after it loads as the configured policy's cache.
+
+    Loading re-verifies every SHA-256 hash and logical index, so a tampered or policy-mismatched
+    candidate is refused and the existing pointer is left unchanged.
+    """
+    cfg, base_dir = _resolve_config_and_base_dir(config, repo_root)
+    processed_dir = _resolve_dir(cfg.data.processed_dir, base_dir)
+    bundle = load_data(cfg, offline=True, repo_root=base_dir)
+    if bundle.manifest.dataset_id != dataset_id:
+        raise DataUnavailableError(
+            f"Configured policy resolves to {bundle.manifest.dataset_id}, not {dataset_id}."
+        )
+    _write_active_pointer(processed_dir, bundle.manifest, cfg.data.rf_alignment_policy)
+    return bundle
 
 
 def _validate_cached_bundle_tables(
@@ -1212,11 +1343,14 @@ def _validate_cached_bundle_tables(
     log_returns: pd.DataFrame,
     rf_frame: pd.DataFrame,
     rf_ex_post_frame: pd.DataFrame | None,
+    rf_provenance: pd.DataFrame | None = None,
+    rf_accrual_frame: pd.DataFrame | None = None,
 ) -> tuple[pd.Series, pd.Series | None]:
     """Validate logical indices and columns of SHA-256-verified cached parquet tables.
 
     Never overwrites ``rf_daily.index`` positionally; any mismatched or non-DatetimeIndex
-    ``rf_daily`` / ``rf_daily_ex_post`` / ``log_returns`` index raises ``DataUnavailableError``.
+    ``rf_daily`` / ``rf_daily_ex_post`` / ``log_returns`` index, or provenance that disagrees
+    with ``rf_daily``, raises ``DataUnavailableError``.
     """
     canonical_cols = tuple(cfg.mandate.canonical_tickers)
     if tuple(prices.columns) != canonical_cols:
@@ -1313,6 +1447,21 @@ def _validate_cached_bundle_tables(
         ex_post_rf_daily = rf_ex_post_frame["rf_daily_ex_post"].astype(float).copy()
         ex_post_rf_daily.name = "rf_daily_ex_post"
 
+    for name, frame in (("rf_provenance", rf_provenance), ("rf_accrual", rf_accrual_frame)):
+        if frame is not None and not frame.index.equals(simple_returns.index):
+            raise DataUnavailableError(
+                f"Cached snapshot {dataset_id} failed logical index validation: "
+                f"{name} index does not match simple_returns.parquet index."
+            )
+    if rf_provenance is not None and not np.array_equal(
+        rf_provenance["rf_daily"].to_numpy(dtype=float),
+        rf_daily.to_numpy(dtype=float),
+        equal_nan=True,
+    ):
+        raise DataUnavailableError(
+            f"Cached snapshot {dataset_id} rf_provenance disagrees with rf_daily.parquet."
+        )
+
     return rf_daily, ex_post_rf_daily
 
 
@@ -1391,6 +1540,13 @@ def _try_load_verified_cache(
             or rf_conv.get("assumed_h15_release_time") != cfg.data.rf_release_time
         ):
             continue
+        if raw_m.get("policy_revision") != _rf_policy_revision(cfg.data.rf_alignment_policy):
+            continue
+        if (
+            cfg.data.rf_alignment_policy == RF_POLICY_R3
+            and rf_conv.get("evidence_sha256") != cfg.data.rf_evidence_sha256
+        ):
+            continue
 
         if expected_last_nyse is not None and raw_m.get("actual_end") != expected_last_nyse:
             continue
@@ -1424,6 +1580,14 @@ def _try_load_verified_cache(
         rf_ex_post_frame = (
             pd.read_parquet(rf_ex_post_path, engine="pyarrow") if rf_ex_post_path.exists() else None
         )
+        provenance_path = snap_proc_dir / "rf_provenance.parquet"
+        rf_provenance = (
+            pd.read_parquet(provenance_path, engine="pyarrow") if provenance_path.exists() else None
+        )
+        accrual_path = snap_proc_dir / "rf_daily_accrual_91d_sensitivity.parquet"
+        rf_accrual_frame = (
+            pd.read_parquet(accrual_path, engine="pyarrow") if accrual_path.exists() else None
+        )
 
         rf_daily, ex_post_rf_daily = _validate_cached_bundle_tables(
             dataset_id=dataset_id,
@@ -1433,6 +1597,8 @@ def _try_load_verified_cache(
             log_returns=log_returns,
             rf_frame=rf_frame,
             rf_ex_post_frame=rf_ex_post_frame,
+            rf_provenance=rf_provenance,
+            rf_accrual_frame=rf_accrual_frame,
         )
 
         quarantined_path = snap_proc_dir / "quarantined_unexpected_prices.parquet"
@@ -1484,7 +1650,7 @@ def _try_load_verified_cache(
             session_calendar_note=str(raw_m.get("session_calendar_note", "")),
             offline_cache_used=bool(offline_flag or fallback_warning is not None),
             notes=tuple(notes),
-            policy_revision=str(raw_m.get("policy_revision", "r2_hardened")),
+            policy_revision=str(raw_m.get("policy_revision", POLICY_REVISION_R2)),
             parent_dataset_id=raw_m.get("parent_dataset_id"),
         )
 
@@ -1499,9 +1665,32 @@ def _try_load_verified_cache(
             excluded_return_rows=excluded_return_rows,
             ex_post_rf_daily=ex_post_rf_daily,
             quarantined_prices=quarantined_prices,
+            rf_provenance=rf_provenance,
+            rf_accrual_sensitivity=(
+                rf_accrual_frame.iloc[:, 0].astype(float).copy() if rf_accrual_frame is not None else None
+            ),
         )
 
     return None
+
+
+def _load_rf_evidence(cfg: AppConfig, base_dir: Path) -> pd.DataFrame:
+    """Load the versioned RF evidence table after checking the configured SHA-256 pin."""
+    if not cfg.data.rf_evidence_path or not cfg.data.rf_evidence_sha256:
+        raise DataUnavailableError("The r3 RF policy requires rf_evidence_path and rf_evidence_sha256.")
+    path = _resolve_dir(cfg.data.rf_evidence_path, base_dir)
+    if not path.exists():
+        raise DataUnavailableError(f"RF evidence table not found: {path}")
+    actual = _sha256_file(path)
+    if actual != cfg.data.rf_evidence_sha256:
+        raise DataUnavailableError(
+            f"RF evidence SHA-256 {actual} does not match configured {cfg.data.rf_evidence_sha256}."
+        )
+    table = pd.read_parquet(path, engine="pyarrow")
+    missing = [c for c in RF_VERSION_TABLE_COLUMNS if c not in table.columns]
+    if missing:
+        raise DataUnavailableError(f"RF evidence table is missing columns: {missing}.")
+    return table
 
 
 def _build_and_persist_from_raw(
@@ -1513,9 +1702,10 @@ def _build_and_persist_from_raw(
     observed_prices: pd.DataFrame,
     raw_rf: pd.DataFrame | None,
     retrieved_at_utc: str,
-    policy_revision: str = "r2_hardened",
+    policy_revision: str = POLICY_REVISION_R2,
     parent_dataset_id: str | None = None,
     extra_notes: Sequence[str] = (),
+    activate: bool = True,
 ) -> DataBundle:
     """Apply hardened Step 2 session, boundary, quarantine, return, RF, and quality builders."""
     obs = observed_prices.copy()
@@ -1556,18 +1746,42 @@ def _build_and_persist_from_raw(
         raw_rf_trimmed = None
 
     primary_rf_mode = _rf_policy_to_mode(cfg.data.rf_alignment_policy)
+    rf_version_table: pd.DataFrame | None = None
+    rf_provenance: pd.DataFrame | None = None
+    rf_accrual_sensitivity: pd.Series | None = None
     if raw_rf_trimmed is not None and not raw_rf_trimmed.empty:
-        rf_daily = align_risk_free_rate(
-            raw_rf_trimmed["rate_annual_pct"],
-            simple_returns.index,
-            availability_lag_sessions=cfg.data.rf_availability_lag_sessions,
-            trading_days_per_year=cfg.data.rf_trading_days_per_year,
-            mode=primary_rf_mode,
-            price_sessions=grid_prices.index,
-            decision_timezone=cfg.data.rf_decision_timezone,
-            decision_cutoff_time_ny=cfg.data.rf_decision_cutoff_time,
-            release_time_ny=cfg.data.rf_release_time,
-        )
+        if cfg.data.rf_alignment_policy == RF_POLICY_R3:
+            rf_version_table = _load_rf_evidence(cfg, base_dir)
+            covered = pd.DatetimeIndex(rf_version_table["obs_date"].unique())
+            uncovered = raw_rf_trimmed["rate_annual_pct"].dropna().index.difference(covered)
+            if len(uncovered) > 0:
+                raise DataUnavailableError(
+                    f"RF evidence does not cover {len(uncovered)} raw DTB3 observation(s), "
+                    f"first {uncovered[0].strftime('%Y-%m-%d')}."
+                )
+            rf_daily, rf_provenance = select_rf_versions_asof(
+                rf_version_table,
+                simple_returns.index,
+                trading_days_per_year=cfg.data.rf_trading_days_per_year,
+                price_sessions=grid_prices.index,
+                decision_timezone=cfg.data.rf_decision_timezone,
+                decision_cutoff_time_ny=cfg.data.rf_decision_cutoff_time,
+            )
+            rf_accrual_sensitivity = rf_accrual_91d_sensitivity(
+                rf_provenance["value_pct"], grid_prices.index
+            )
+        else:
+            rf_daily = align_risk_free_rate(
+                raw_rf_trimmed["rate_annual_pct"],
+                simple_returns.index,
+                availability_lag_sessions=cfg.data.rf_availability_lag_sessions,
+                trading_days_per_year=cfg.data.rf_trading_days_per_year,
+                mode=primary_rf_mode,
+                price_sessions=grid_prices.index,
+                decision_timezone=cfg.data.rf_decision_timezone,
+                decision_cutoff_time_ny=cfg.data.rf_decision_cutoff_time,
+                release_time_ny=cfg.data.rf_release_time,
+            )
         ex_post_rf_daily = align_risk_free_rate(
             raw_rf_trimmed["rate_annual_pct"],
             simple_returns.index,
@@ -1615,6 +1829,10 @@ def _build_and_persist_from_raw(
         policy_revision=policy_revision,
         parent_dataset_id=parent_dataset_id,
         extra_notes=extra_notes,
+        rf_version_table=rf_version_table,
+        rf_provenance=rf_provenance,
+        rf_accrual_sensitivity=rf_accrual_sensitivity,
+        activate=activate,
     )
 
 
@@ -1623,12 +1841,14 @@ def derive_snapshot_from_existing(
     *,
     source_dataset_id: str,
     repo_root: Path | None = None,
+    activate: bool = True,
 ) -> DataBundle:
-    """Derive a hardened policy-revision snapshot offline from a preserved, SHA-256-verified raw snapshot.
+    """Derive a policy-revision snapshot offline from a preserved, SHA-256-verified raw snapshot.
 
     Verifies every SHA-256 hash recorded in ``source_dataset_id``'s ``manifest.json`` before
     reading ``etf_prices_raw.parquet`` and ``fred_dtb3_raw.parquet``, performs zero network
-    downloads, and leaves ``source_dataset_id`` untouched on disk.
+    downloads, and leaves ``source_dataset_id`` untouched on disk. With ``activate=False`` the
+    result is a candidate and the active pointer is left unchanged.
     """
     cfg, base_dir = _resolve_config_and_base_dir(config, repo_root)
     raw_dir = _resolve_dir(cfg.data.raw_dir, base_dir)
@@ -1667,10 +1887,11 @@ def derive_snapshot_from_existing(
 
     now_utc = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     src_retrieved = str(src_manifest.get("retrieved_at_utc", "unknown"))
+    policy_revision = _rf_policy_revision(cfg.data.rf_alignment_policy)
     note = (
         f"Derived offline at {now_utc} from preserved audited raw snapshot "
         f"{source_dataset_id} (originally retrieved {src_retrieved}) without network redownload "
-        f"under Step 2 r2_hardened policy."
+        f"under {policy_revision} policy."
     )
 
     return _build_and_persist_from_raw(
@@ -1681,9 +1902,10 @@ def derive_snapshot_from_existing(
         observed_prices=observed_prices,
         raw_rf=raw_rf,
         retrieved_at_utc=now_utc,
-        policy_revision="r2_hardened",
+        policy_revision=policy_revision,
         parent_dataset_id=source_dataset_id,
         extra_notes=(note,),
+        activate=activate,
     )
 
 
@@ -1804,7 +2026,7 @@ def load_data(
         observed_prices=observed_prices,
         raw_rf=raw_rf,
         retrieved_at_utc=now_utc,
-        policy_revision="r2_hardened",
+        policy_revision=_rf_policy_revision(cfg.data.rf_alignment_policy),
         parent_dataset_id=None,
         extra_notes=extra_notes,
     )

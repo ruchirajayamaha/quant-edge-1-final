@@ -86,6 +86,8 @@ class DataConfig:
     raw_dir: str
     processed_dir: str
     results_dir: str
+    rf_evidence_path: str | None = None
+    rf_evidence_sha256: str | None = None
 
 
 @dataclass(frozen=True)
@@ -361,6 +363,7 @@ def _validate_raw_config(raw: dict[str, Any]) -> AppConfig:
     )
     allowed_rf_policies = {
         "h15_schedule_1615_ny_before_prev_nyse_close_1600_ny",
+        "r3_versioned_release_evidence_day_level",
         "ex_post_same_date",
         "legacy_bday_lag",
     }
@@ -375,6 +378,15 @@ def _validate_raw_config(raw: dict[str, Any]) -> AppConfig:
     rf_release_time = str(data_raw.get("rf_release_time", "16:15:00"))
     time.fromisoformat(rf_cutoff_time)
     time.fromisoformat(rf_release_time)
+
+    rf_evidence_path = data_raw.get("rf_evidence_path")
+    rf_evidence_sha256 = data_raw.get("rf_evidence_sha256")
+    if rf_policy == "r3_versioned_release_evidence_day_level" and not (
+        rf_evidence_path and rf_evidence_sha256
+    ):
+        raise ValueError(
+            "data.rf_evidence_path and data.rf_evidence_sha256 are required for the r3 RF policy."
+        )
 
     frozen_end = data_raw.get("frozen_end_date")
     data_cfg = DataConfig(
@@ -400,6 +412,8 @@ def _validate_raw_config(raw: dict[str, Any]) -> AppConfig:
         raw_dir=str(data_raw["raw_dir"]),
         processed_dir=str(data_raw["processed_dir"]),
         results_dir=str(data_raw["results_dir"]),
+        rf_evidence_path=str(rf_evidence_path) if rf_evidence_path else None,
+        rf_evidence_sha256=str(rf_evidence_sha256) if rf_evidence_sha256 else None,
     )
 
     # Chronology validation

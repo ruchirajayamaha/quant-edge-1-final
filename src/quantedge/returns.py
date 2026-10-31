@@ -17,10 +17,12 @@ Mathematical & Data-Hygiene Conventions:
 - FRED ``DTB3`` quotes (annual percent, discount basis) are converted via the documented
   daily proxy ``(rate_pct / 100.0) / trading_days_per_year``. Forward-decision alignment
   models the actual decision cutoff (preceding NYSE close, ``16:00:00 America/New_York``)
-  against verified release timestamps or the conservative Federal Reserve H.15 publication
-  schedule (``16:15:00 America/New_York`` on the next Federal Reserve business day,
-  requiring ``available_at <= decision_time`` with zero backfill), explicitly distinct
-  from the contemporaneous ex-post daily proxy (``mode='ex_post'``).
+  against verified release timestamps or the Federal Reserve H.15 publication schedule
+  proxy (``16:15:00 America/New_York`` on the next Federal Reserve business day, requiring
+  ``available_at <= decision_time`` with zero backfill), explicitly distinct from the
+  contemporaneous ex-post daily proxy (``mode='ex_post'``). That schedule misses Board
+  closures and omitted Treasury data, so ``select_rf_versions_asof`` applies the
+  evidence-based, value-versioned ``r3_release_evidence`` policy instead.
 """
 
 from __future__ import annotations
@@ -208,12 +210,13 @@ def _observe_federal_fixed_holiday(holiday: date) -> date:
 
 
 def _federal_holidays_for_year(year: int) -> set[date]:
-    """Return US Federal Reserve / OPM non-publication holidays plus conservative market closures.
+    """Return US Federal Reserve / OPM non-publication holidays plus documented market closures.
 
     Covers all 11 US federal holidays (including Columbus Day and Veterans Day when NYSE is open
     but the Federal Reserve Board H.15 release does not publish, as well as Friday Dec 31 when
     New Year's Day falls on Saturday and Juneteenth starting in 2021), plus Good Friday and
-    documented special national closures so H.15 publication availability is never assumed early.
+    documented special national closures. This is a schedule, not release evidence: it omits
+    unscheduled Board closures and skips some Good Fridays on which H.15 was in fact released.
     """
     holidays: set[date] = set()
 
@@ -231,7 +234,7 @@ def _federal_holidays_for_year(year: int) -> set[date]:
     # 3. Washington's Birthday (3rd Monday in February)
     holidays.add(_nth_weekday_of_month(year, 2, 0, 3))
 
-    # 4. Good Friday (conservative SIFMA/Treasury market closure guard)
+    # 4. Good Friday (SIFMA/Treasury market closure guard; H.15 is often still released)
     holidays.add(_easter_sunday(year) - timedelta(days=2))
 
     # 5. Memorial Day (last Monday in May)
@@ -270,7 +273,7 @@ def expected_federal_reserve_business_days(
     start_date: str | pd.Timestamp,
     end_date: str | pd.Timestamp,
 ) -> pd.DatetimeIndex:
-    """Construct conservative Federal Reserve H.15 publication business days over ``[start_date, end_date]``."""
+    """Construct scheduled Federal Reserve H.15 publication business days over ``[start_date, end_date]``."""
     start_ts = pd.Timestamp(start_date).normalize()
     end_ts = pd.Timestamp(end_date).normalize()
     if end_ts < start_ts:
@@ -285,6 +288,48 @@ def expected_federal_reserve_business_days(
     pub_days = weekdays[~weekdays.isin(holidays)]
     pub_days.name = "date"
     return pub_days
+
+
+def _preceding_close_decision_times_utc(
+    normalized_targets: pd.DatetimeIndex,
+    price_sessions: pd.DatetimeIndex | None,
+    decision_timezone: str,
+    cutoff_t: time,
+) -> pd.DatetimeIndex:
+    """Return the preceding NYSE session's decision cutoff, in UTC, for each return date."""
+    tz = ZoneInfo(decision_timezone)
+    base_nyse = expected_nyse_sessions(
+        normalized_targets[0] - pd.Timedelta(days=20),
+        normalized_targets[-1],
+    )
+    if price_sessions is not None:
+        if not isinstance(price_sessions, pd.DatetimeIndex) or len(price_sessions) == 0:
+            raise ValueError("price_sessions, when supplied, must be a non-empty DatetimeIndex.")
+        norm_ps = (
+            price_sessions.tz_convert(decision_timezone).tz_localize(None)
+            if price_sessions.tz is not None
+            else price_sessions
+        ).normalize()
+        norm_ps = pd.DatetimeIndex(norm_ps).sort_values().unique()
+        session_pool = base_nyse[base_nyse < norm_ps[0]].append(norm_ps)
+    else:
+        session_pool = base_nyse
+
+    prev_pos = (
+        np.searchsorted(session_pool.to_numpy(), normalized_targets.to_numpy(), side="left") - 1
+    )
+    if np.any(prev_pos < 0):
+        raise ValueError(
+            "Could not determine preceding NYSE trading session prior to earliest return date."
+        )
+    prev_dates = session_pool[prev_pos]
+    cutoff_delta = pd.Timedelta(
+        hours=cutoff_t.hour,
+        minutes=cutoff_t.minute,
+        seconds=cutoff_t.second,
+        microseconds=cutoff_t.microsecond,
+    )
+    return (prev_dates + cutoff_delta).tz_localize(tz).tz_convert("UTC")
 
 
 def compute_session_returns(
@@ -416,8 +461,8 @@ def align_risk_free_rate(
       Each valid ``DTB3`` observation dated ``d`` becomes usable at ``available_at``:
       * If ``release_timestamps`` provides a verified timezone-aware timestamp for ``d``, that
         exact release timestamp is used.
-      * Otherwise (unless ``require_verified_releases=True``), ``available_at`` is conservatively
-        set to the ``availability_lag_sessions``-th Federal Reserve H.15 publication business day
+      * Otherwise (unless ``require_verified_releases=True``), ``available_at`` is assumed to be
+        the ``availability_lag_sessions``-th Federal Reserve H.15 publication business day
         strictly after ``d`` (skipping all 11 US federal holidays including Columbus Day and
         Veterans Day, Good Friday, documented special closures, and any explicit ``NaN`` holiday
         dates in ``raw_dtb3_annual_pct``) at ``release_time_ny`` (default ``16:15:00 America/New_York``).
@@ -569,38 +614,9 @@ def align_risk_free_rate(
             raise ValueError("decision_timestamps must contain non-null timezone-aware timestamps.")
         decision_utc = dec_idx.tz_convert("UTC")
     else:
-        base_nyse = expected_nyse_sessions(
-            normalized_targets[0] - pd.Timedelta(days=20),
-            normalized_targets[-1],
+        decision_utc = _preceding_close_decision_times_utc(
+            normalized_targets, price_sessions, decision_timezone, cutoff_t
         )
-        if price_sessions is not None:
-            if not isinstance(price_sessions, pd.DatetimeIndex) or len(price_sessions) == 0:
-                raise ValueError("price_sessions, when supplied, must be a non-empty DatetimeIndex.")
-            norm_ps = (
-                price_sessions.tz_convert(decision_timezone).tz_localize(None)
-                if price_sessions.tz is not None
-                else price_sessions
-            ).normalize()
-            norm_ps = pd.DatetimeIndex(norm_ps).sort_values().unique()
-            session_pool = base_nyse[base_nyse < norm_ps[0]].append(norm_ps)
-        else:
-            session_pool = base_nyse
-
-        prev_pos = (
-            np.searchsorted(session_pool.to_numpy(), normalized_targets.to_numpy(), side="left") - 1
-        )
-        if np.any(prev_pos < 0):
-            raise ValueError(
-                "Could not determine preceding NYSE trading session prior to earliest return date."
-            )
-        prev_dates = session_pool[prev_pos]
-        cutoff_delta = pd.Timedelta(
-            hours=cutoff_t.hour,
-            minutes=cutoff_t.minute,
-            seconds=cutoff_t.second,
-            microseconds=cutoff_t.microsecond,
-        )
-        decision_utc = (prev_dates + cutoff_delta).tz_localize(tz).tz_convert("UTC")
 
     cal_start = obs_df["obs_date"].min()
     cal_end = max(obs_df["obs_date"].max(), normalized_targets.max()) + pd.Timedelta(
@@ -700,6 +716,97 @@ def align_risk_free_rate(
     )
     aligned.attrs["rf_mode"] = rf_mode_tag
     return aligned
+
+
+def select_rf_versions_asof(
+    version_table: pd.DataFrame,
+    return_dates: pd.DatetimeIndex,
+    *,
+    trading_days_per_year: int = 252,
+    price_sessions: pd.DatetimeIndex | None = None,
+    decision_timezone: str = "America/New_York",
+    decision_cutoff_time_ny: str = "16:00:00",
+) -> tuple[pd.Series, pd.DataFrame]:
+    """Select the value known at each decision cutoff from versioned DTB3 observations.
+
+    For return date ``t`` the decision cutoff is the preceding NYSE session close. Among versions
+    with ``available_at_utc <= decision_time``, each observation keeps its latest eligible version
+    and withdrawn observations drop out. The most recent remaining OBSERVATION date is selected,
+    never the most recently available version, so a late revision to an older observation cannot
+    replace a newer quote. There is no backfill: a session with nothing eligible stays ``NaN``.
+
+    Args:
+        version_table: Rows with ``obs_date``, ``version_seq``, ``value_pct`` (``NaN`` marks a
+            withdrawal) and timezone-aware ``available_at_utc``. Other columns pass through to
+            the provenance table.
+        return_dates: Ascending unique return session dates.
+        trading_days_per_year: Daily proxy divisor.
+        price_sessions: Optional session grid used to locate the preceding close.
+        decision_timezone: IANA timezone of the cutoff.
+        decision_cutoff_time_ny: Local cutoff time.
+
+    Returns:
+        ``(rf_daily, provenance)`` indexed by ``return_dates``. Provenance holds the decision
+        cutoff, selected observation, value and version, and the version's evidence labels.
+    """
+    if not isinstance(return_dates, pd.DatetimeIndex):
+        raise ValueError("return_dates must be a pandas DatetimeIndex.")
+    if not return_dates.is_monotonic_increasing or not return_dates.is_unique:
+        raise ValueError("return_dates must be strictly ascending and unique.")
+    if trading_days_per_year <= 0:
+        raise ValueError(f"trading_days_per_year must be > 0; got {trading_days_per_year}")
+    table = version_table.reset_index(drop=True)
+    if table["available_at_utc"].dt.tz is None:
+        raise ValueError("available_at_utc must be timezone-aware.")
+
+    decisions = _preceding_close_decision_times_utc(
+        return_dates.normalize(),
+        price_sessions,
+        decision_timezone,
+        time.fromisoformat(decision_cutoff_time_ny),
+    )
+    order = table.sort_values(
+        ["available_at_utc", "obs_date", "version_seq"], kind="mergesort"
+    ).index.to_numpy()
+    available = table["available_at_utc"].dt.tz_convert("UTC").dt.tz_localize(None).to_numpy()[order]
+    obs_dates = table["obs_date"].to_numpy()[order]
+    values = table["value_pct"].to_numpy(dtype=float)[order]
+    versions = table["version_seq"].to_numpy(dtype=int)[order]
+
+    latest: dict[np.datetime64, int] = {}
+    live: set[np.datetime64] = set()
+    selected = np.full(len(return_dates), -1, dtype=int)
+    pointer = 0
+    for i, cutoff in enumerate(decisions.tz_localize(None).to_numpy()):
+        while pointer < len(order) and available[pointer] <= cutoff:
+            obs = obs_dates[pointer]
+            if obs not in latest or versions[pointer] >= versions[latest[obs]]:
+                latest[obs] = pointer
+                if np.isnan(values[pointer]):
+                    live.discard(obs)
+                else:
+                    live.add(obs)
+            pointer += 1
+        if live:
+            selected[i] = latest[max(live)]
+
+    has_value = selected >= 0
+    picked = table.iloc[order[selected[has_value]]]
+    provenance = pd.DataFrame(index=pd.DatetimeIndex(return_dates, name="date"))
+    provenance["decision_time_utc"] = decisions
+    for column in table.columns:
+        filled = pd.Series(picked[column].to_numpy(), index=return_dates[has_value]).reindex(return_dates)
+        provenance[column] = filled.to_numpy()
+    provenance["available_at_utc"] = pd.to_datetime(provenance["available_at_utc"], utc=True)
+    rf_daily = pd.Series(
+        (provenance["value_pct"].to_numpy(dtype=float) / 100.0) / float(trading_days_per_year),
+        index=return_dates.copy(),
+        name="rf_daily",
+        dtype=float,
+    )
+    rf_daily.attrs["rf_mode"] = "versioned_release_evidence_day_level"
+    provenance["rf_daily"] = rf_daily.to_numpy()
+    return rf_daily, provenance
 
 
 def run_stationarity_diagnostics(

@@ -1,0 +1,26 @@
+{
+  "active": "qe1_20050101_20261030_r3_6c4633a7ba",
+  "hash_checks": {
+    "qe1_20050101_20261030_afb9ce5694": {
+      "count": 13,
+      "bad": []
+    },
+    "qe1_20050101_20261030_r2_cd2904443b": {
+      "count": 15,
+      "bad": []
+    },
+    "qe1_20050101_20261030_r3_6c4633a7ba": {
+      "count": 18,
+      "bad": []
+    }
+  },
+  "prices_unchanged": true,
+  "simple_returns_unchanged": true,
+  "log_returns_unchanged": true,
+  "offline_active_match": true,
+  "evidence_config_hash_match": true,
+  "bruteforce_rows": 5491,
+  "bruteforce_mismatches": [],
+  "jan_2005_quote_pct": 2.29,
+  "rf_missing": 0
+}

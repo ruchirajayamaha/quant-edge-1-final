@@ -2,6 +2,17 @@
 
 All notable milestone checkpoints for the Quant Edge 1.0 solo implementation are recorded incrementally in this file.
 
+## [0.2.2] - 2026-10-31 — RF-only `r3_release_evidence` Upgrade
+
+### Changed & Fixed
+- **Value-versioned RF selection (`src/quantedge/returns.py`, `src/quantedge/rf_evidence.py`):** Added `select_rf_versions_asof`, which picks the most recent eligible observation and then its latest eligible version, so a late revision to an older observation cannot replace a newer quote.
+- **Complete vintage evidence (`scripts/pull_rf_vintage_evidence.py`, `scripts/build_rf_release_evidence.py`, `data/reference/rf_evidence/`):** Stitched all `5,142` published DTB3 vintages across request boundaries with exact header validation, at most 12 vintages per request, throttling, and cached resume. Added archived weekly H.15 values for the sparse era and a curated event table separating documented, inferred, and unresolved cases.
+- **Evidence-based availability:** Corrected documented closures, omitted Treasury releases, and Good Friday and blank-day overgeneralizations at day level. Sparse history keeps a labelled calendar fallback.
+- **Snapshot lineage (`src/quantedge/data.py`, `src/quantedge/config.py`, `src/quantedge/contracts.py`, `scripts/build_data_snapshot.py`):** Removed the hard-coded `_r2_` identifier, added evidence hash pinning to dataset and cache identity, candidate builds that leave the active pointer unchanged, and `activate_snapshot`. `DataBundle` gained optional `rf_provenance` and `rf_accrual_sensitivity` fields; the schema stays `1.1.0` because the additions are optional and `r2` manifests remain valid.
+- **Conversion sensitivity:** Added a labelled 91-day accrual series. `/252` remains primary.
+- **Wording:** Corrected the description of `r2` from "conservative" to a schedule proxy in current documents and runtime text. Earlier audit documents are preserved as written.
+- **Snapshot and tests:** Derived `qe1_20050101_20261030_r3_6c4633a7ba` from `qe1_20050101_20261030_r2_cd2904443b` without any ETF download. Prices and simple/log returns equal `r2` exactly, and all `v1`/`r2` hashes are intact. Test suite expanded to `41/41` passing tests (`tests/test_r3_rf_evidence.py`).
+
 ## [0.2.1] - 2026-10-31 — SOLO STEP 2 Bounded Data-Hardening Pass (`r2_hardened`)
 
 ### Changed & Fixed

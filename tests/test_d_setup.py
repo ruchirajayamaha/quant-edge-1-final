@@ -53,7 +53,7 @@ def test_library_modules_never_import_streamlit(repo_root: Path) -> None:
     """No module under src/quantedge may import streamlit (architecture boundary)."""
     pkg_dir = repo_root / "src" / "quantedge"
     py_files = sorted(pkg_dir.glob("*.py"))
-    assert len(py_files) == 14
+    assert len(py_files) == 15
 
     for py_file in py_files:
         tree = ast.parse(py_file.read_text(encoding="utf-8"), filename=str(py_file))
@@ -83,8 +83,10 @@ def test_config_loads_offline_and_hashes_deterministically(
     assert baseline_config.data.require_requested_boundary_coverage is True
     assert (
         baseline_config.data.rf_alignment_policy
-        == "h15_schedule_1615_ny_before_prev_nyse_close_1600_ny"
+        == "r3_versioned_release_evidence_day_level"
     )
+    assert baseline_config.data.rf_evidence_path is not None
+    assert baseline_config.data.rf_evidence_sha256 is not None
     assert baseline_config.data.rf_decision_timezone == "America/New_York"
     assert baseline_config.data.rf_decision_cutoff_time == "16:00:00"
     assert baseline_config.data.rf_release_time == "16:15:00"

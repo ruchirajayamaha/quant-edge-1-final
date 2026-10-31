@@ -1,0 +1,9 @@
+{
+  "weekend_retained_in_grid": true,
+  "weekend_reported_as_unexpected": true,
+  "truncated_input_first_session": "2026-10-01",
+  "truncated_input_last_session": "2026-10-30",
+  "missing_sessions_reported_for_truncated_input": 0,
+  "configured_request_start": "2005-01-01",
+  "note": "Synthetic reproductions only; the actual stored snapshot has no unexpected dates and has its full stated bounds."
+}

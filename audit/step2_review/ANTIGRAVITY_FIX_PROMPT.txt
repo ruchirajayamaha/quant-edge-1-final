@@ -1,0 +1,49 @@
+Pause before SOLO STEP 3. Complete a bounded STEP 2 data-hardening pass.
+
+Read the actual evidence and findings in:
+C:/Users/ruchira/Desktop/qunt/audit/step2_review/STEP2_DATA_AUDIT.md
+C:/Users/ruchira/Desktop/qunt/audit/step2_review/snapshot_facts.json
+C:/Users/ruchira/Desktop/qunt/audit/step2_review/source_spotcheck_result.json
+
+The audit verified the stored ETF price/return arithmetic and coverage, all13
+manifest hashes,139fresh Yahoo adjusted-price sample cells,9FRED rates and
+17passing tests. Do not rebuild the project or redownload ETF history unnecessarily.
+The following findings need targeted changes and evidence, not blanket rewrites:
+
+1. RF AVAILABILITY
+   Observation date + BDay(1) is not proof of release-time availability.
+   Distinguish the approximate ex-post RF proxy from any forward-decision series.
+   Model the actual decision cutoff (preceding close, America/New_York) and require
+   available_at<=decision_time using verified release data or an explicitly
+   conservative lag/calendar policy. Preserve and disclose publication/vintage
+   uncertainty; do not claim all historical first-release dates were verified.
+   Add tests for after-close publication, holidays and the forecast-origin cutoff.
+   Do not simply increase a lag number without checking what it makes available.
+
+2. REQUESTED BOUNDARY COVERAGE
+   Validate first/last expected sessions against requested bounds, not merely
+   the observed endpoints. A truncated download must not pass as full coverage.
+   Handle requested weekends/holidays correctly; add a boundary-truncation test.
+
+3. UNEXPECTED SESSION GUARD
+   Keep unexpected raw dates for audit, but do not let weekends/unexpected dates
+   enter one-session modelling returns through a union of observed/expected dates.
+   Block or explicitly quarantine them with documented counts; add a regression test.
+
+4. CACHED RF INDEX
+   Validate the serialized RF index against the saved return index.
+   Remove positional index overwriting as a supposed repair.
+   Add a same-length shifted-index test with valid synthetic manifest hashes.
+
+Preserve the existing audited raw/processed snapshot and audit evidence. Any changed
+derived RF alignment must receive a new documented policy/derived-snapshot revision;
+do not overwrite qe1_20050101_20261030_afb9ce5694 in place. Ensure cache matching and
+manifest provenance distinguish old and new policies. Coordinate necessary contract
+changes consistently; the solo developer owns all modules.
+
+Reuse the verified Python3.11.venv. Run the focused new regressions plus existing tests.
+Update the quality/limitations documentation, truthful AI disclosure and handoff/SOLO.md.
+AI review/tests do not count as completed independent human validation.
+
+Report actual findings/fixes, file locations, test commands/results, preserved/new
+dataset IDs and any remaining limits. Do not start Step3or other analytics yet.

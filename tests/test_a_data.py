@@ -30,6 +30,7 @@ import yaml
 from quantedge.config import AppConfig, _validate_raw_config
 from quantedge.contracts import CANONICAL_TICKERS, QUALITY_FLAG_COLUMNS
 from quantedge.data import (
+    RF_POLICY_R2,
     DataUnavailableError,
     build_session_price_grid,
     extract_adjusted_closes,
@@ -351,6 +352,7 @@ def test_offline_cache_roundtrip_network_fallback_and_sha256_tamper_rejection(
     """load_data handles absent cache, SHA-256 verified cache reuse, network fallback, and tampering."""
     raw_cfg = yaml.safe_load((repo_root / "config.yaml").read_text(encoding="utf-8"))
     test_cfg_dict = copy.deepcopy(raw_cfg)
+    test_cfg_dict["data"]["rf_alignment_policy"] = RF_POLICY_R2
     test_cfg_dict["data"]["requested_start"] = "2024-01-02"
     test_cfg_dict["data"]["frozen_end_date"] = None
     test_cfg_dict["data"]["raw_dir"] = str(tmp_path / "data" / "raw")
@@ -536,6 +538,7 @@ def test_requested_boundary_coverage_rejects_truncation_and_handles_weekends_hol
     # End-to-end through load_data: truncated download MUST raise DataUnavailableError (not pass!)
     raw_cfg = yaml.safe_load((repo_root / "config.yaml").read_text(encoding="utf-8"))
     trunc_cfg_dict = copy.deepcopy(raw_cfg)
+    trunc_cfg_dict["data"]["rf_alignment_policy"] = RF_POLICY_R2
     trunc_cfg_dict["data"]["requested_start"] = "2005-01-01"
     trunc_cfg_dict["data"]["frozen_end_date"] = "2026-10-30"
     trunc_cfg_dict["data"]["raw_dir"] = str(tmp_path / "trunc_raw")
@@ -618,6 +621,7 @@ def test_unexpected_weekend_session_quarantined_and_excluded_from_returns(
     # Policy 'quarantine' excludes Saturday from modelling grid and returns while recording it
     raw_cfg = yaml.safe_load((repo_root / "config.yaml").read_text(encoding="utf-8"))
     q_cfg_dict = copy.deepcopy(raw_cfg)
+    q_cfg_dict["data"]["rf_alignment_policy"] = RF_POLICY_R2
     q_cfg_dict["data"]["requested_start"] = "2024-01-05"
     q_cfg_dict["data"]["frozen_end_date"] = "2024-01-08"
     q_cfg_dict["data"]["raw_dir"] = str(tmp_path / "q_raw")
@@ -664,6 +668,7 @@ def test_cached_rf_shifted_index_with_valid_sha256_is_rejected(
     """Finding 4: Same-length shifted or RangeIndex rf_daily.parquet with valid SHA-256 fails logical index check."""
     raw_cfg = yaml.safe_load((repo_root / "config.yaml").read_text(encoding="utf-8"))
     cfg_dict = copy.deepcopy(raw_cfg)
+    cfg_dict["data"]["rf_alignment_policy"] = RF_POLICY_R2
     cfg_dict["data"]["requested_start"] = "2024-01-02"
     cfg_dict["data"]["frozen_end_date"] = "2024-02-15"
     cfg_dict["data"]["raw_dir"] = str(tmp_path / "idx_raw")
@@ -715,12 +720,13 @@ def test_cached_rf_shifted_index_with_valid_sha256_is_rejected(
 
 
 def test_real_repository_snapshot_integrity_and_preserved_v1_audit_snapshot(
-    baseline_config: AppConfig,
     repo_root: Path,
     tmp_path: Path,
 ) -> None:
-    """Verify active r2 hardened snapshot, preserved v1 audited snapshot hashes, and policy isolation."""
-    bundle = load_data(baseline_config, offline=True, repo_root=repo_root)
+    """Verify preserved r2 hardened snapshot, preserved v1 audited snapshot hashes, and policy isolation."""
+    r2_cfg_dict = yaml.safe_load((repo_root / "config.yaml").read_text(encoding="utf-8"))
+    r2_cfg_dict["data"]["rf_alignment_policy"] = RF_POLICY_R2
+    bundle = load_data(_validate_raw_config(r2_cfg_dict), offline=True, repo_root=repo_root)
     m = bundle.manifest
 
     assert m.dataset_id.startswith("qe1_20050101_20261030_r2_")
@@ -800,6 +806,7 @@ def test_real_repository_snapshot_integrity_and_preserved_v1_audit_snapshot(
     )
     raw_cfg = yaml.safe_load((repo_root / "config.yaml").read_text(encoding="utf-8"))
     iso_cfg_dict = copy.deepcopy(raw_cfg)
+    iso_cfg_dict["data"]["rf_alignment_policy"] = RF_POLICY_R2
     iso_cfg_dict["data"]["processed_dir"] = str(iso_proc)
     iso_cfg = _validate_raw_config(iso_cfg_dict)
     with pytest.raises(DataUnavailableError, match="Offline mode"):

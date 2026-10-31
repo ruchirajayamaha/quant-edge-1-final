@@ -1,0 +1,19 @@
+{
+ "corrected_vs_stored": {
+  "differ": 33,
+  "max_quote_pp": 0.05,
+  "ann_bp": -0.00036
+ },
+ "extended_vs_stored": {
+  "differ": 37,
+  "max_quote_pp": 0.05,
+  "ann_bp": -0.00146
+ },
+ "extended_vs_corrected": {
+  "differ": 4,
+  "max_quote_pp": 0.04,
+  "ann_bp": -0.00109
+ },
+ "conversion_gap_bp_per_year_evaluation_window": 8.02,
+ "conversion_sharpe_delta_at_10pct_vol_evaluation_window": -0.008
+}

@@ -1,0 +1,41 @@
+{
+  "audit_date": "2026-10-31",
+  "parent_dataset_id": "qe1_20050101_20261030_afb9ce5694",
+  "active_dataset_id": "qe1_20050101_20261030_r2_cd2904443b",
+  "snapshots": {
+    "qe1_20050101_20261030_afb9ce5694": {
+      "schema": "1.0.0",
+      "hash_count": 13,
+      "bad_hashes": [],
+      "parent_id": null,
+      "policy_revision": null
+    },
+    "qe1_20050101_20261030_r2_cd2904443b": {
+      "schema": "1.1.0",
+      "hash_count": 15,
+      "bad_hashes": [],
+      "parent_id": "qe1_20050101_20261030_afb9ce5694",
+      "policy_revision": "r2_hardened"
+    }
+  },
+  "prices_parent_child_values_equal": true,
+  "simple_returns_parent_child_values_equal": true,
+  "log_returns_parent_child_values_equal": true,
+  "price_rows": 5492,
+  "return_rows": 5491,
+  "return_recompute_max_error": 0.0,
+  "log_recompute_max_error": 0.0,
+  "forward_rf_index_matches": true,
+  "ex_post_rf_index_matches": true,
+  "missing_forward_rf": 0,
+  "missing_ex_post_rf": 0,
+  "rf_different_days": 4354,
+  "forward_quote_2026_10_30_pct": 4.05,
+  "ex_post_quote_2026_10_30_pct": 4.0,
+  "quarantined_rows": 0,
+  "parent_manifest_matches_step2_git": true,
+  "offline_loader_returns_active_revision": true,
+  "offline_flag": true,
+  "pytest_exit_code": 0,
+  "pytest_output": ".....................                                                    [100%]\n21 passed in 4.69s"
+}

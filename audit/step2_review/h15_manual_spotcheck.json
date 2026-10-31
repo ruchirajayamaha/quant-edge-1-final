@@ -1,0 +1,36 @@
+{
+  "source": "https://www.federalreserve.gov/releases/h15/",
+  "release_date": "2026-10-30",
+  "observations": [
+    {
+      "observation_date": "2026-10-23",
+      "official_annual_percent": 4.04,
+      "saved_annual_percent": 4.04,
+      "matches": true
+    },
+    {
+      "observation_date": "2026-10-26",
+      "official_annual_percent": 4.05,
+      "saved_annual_percent": 4.05,
+      "matches": true
+    },
+    {
+      "observation_date": "2026-10-27",
+      "official_annual_percent": 4.05,
+      "saved_annual_percent": 4.05,
+      "matches": true
+    },
+    {
+      "observation_date": "2026-10-28",
+      "official_annual_percent": 4.01,
+      "saved_annual_percent": 4.01,
+      "matches": true
+    },
+    {
+      "observation_date": "2026-10-29",
+      "official_annual_percent": 4.0,
+      "saved_annual_percent": 4.0,
+      "matches": true
+    }
+  ]
+}

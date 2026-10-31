@@ -5,7 +5,7 @@ Quantitative portfolio construction, tail-risk modelling (VaR, Expected Shortfal
 - **Authoritative specification:** `Quant edge 1.0 Final Challenge 1.pdf`
 - **Canonical 7-ETF allocation universe:** `SPY, EFA, EEM, AGG, GLD, XLE, XLK`
 - **Contract / config schema version:** `1.1.0`
-- **Current workflow status:** **SOLO STEP 1 (D0 Project Setup) and SOLO STEP 2 (A1 Data Snapshot, Quality Diagnostics & Bounded `r2` Hardening Pass) complete.** Active verified snapshot: `qe1_20050101_20261030_r2_cd2904443b` (derived from preserved audited snapshot `qe1_20050101_20261030_afb9ce5694`). Analytics (Steps 3–8), full six-view Streamlit dashboard (Step 9), and final report audit (Step 10) are not yet executed; remaining Step 3–9 analytical functions explicitly raise `NotImplementedError` rather than returning fabricated numbers.
+- **Current workflow status:** **SOLO STEP 1 (D0 Project Setup) and SOLO STEP 2 (A1 Data Snapshot, Quality Diagnostics & Bounded `r2` Hardening Pass) complete.** Active verified snapshot: `qe1_20050101_20261030_r3_6c4633a7ba` (RF-only `r3_release_evidence`, derived from preserved `qe1_20050101_20261030_r2_cd2904443b`, itself derived from preserved audited snapshot `qe1_20050101_20261030_afb9ce5694`). Analytics (Steps 3–8), full six-view Streamlit dashboard (Step 9), and final report audit (Step 10) are not yet executed; remaining Step 3–9 analytical functions explicitly raise `NotImplementedError` rather than returning fabricated numbers.
 
 ---
 
@@ -19,7 +19,8 @@ Quantitative portfolio construction, tail-risk modelling (VaR, Expected Shortfal
 ├── config.yaml              # Canonical universe, conventions, seeds, and provisional governance fields
 ├── data/
 │   ├── raw/                 # Raw market/FRED snapshots and provenance manifests (Step 2)
-│   └── processed/           # Session-aligned prices, simple/log returns, and quality flags (Step 2)
+│   ├── processed/           # Session-aligned prices, simple/log returns, and quality flags (Step 2)
+│   └── reference/           # Versioned DTB3 release evidence pinned by config.yaml (r3)
 ├── docs/
 │   └── sections/            # Incremental methodology, limitations, and report sections
 ├── handoff/

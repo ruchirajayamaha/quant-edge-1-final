@@ -1,0 +1,35 @@
+event_date,event_type,classification,effect_obs_date,floor_date,source_url,note
+2008-12-26,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2008-12-18: Board closed; daily update not posted
+2009-01-20,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2009-01-12: Board closed 19 and 20 January
+2009-12-24,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2009-12-18: afternoon closure; daily update not published
+2010-02-08,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2010-02-08: inclement weather
+2010-02-09,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2010-02-09: inclement weather
+2012-10-29,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2012-10-29; ALFRED still lists this date as a release date
+2012-10-30,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2012-10-29: severe weather
+2013-03-06,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2013-03-06: severe weather
+2013-12-10,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2013-12-10: inclement weather
+2014-01-21,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2014-01-21: severe weather
+2014-02-13,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2014-02-13: inclement weather
+2014-03-03,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2014-03-03: inclement weather
+2014-03-17,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2014-03-17: inclement weather
+2014-12-26,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2014-12-23: federal government closed; release moved to 2014-12-29
+2015-02-17,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2015-02-17: inclement weather
+2015-03-05,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2015-03-05: inclement weather
+2016-01-22,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2016-01-22: closed after noon; ALFRED still lists this date as a release date
+2016-01-25,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2016-01-25: inclement weather
+2016-01-26,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2016-01-26: inclement weather
+2019-01-14,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2019-01-14: inclement weather
+2019-02-20,no_release_day,documented,,,https://www.federalreserve.gov/feeds/h15.html,Notice of 2019-02-20: inclement weather
+2017-01-20,no_release_day,inferred,,,https://alfred.stlouisfed.org/release/downloaddates?rid=18,No ALFRED release or DTB3 vintage; no Board closure notice found
+2018-03-02,no_release_day,inferred,,,https://alfred.stlouisfed.org/release/downloaddates?rid=18,No ALFRED release or DTB3 vintage; no Board closure notice found
+2018-12-24,no_release_day,inferred,,,https://alfred.stlouisfed.org/release/downloaddates?rid=18,No ALFRED release or DTB3 vintage; no Board closure notice found
+2020-12-24,no_release_day,inferred,,,https://alfred.stlouisfed.org/release/downloaddates?rid=18,No ALFRED release or DTB3 vintage; no Board closure notice found
+2021-01-20,no_release_day,inferred,,,https://alfred.stlouisfed.org/release/downloaddates?rid=18,No ALFRED release or DTB3 vintage; no Board closure notice found
+2024-12-24,no_release_day,inferred,,,https://alfred.stlouisfed.org/release/downloaddates?rid=18,No ALFRED release or DTB3 vintage; no Board closure notice found
+2018-09-18,omitted_treasury_data,documented,2018-09-17,2018-09-19,https://www.federalreserve.gov/feeds/h15.html,Notice of 2018-09-19: Treasury rates omitted from the 2018-09-18 H.15
+2020-08-20,omitted_treasury_data,documented,2020-08-19,2020-08-26,https://www.federalreserve.gov/feeds/h15.html,Notice of 2020-08-26: H.15 wrongly noted markets closed; ALFRED first shows the value on 2020-08-25
+2023-08-02,omitted_treasury_data,documented,2023-08-01,2023-08-03,https://www.federalreserve.gov/feeds/h15.html,Notice of 2023-08-04: omitted on 2023-08-02 and updated 2023-08-03
+2023-09-13,omitted_treasury_data,documented,2023-09-12,2023-09-14,https://www.federalreserve.gov/feeds/h15.html,Notice of 2023-09-14: omitted on 2023-09-13 and updated 2023-09-14
+2025-12-24,release_conflict,unresolved,2025-12-23,2025-12-29,https://alfred.stlouisfed.org/release/downloaddates?rid=18,ALFRED lists an H.15 date but DTB3 first updates on 2025-12-29
+2025-12-26,release_conflict,unresolved,2025-12-24,2025-12-29,https://alfred.stlouisfed.org/release/downloaddates?rid=18,ALFRED lists an H.15 date but DTB3 first updates on 2025-12-29
+2018-03-21,published_as_scheduled,documented,,,https://www.federalreserve.gov/feeds/h15.html,Federal offices closed but the Fed listed H.15 as releasing as scheduled
