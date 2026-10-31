@@ -1,0 +1,20 @@
+{
+  "recorded_at_utc": "2026-10-31T17:14:02.749073+00:00",
+  "user_delegation": "User requested completion of Step9 and delegated assumption/decision design; independent human validation remains pending.",
+  "primary_rule": "unchanged constrained minimum variance, 504 prior sessions, monthly rebalance, existing costs/caps",
+  "references": [
+    "equal_weight",
+    "benchmark_60_40"
+  ],
+  "no_holdout_selection": "No switching/tuning of rule/model/constraints based on selection/evaluation outcomes. Compare registered rule to references; report every outcome.",
+  "scopes": {
+    "development_end": "2016-12-30",
+    "selection_start": "2017-01-03",
+    "selection_end": "2020-12-31",
+    "evaluation_start": "2021-01-04",
+    "evaluation_end": "2026-10-30"
+  },
+  "backtest": "Primary Historical95/99,500 prior sessions; Normal comparison; no rolling MC/EVT claim",
+  "publication": "User explicitly requested public GitHub repository and final submission artifacts",
+  "prior_exposure": "Whole-history asset EDA, versioned RF evidence and post2016 fixed-exposure stress scenarios inspected; post2016 investable strategy results not inspected before this record."
+}

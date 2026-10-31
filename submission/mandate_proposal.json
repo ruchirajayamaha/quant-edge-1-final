@@ -1,0 +1,44 @@
+{
+  "status": "TEAM_PROPOSED_CONDITIONAL; user delegated design; independent human validation PENDING",
+  "investment_horizon_years": 10,
+  "review_frequency": "quarterly monitoring; monthly scheduled rebalance",
+  "spending_annual_fraction": 0.04,
+  "inflation_assumption_annual_fraction": 0.025,
+  "additional_fee_assumption_annual_fraction": 0.0025,
+  "desired_real_growth_annual_fraction": 0.0,
+  "cash_flow_convention": "end-year spending/additional fee deductions measured against beginning-year NAV: 1+R-s-f=(1+i)*(1+g)",
+  "required_nominal_return_fraction": 0.0675,
+  "target_note": "Planning hurdle, not a forecast; total-return adjusted ETF data already embed fund expenses. Additional0.25% fee is separate hypothetical mandate cost, not a second fund expense.",
+  "risk_limits": {
+    "max_daily_var_95_fraction": 0.01,
+    "max_daily_var_99_fraction": 0.015,
+    "max_daily_es_99_fraction": 0.02,
+    "max_annual_volatility_fraction": 0.1,
+    "max_drawdown_fraction": 0.2,
+    "max_historical_scenario_loss_fraction": 0.2
+  },
+  "rationale": "Illustrative conservative review budgets chosen before current/evaluation results. At USD10M these are USD100k VaR95,USD150k VaR99,USD200k ES99; 20% loss triggers mandate adjustment discussion. They are not organiser/client-supplied requirements.",
+  "decision_policy": "Conditional ADJUST: retain eligible universe and constrained rule as candidate; do not accept until spending/return feasibility, approved loss budgets, concentration and human review are resolved. Do not relax budgets merely to pass.",
+  "monitoring": [
+    {
+      "metric": "HS99 ES",
+      "threshold": 0.02,
+      "action": "Escalate to committee and assess feasible redistribution; no automatic cap relaxation."
+    },
+    {
+      "metric": "drawdown",
+      "threshold": 0.2,
+      "action": "Escalate spending/liquidity and allocation review."
+    },
+    {
+      "metric": "max_equity_weight",
+      "threshold": 0.35,
+      "action": "Flag drift; review at scheduled monthly rebalance, no unapproved daily clipping."
+    },
+    {
+      "metric": "quarterly model independence test",
+      "threshold": 0.05,
+      "action": "Statistical p-value below0.05 triggers model/dependence review, not proof of future loss."
+    }
+  ]
+}
