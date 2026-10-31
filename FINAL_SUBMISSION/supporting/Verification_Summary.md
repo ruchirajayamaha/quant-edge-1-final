@@ -43,18 +43,38 @@ target weights. That is arithmetic on frozen inputs. No model, parameter or resu
 
 ## Public app
 
-**Not deployed, so no public-app check was performed.** There is no public URL to test, and the HTTP responses
-of guessed `streamlit.app` names prove nothing, so none is reported.
+**Live at https://quant-edge-1-final.streamlit.app/** on Streamlit Community Cloud, from `main` with `streamlit_app.py`. App code revision
+`5304403`; later commits change documents and tests only. Bundle `1c7bd6007fe22b014b25`. The build log shows
+Python 3.11.18 and all pinned packages installed with no errors, and the frozen results passed their hash
+check on Linux.
 
-Deployment needs the owner to sign in to Community Cloud. The closest available checks ran on Windows:
+Tested in a browser that was not signed in to Streamlit, after the interface rendered:
 
-- `streamlit_app.py` from a clean clone with `requirements.txt` only: all six views rendered with 0 errors,
-  the three PDF downloads were present, and the server health endpoint returned 200.
-- All pinned requirements resolve to Linux wheels for Python 3.11.
-- `.gitattributes` keeps exact file bytes, so the source-hash check should hold on Linux.
-- Peak memory was about 270 MB over four views.
+| Check | Result |
+|---|---|
+| Access | No login screen; the app rendered with viewer controls only |
+| Six views | All opened with charts and tables, 0 exceptions, 0 error messages |
+| Headlines | 7.63%, $203,169, 2.19%, recent VaR 1.54% and ES 2.03%, full-history ES 2.50%, 18 of 1,464 exceptions |
+| Confidence | 99 and 90 checked on the final code; 90% VaR 0.65%, ES 1.03% |
+| Risk method | Pure POT shows Unavailable at 90% with its explanation, and 1.68% VaR at 99% on full history |
+| Sample window | Recent 1,260 and full 5,491 sessions |
+| Portfolio | 60/40 shows its reference notice and its own results |
+| Rolling model | Historical 18 and Normal 27 exceptions; final-250 Basel green and yellow |
+| Short range | October 2026 only: 22 sessions and Basel unavailable, with no exception |
+| PDF downloads | Memo, tear sheet and recommendation served byte-identical to the packaged files (SHA-256 and size) |
+| Widths | Desktop 1360 and phone 375, with no horizontal page scroll |
 
-None of this proves a Community Cloud build succeeds. Linux was not run.
+Portfolio and pure POT at 99% were last clicked before two display-only commits. Those commits changed styling
+and the file watcher, not calculations. 95% was covered by the automated sweep, not clicked on the live app.
+
+The logs showed one real error. When an update arrived with a session open, Cloud logged an `ImportError` and
+`AttributeError` as `quantedge` was reloaded. The app kept working for new sessions. The file watcher was turned
+off, and the next update with sessions open logged no traceback. As a result, new Python code needs a manual
+reboot. The log's remaining warning is that `requirements.txt` and `pyproject.toml` both exist, and it used
+`requirements.txt` as intended.
+
+Community Cloud may put an idle app to sleep, so a visitor can see a wake-up button first. Availability depends
+on that free service, and the local launch is the fallback.
 
 ## Limits and unresolved items
 
@@ -63,9 +83,6 @@ None of this proves a Community Cloud build succeeds. Linux was not run.
 - Archived Federal Reserve H.15 pages support release dates and are disclosed, but are not named in section 9.1.
   The team should confirm that is acceptable.
 - Macro checks are comprehensive; table checks cover key cells; not every app cell was compared.
-- App PDF downloads read the canonical files directly, and tests check those paths. The downloaded bytes were
-  not hashed through a hosted app.
-- Dashboard views were read in a browser before the final path change, which touched only download sources.
 - Citations were checked by search. Kupiec's journal pages came from secondary sources, and Markowitz (1952) and
   Sharpe (1964) rest on the standard bibliographic record.
 - The research limits stand: the candidate is above its proposed tail budgets, cash income does not cover

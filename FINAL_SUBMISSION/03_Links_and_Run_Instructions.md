@@ -4,11 +4,15 @@
 
 - Repository: https://github.com/ruchirajayamaha/quant-edge-1-final
 - This folder: https://github.com/ruchirajayamaha/quant-edge-1-final/tree/main/FINAL_SUBMISSION
-- Public app: not yet deployed. Status and steps are in `DEPLOY_STREAMLIT.md` in the repository.
+- Public app: https://quant-edge-1-final.streamlit.app/
+
+The app needs no login. Streamlit Community Cloud may put an idle free app to sleep. If you see a wake-up
+screen, click the button and allow about a minute. The local launch below is the fallback.
 
 ## Set up once
 
-Use Python 3.11. Setup installs packages. After that, the app needs no download, API key or paid service.
+This is only needed to run the app yourself. Use Python 3.11. Setup installs packages. After that, the app
+needs no download, API key or paid service.
 
 Windows PowerShell:
 
@@ -30,7 +34,8 @@ python3.11 -m venv .venv
 .venv/bin/python -m pip install --no-deps -e .
 ```
 
-The install was tested on Windows with Python 3.11.16. macOS and Linux have not been run.
+The local install was tested on Windows with Python 3.11.16. The public app runs on Linux with Python
+3.11.18. The macOS steps have not been run.
 
 ## Run it locally
 

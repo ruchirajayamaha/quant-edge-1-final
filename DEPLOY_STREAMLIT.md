@@ -1,8 +1,11 @@
 # Public Streamlit deployment
 
+**Live at https://quant-edge-1-final.streamlit.app/**, verified signed out. Results are in
+`FINAL_SUBMISSION/supporting/Verification_Summary.md`.
+
 The GitHub repository is public. That makes the source available; it does not
 create a running public Streamlit service. A localhost URL works on the server's
-own computer. No public app URL is claimed until a real deployment is verified.
+own computer.
 
 ## Community Cloud settings
 
@@ -46,8 +49,8 @@ Official references:
 
 ## Current status
 
-Not deployed. The repository is ready, but deployment needs the owner to sign in to Community Cloud with
-GitHub, accept its terms and authorise access. Those steps were not done for the owner. Once a URL exists,
-verify it as above, record the result in `FINAL_SUBMISSION/supporting/Verification_Summary.md`, add it to
-`FINAL_SUBMISSION/00_START_HERE.md` and `03_Links_and_Run_Instructions.md`, then run
-`python scripts/package_submission.py` and push.
+Deployed from `main` with `streamlit_app.py` on Python 3.11, under the owner's Community Cloud account.
+
+`.streamlit/config.toml` turns the file watcher off, because an update otherwise raised import errors in open
+sessions. So a push changes files on disk at once, but new Python code needs **Reboot app** in the Manage app
+menu. PDFs and other documents are read from disk and do not need a reboot.

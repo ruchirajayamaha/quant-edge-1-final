@@ -6,7 +6,7 @@ before committing capital. This is a team proposal and no university committee h
 
 | | |
 |---|---|
-| Public app | Not yet deployed, so no URL is given. Run it locally with the command below |
+| Public app (no login needed) | https://quant-edge-1-final.streamlit.app/ |
 | GitHub repository | https://github.com/ruchirajayamaha/quant-edge-1-final |
 | Investment memo (11 pages) | [01_Investment_Memo.pdf](01_Investment_Memo.pdf) |
 | Executive tear sheet (1 page) | [02_Executive_Tear_Sheet.pdf](02_Executive_Tear_Sheet.pdf) |
@@ -14,7 +14,8 @@ before committing capital. This is a team proposal and no university committee h
 
 ## Run the app
 
-After the setup in [03_Links_and_Run_Instructions.md](03_Links_and_Run_Instructions.md), one command starts it:
+The public link above is the quickest way in. To run it yourself instead, follow the setup in
+[03_Links_and_Run_Instructions.md](03_Links_and_Run_Instructions.md), and then one command starts it:
 
 ```bash
 python scripts/launch.py
@@ -41,4 +42,3 @@ The technical package is complete. Human validation is not.
 - **Team details are not included.** Team and member names, the deadline and the organiser's submission
   route were not supplied.
 - **Nothing has been submitted** to the organisers.
-- **Public deployment is optional under the brief**, which accepts a one-command local launch.

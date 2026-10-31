@@ -2,6 +2,12 @@
 
 All notable milestone checkpoints for the Quant Edge 1.0 solo implementation are recorded incrementally in this file.
 
+## [1.0.2] - 2026-11-01 - Public deployment
+
+- Deployed to https://quant-edge-1-final.streamlit.app/ and verified it signed out, including PDF hashes.
+- Stopped metric values being cut off at narrow widths, and fixed a clipped table status pill.
+- Turned off the hosted file watcher after logs showed import errors during an update.
+
 ## [1.0.1] - 2026-11-01 - Canonical final submission folder
 
 - Added `FINAL_SUBMISSION/` with the required PDFs, links, requirement trace, checksums and LaTeX

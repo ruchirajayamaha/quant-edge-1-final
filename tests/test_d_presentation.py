@@ -199,6 +199,7 @@ def test_status_records_no_invented_review_or_deployment():
     assert "PENDING" in status and "PASSED" not in status
     start = (FINAL / "00_START_HERE.md").read_text(encoding="utf-8")
     assert "PENDING" in start and "localhost" not in start
+    assert "https://quant-edge-1-final.streamlit.app/" in start
 
 
 def test_legacy_reportlab_script_cannot_overwrite_latex_deliverables():

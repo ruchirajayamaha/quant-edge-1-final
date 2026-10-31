@@ -9,7 +9,10 @@ This document is updated incrementally at every project step in accordance with 
 Claude Code (Claude Opus 5.5) assembled `FINAL_SUBMISSION/`, re-read the brief against the memo, added a
 diversification paragraph and calendar statement to the memo, and wrote the summary documents. The
 diversification figure is weighted arithmetic on frozen inputs with no change to any model or result. It was
-checked by a separate plain-Python route. Human validation remains **PENDING**.
+checked by a separate plain-Python route. It then deployed the app to Streamlit Community Cloud in the
+owner's signed-in browser, read the build logs, fixed the display and module-reload problems they revealed, and
+tested the public URL signed out. The owner completed the sign-in, consent and email verification personally.
+Human validation remains **PENDING**.
 
 ### Presentation and LaTeX report disclosure (November 2026)
 

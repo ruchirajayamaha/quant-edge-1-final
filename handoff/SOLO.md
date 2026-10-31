@@ -1,7 +1,7 @@
 # Quant Edge 1.0 — Solo Checkpoint (`handoff/SOLO.md`)
 
 **LATEST: FINAL_SUBMISSION/ is the one canonical package; submission/ now holds working
-evidence only.** Hosted deployment and human validation are the open items.
+evidence only.** The public app is live at https://quant-edge-1-final.streamlit.app/. Human validation is the open item.
 
 **Earlier: presentation and LaTeX reports complete.** The dashboard is redesigned and
 the memo (11 pages), tear sheet and recommendation are compiled with XeLaTeX through

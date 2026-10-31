@@ -9,7 +9,7 @@ items below remain open.**
 | Requirement | Evidence | Status |
 |---|---|---|
 | Public repository, documented and reproducible, with a README | https://github.com/ruchirajayamaha/quant-edge-1-final | Met; anonymous access checked |
-| Streamlit app deployed, or runnable locally with one command | `python scripts/launch.py`; `03_Links_and_Run_Instructions.md` | Met by local launch; not deployed |
+| Streamlit app deployed, or runnable locally with one command | https://quant-edge-1-final.streamlit.app/; `python scripts/launch.py` | Met both ways; public access checked signed out |
 | 7-15 page report covering method, data, cleaning, results, assumptions, limitations | `01_Investment_Memo.pdf`, 11 pages including references | Met |
 | One-page tear sheet: portfolio, risk metrics, recommendation | `02_Executive_Tear_Sheet.pdf` | Met |
 | One-page plain-English accept / adjust / reject (section 8.6) | `supporting/Recommendation.pdf` | Met; conditional ADJUST |

@@ -1,6 +1,6 @@
 {
  "scope": "AI-assisted numerical, editorial and technical verification. Not independent human validation.",
- "recorded_at_utc": "2026-10-31T19:49:52+00:00",
+ "recorded_at_utc": "2026-10-31T20:31:41+00:00",
  "bundle_id": "1c7bd6007fe22b014b25",
  "dataset_id": "qe1_20050101_20261030_r3_6c4633a7ba",
  "baseline_verify_exit_code": 0,

@@ -8,6 +8,8 @@ rule is a candidate, not an approved trade instruction. The proposed funding hur
 tail-loss budgets, concentration and monthly drift policy require human approval.
 Independent human validation is **PENDING**; automated tests do not satisfy that requirement.
 
+**Public app: https://quant-edge-1-final.streamlit.app/** (no login needed)
+
 **Judges: start at [FINAL_SUBMISSION/00_START_HERE.md](FINAL_SUBMISSION/00_START_HERE.md).**
 That folder is the one canonical submission, and
 [QuantEdge_Final_Submission.zip](QuantEdge_Final_Submission.zip) is an archive of it.
@@ -25,7 +27,7 @@ HTTP200 responses on31 October2026. Exact evidence: `audit/step9_review/publicat
 
 Use **Python3.11**. Setup needs package installation; normal app launch needs no
 market-data downloads, API key or paid service. Frozen inputs and results are included.
-The official challenge permits a local one-command launch instead of hosted deployment.
+The public app above needs no setup. The local launch below is the reproducible fallback.
 
 Windows PowerShell:
 
@@ -51,8 +53,7 @@ python3.11 -m venv .venv
 ```
 
 Equivalent direct command after activation: `streamlit run app/Home.py`.
-Open the local URL printed by Streamlit, normally http://localhost:8501.
-No public hosted-app URL is claimed. For headless verification:
+Open the local URL printed by Streamlit, normally http://localhost:8501. For headless verification:
 `python scripts/launch.py --server.headless=true --server.port=8501`.
 
 ## What the app shows
