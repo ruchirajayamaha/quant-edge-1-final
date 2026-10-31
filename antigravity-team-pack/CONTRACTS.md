@@ -1,6 +1,6 @@
 # Shared interfaces - freeze before parallel implementation
 
-This is a design contract, not implemented project code. D creates its Python definitions in D0; A/B/C then implement against that baseline. Names can change before D0 is frozen. After freeze, D coordinates versioned contract changes across all workstreams.
+This file describes integration conventions. Existing runtime definitions in src/quantedge/contracts.py (currently schema 1.1.0), config and handoff/SOLO.md are authoritative for implemented interfaces. D0/A1/r3 are complete; do not recreate them from this older skeleton. Proposed future additions are introduced together with their callers and tests, not by silently replacing existing dataclasses. In solo mode one developer owns all areas below; the ownership table is for explicitly chosen parallel work only.
 
 ## Ownership
 
@@ -15,16 +15,18 @@ Each owner creates only their own tests; D owns shared `conftest.py`. Generated 
 
 ## DataBundle
 
-D creates a dataclass with:
+The implemented DataBundle includes these concepts; inspect the current dataclass for exact field names and optional r3 additions:
 
 - `prices`: adjusted close DataFrame on the documented expected shared US trading sessions, ascending unique DatetimeIndex, columns exactly `SPY,EFA,EEM,AGG,GLD,XLE,XLK`; missing observations remain flagged before return calculation.
 - `simple_returns`: complete one-session DataFrame `P_t/P_(t-1)-1`, calculated on the uncollapsed session grid with no implicit fill; no artificial first-day zero. A missing price invalidates returns needing either endpoint. Exclude/count those affected rows only after calculation, rather than dropping price dates first and mislabelling a multi-session return as one-day. Expose gaps so a performance path or250-day test is not falsely labelled uninterrupted.
 - `log_returns`: same index/columns as simple returns, `log1p(simple_returns)`.
-- `rf_daily`: Series on return dates, fractional approximate trading-day risk-free proxy. Preserve raw annual-percent DTB3 separately with observation dates and chosen availability lag in the manifest. Align from past available values only; never bfill.
+- `rf_daily`: fractional DTB3/252 approximate trading-day proxy. Under r3 select the newest eligible observation and its latest eligible value version; provenance distinguishes documented, vintage-supported, inferred, sparse-fallback and unresolved evidence. This is day-level evidence, not exact historical intraday availability. Keep `ex_post_rf_daily`, `rf_provenance` and `rf_accrual_sensitivity` separate using their runtime names. Neither the primary proxy nor the accrual sensitivity is an exact realized Treasury return.
 - `quality_flags`: tidy table with date/ticker/rule/value/action; flagging must not automatically remove a return.
 - `manifest`: dataset ID, requested and actual bounds, UTC retrieval time, source URLs, adjustment setting, row exclusions, per-file SHA256, RF conversion/availability convention and schema version.
 
 The downloadable end bound may be exclusive. Persist actual final observations, not just the requested date. A creates the snapshot once; D distributes it by the team's agreed mechanism without requiring a new download per clone. No secrets go into it.
+
+The current ETF/RF snapshot is already built and verified. Future income/inflation context belongs in a separate hashed data/reference/context/ snapshot with source, bounds, retrieval time, units and use classification. It must not modify r3 or become an unlagged optimizer signal. See A1b.
 
 Public interfaces, with exact Python details frozen by D:
 
@@ -55,6 +57,8 @@ At close t-1, a decision using data through t-1 can set weights for the t return
 
 Core portfolio candidates: constrained minimum variance, equal-weight reference and monthly 60/40 comparison. Show mean-variance/frontier trade-offs and CAPM expected-return assumptions. Reference portfolios may violate proposed mandate constraints: label that and do not recommend them as feasible without checking. A useful minimum-CVaR candidate is optional after this core.
 
+Validate a registered allocation rule, not hindsight-selected final weights. The final proposed allocation is the selected rule applied at the data end. The register distinguishes prior full-sample asset-data diagnostics from still-uncomputed strategy evaluation: do not claim the entire dataset was never seen. Sample covariance ddof=1 is the current configured primary; optional shrinkage requires an explicit dependency/validation decision, not an implicit requirement.
+
 ## RiskEstimate and forecast callback
 
 D creates fields:
@@ -76,6 +80,10 @@ forecast_fn(train_asset_returns, weights, *, confidence, seed) -> RiskEstimate
 ```
 
 C forms simple portfolio returns as `train_asset_returns @ weights` for the *exposure being forecast*. All methods compared on the dashboard use identical weights, date window, confidence and horizon. Log returns remain available for statistical diagnostics; simple-return risk models are an explicitly documented aggregation/P&L exception. Do not mix a log-loss quantile with a simple-loss quantile in the same comparison.
+
+WINDOWS: report (1) registered recent-window current risk and (2) a labelled full-history crisis-inclusive fixed-exposure sensitivity. Show each window's dates, counts and actual crisis coverage. Recent 1,260 sessions omit GFC/COVID but include 2022. Never use the final full sample in an earlier rolling forecast. A long-window sensitivity is our strategy choice, not an official fixed-lookback requirement. Both views use matched observations across methods.
+
+EVT confidence support: C2 defines an explicitly labelled empirical-body/GPD-tail model when the requested quantile is below the fitted tail. Do not force a lower threshold merely to populate the 90% selector, extrapolate a GPD into the body or disguise body estimates as pure tail extrapolation. Numerical/fit failures, infinite ES and insufficient data remain legitimate unavailable states with reasons.
 
 For normal loss risk: `VaR=-mu + z_c*sigma`; `ES=-mu + sigma*phi(z_c)/(1-c)`. Multivariate normal MC uses the SAME asset mean/covariance and the same ddof convention as the normal analytic method. Agreement within simulation error is expected.
 
@@ -100,7 +108,7 @@ For target date t:
 
 Rows: `date,model,confidence,forecast_var,forecast_es,realized_loss,exceedance,train_start,train_end,status,reason`. Invalid/skipped rows are retained with reasons; do not encode missing forecasts as non-exceedances. D supplies dataset/config/code IDs on persistence.
 
-Primary core backtest: historical VaR at 95% and 99%. Add parametric normal only if the core budget allows. The team may select a different primary model prospectively, with reasoning. A's generic engine must support callbacks so C does not reimplement validation. Rolling MC/EVT/GARCH is not needed for core compliance.
+Required core backtest: the primary model registered before selection/evaluation, at 95% and 99%, with the generic callback engine. Target historical/normal/MC coverage before exposing them as selectable backtest methods; cache forecasts and report actual runtime. Report the longest valid OOS span and the frozen final evaluation span separately, with different purposes clearly labelled. Optional EVT/FHS enters the backtest selector only after its rolling callback is implemented/validated; a risk-only estimate is not silently relabelled as a backtest. Every exposed backtest choice must work or give a genuine sample/fit reason. The official brief requires validation of the chosen model, not daily refitting every extension. Retain legitimate unavailable states rather than fabricating passes.
 
 Basel standard colors are only for 250 consecutive valid one-day 99% forecast/realization pairs: green0-4, yellow5-9, red10+. Do not cherry-pick valid days around missing forecasts. Otherwise return insufficient/not applicable. Display the 99%/250-day diagnostic separately from the sidebar-selected 90%/95% tests. Label this an educational diagnostic, not bank regulatory approval. State small-sample power limitations.
 
@@ -125,5 +133,7 @@ One hypothetical shock vector must explicitly name all seven tickers. Example, i
 D's `pipeline.py` is the only orchestrator. Library functions do not import Streamlit. Pages do not independently download, optimize, fit EVT or compute alternate versions of metrics. UI test fixtures are explicitly labelled and never enter final exports.
 
 Every result bundle includes dataset ID, config hash, code version, forecast/cost conventions and computation time. Exported memo/tear sheet values must come from the same bundle as the app. Human-written return objectives, horizon, constraints and recommendation remain distinguishable from calculated facts.
+
+The bundle additionally records context-snapshot ID, decision-register version, risk-window ID, EVT body/tail construction and simulation draw count/seed/uncertainty where used. These are future metadata additions coordinated with implementation; no runtime schema is changed by this prompt update. A frozen reference bundle supports offline demonstration while real controls still recompute/retrieve the correct selected configuration.
 
 If a shared interface needs a change: owner writes current contract, proposed change, reason and callers affected into their handoff; D applies it once and announces a new schema version. No parallel ad-hoc edits.

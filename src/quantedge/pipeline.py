@@ -26,6 +26,5 @@ def run_pipeline(
       rolling validation, risk budgeting, and stress scenarios with shared ``dataset_id``,
       ``config_hash``, seeds, and ``code_version``.
     """
-    raise NotImplementedError(
-        "run_pipeline is a D0 interface stub scheduled for implementation in SOLO STEP 9 (D1/D2)."
-    )
+    from quantedge.final_engine import compute_bundle
+    return compute_bundle(config, offline=offline)

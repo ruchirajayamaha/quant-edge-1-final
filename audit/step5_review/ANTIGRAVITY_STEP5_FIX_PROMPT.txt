@@ -1,0 +1,50 @@
+SOLO STEP 5 - BOUNDED CONFIG / JSON CORRECTIONS AND VISIBLE EXPORTS
+
+Work in C:/Users/ruchira/Desktop/qunt. Read:
+- audit/step5_review/STEP5_REVIEW.md and verification.json
+- audit/step5_review/verify_step5.py and baseline_step5_results.json
+- current var.py, es.py, tests/test_c_var_es.py and record_step5_c1_results.py
+
+The independent review passed 69 tests, verified 450 exact rational-tail cases,
+and independently checked all 54 saved baseline risk rows. The mathematics is
+working; preserve the estimator/tail conventions and default baseline results.
+
+R1: Eliminate mixed configuration settings. build_development_c1_risk_bundle
+currently records a passed config's MC count and uses it for uncertainty, while
+its comparison estimator silently uses cached repository defaults. A synthetic
+config asking for 111 draws returns primary estimates using 25,000 and uncertainty
+using 111. Route one consistent set of effective settings through internal helpers
+while preserving frozen D0 signatures, OR explicitly reject unsupported non-default
+settings rather than returning misleading metadata. No broad architecture rewrite.
+Add a genuinely different-config regression and verify effective draw count/config
+hash and primary/base seed agree between primary estimates, bundle metadata and
+their uncertainty (individual uncertainty replication seeds intentionally differ).
+Keep displayed
+precision/count notes truthful for the settings actually used.
+
+R2: The saved JSON contains bare NaN for non-applicable seed/count fields. Export
+null for legitimate N/A metadata and use json.dumps(..., allow_nan=False), with
+a strict full-artifact parse test. Do not mask invalid core risk values as zero
+or silently remove model failures. Preserve the original artifact/evidence copy;
+regenerate the result file and compare valid baseline numeric values unchanged.
+
+VISIBLE OUTPUTS: Export actual comparison CSV/JSON and report-ready PNG/SVG figures:
+1. Same-exposure 95/99 Historical/Normal/MC VaR and ES comparison, with matched
+   sample dates, confidence, one-day pre-cost units and USD10M conversion.
+2. Fixed-exposure loss distribution with clearly labelled selected risk markers.
+Optional MC uncertainty figure only if cheap. Use the saved/core computed values
+as the numerical authority. The isolated Matplotlib rendering dependencies are
+already in tmp/figure_export_deps; see scripts/export_verified_development_preview.py.
+Do not change app requirements for rendering. Label all outputs DEVELOPMENT ONLY,
+through 2016-12-30, with sample/exposure/config/seed/count metadata and provenance.
+No placeholder EVT/backtest/stress figures. Do not overwrite Step 4 previews.
+
+Run new focused regressions and the connected suite, regenerate/strictly parse
+the corrected export, verify baseline risk values and all 53 source-data hashes.
+Preserve r3/r2/v1/context snapshots, pointer, config, contracts, requirements and
+accepted Steps 3/4 code. No downloads, strategy retuning or holdout outcomes.
+Update methodology, handoff, CHANGELOG and truthful AI disclosure. Report actual
+files, tests/results, hashes, configuration evidence and generated figure paths.
+
+STOP after this bounded Step 5 correction for Codex review. Do not start Step 6,
+new models, a broad research/review cycle, deployment or GitHub push.

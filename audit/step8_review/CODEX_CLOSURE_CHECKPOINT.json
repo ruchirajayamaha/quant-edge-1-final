@@ -1,0 +1,48 @@
+{
+  "checked_at_utc": "2026-10-31T17:05:01.908806+00:00",
+  "status": "Step8 implemented and verified; STOP before Step9",
+  "pytest": {
+    "passed": 127,
+    "seconds": 18.16,
+    "command": ".venv/Scripts/python.exe -m pytest -q --basetemp tmp/pytest_step8_all_d729a8"
+  },
+  "focused_tests": 18,
+  "pip_check": "No broken requirements found",
+  "independent_verification": {
+    "status": "PASS",
+    "contribution_rows_checked": 84,
+    "allocation_rows_checked": 14,
+    "stress_rows_checked": 8,
+    "max_absolute_errors": {
+      "contribution_total": 1.0408340855860843e-17,
+      "contribution_marginal": 2.7755575615628914e-17,
+      "allocation_risk": 6.938893903907228e-18,
+      "stress": 4.440892098500626e-16
+    },
+    "protected_files_unchanged": 87,
+    "source_data_hashes_matching": 53,
+    "source_hashes_matching": 11,
+    "artifact_hashes_matching": 14,
+    "authority_sha256": "354a8915aebf0e85934058abe06f0b929347b8b87ee7ce1625d64c4b1ae32b92",
+    "scope": "Development contribution/sizing; explicitly authorized ex-post post2016 stress only, no strategy evaluation outcomes"
+  },
+  "figures_visually_inspected": 3,
+  "authority_sha256": "354a8915aebf0e85934058abe06f0b929347b8b87ee7ce1625d64c4b1ae32b92",
+  "manifest_sha256": "d7c5827322974fb9a45130e8e3a03a8289dba7656a5ba9dc3a2e1e60f2aa495e",
+  "source_sha256": {
+    "config.yaml": "60f55a1b7172220153ed2c9692faca98771b9c6a2cb2b18f815c7f280a2fbce1",
+    "src/quantedge/contracts.py": "7aa3a84b9951f959913a8310d1ea1fc8ff74c7ca115629bd77fa673635f76caa",
+    "src/quantedge/risk_budget.py": "097c992b6837f47c599b1402160e8f9ec9155c43d126baab4284022c7c53f20f",
+    "src/quantedge/stress.py": "63a5832d028e03c9bacbc062e9e366965f4338f5870ae1475cb1a0a7beb793bc",
+    "src/quantedge/var.py": "c56f5652fe031654d4d629ac659ee26d269b66ff2f7fb5f14cb33c592175bd7d",
+    "src/quantedge/es.py": "9f4c5797a3671360273055badab8fcdcef49e63600f8f543400e200d3b730529",
+    "src/quantedge/portfolio.py": "8e5b93b6fed3869446eabaf60a096a347380cc6c2e8ec7262ea76ba568ee2940",
+    "src/quantedge/returns.py": "2ead8513c6c5758df5ffc7d15de113a01345912d7e4f70b4832af622db11e0e0",
+    "scripts/record_step8_results.py": "5fff6d2fbad0638ffe1a7b7b2e41ed1acee9d5590c4f2094643f83c84049ca0e",
+    "scripts/export_step8_preview.py": "8597f231bdeb3a7a35b05266f23ec4ff5ceeeb84d574ae14098bcec483cc4f15",
+    "docs/sections/b_risk_budget_and_stress.md": "b2029172645c41620f32606898419273aa5127d0a2e1f53b09bd6ac578ebc77c"
+  },
+  "human_validation": "PENDING",
+  "selection_evaluation_strategy_outcomes_inspected": false,
+  "authorized_post_2016_fixed_exposure_scenario_replays": true
+}

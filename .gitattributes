@@ -1,5 +1,7 @@
-# Snapshot manifests and release evidence verify exact bytes with SHA-256.
-# Preserve those bytes across Windows, Linux, and macOS checkouts.
-# Raw evidence also retains provider whitespace; code keeps normal whitespace checks.
+# Analytical-source and artifact manifests verify exact bytes with SHA-256.
+# Preserve existing mixed historical line endings across every checkout. This
+# deliberately disables autocrlf transformations; Python accepts LF and CRLF.
+* -text
+# Raw evidence also retains provider whitespace.
 /data/** -text -whitespace
 /audit/** -text -whitespace

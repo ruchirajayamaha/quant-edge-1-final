@@ -1,0 +1,65 @@
+{
+  "checked_at_utc": "2026-10-31T10:22:18.784316+00:00",
+  "scope": "Prompt/planning integration only; no Step 3 implementation or portfolio outcomes.",
+  "runtime_baseline_checks": {
+    "files": 22,
+    "changed": 0,
+    "results": {
+      "src\\quantedge\\backtest.py": true,
+      "src\\quantedge\\config.py": true,
+      "src\\quantedge\\contracts.py": true,
+      "src\\quantedge\\data.py": true,
+      "src\\quantedge\\es.py": true,
+      "src\\quantedge\\evt.py": true,
+      "src\\quantedge\\kpis.py": true,
+      "src\\quantedge\\pipeline.py": true,
+      "src\\quantedge\\portfolio.py": true,
+      "src\\quantedge\\returns.py": true,
+      "src\\quantedge\\rf_evidence.py": true,
+      "src\\quantedge\\risk_budget.py": true,
+      "src\\quantedge\\stress.py": true,
+      "src\\quantedge\\var.py": true,
+      "src\\quantedge\\__init__.py": true,
+      "tests\\conftest.py": true,
+      "tests\\test_a_data.py": true,
+      "tests\\test_d_setup.py": true,
+      "tests\\test_r3_rf_evidence.py": true,
+      "config.yaml": true,
+      "requirements.txt": true,
+      "data\\processed\\active_snapshot.json": true
+    }
+  },
+  "snapshot_checks": {
+    "qe1_20050101_20261030_afb9ce5694": {
+      "checked": 13,
+      "mismatches": 0
+    },
+    "qe1_20050101_20261030_r2_cd2904443b": {
+      "checked": 15,
+      "mismatches": 0
+    },
+    "qe1_20050101_20261030_r3_6c4633a7ba": {
+      "checked": 18,
+      "mismatches": 0
+    }
+  },
+  "active_dataset_id": "qe1_20050101_20261030_r3_6c4633a7ba",
+  "static_prompt_checks": "passed",
+  "synthetic_cash_flow_identity_checks": "2 passed; no market data or portfolio calculation",
+  "archive": {
+    "path": "antigravity-team-pack.zip",
+    "files": 15,
+    "crc_and_exact_source_match": true,
+    "sha256": "0a0f0e870259c677c2bfb4538d628de436697651c5293a8a377ae40c76223efc"
+  },
+  "git_diff_check": "passed",
+  "claude_review_current_sha256": {
+    "audit/final_strategy_review/claude_output/FINAL_ROUND_REVIEW.md": "0ee2757e93e399bc69e49cc286325578d366e128015fabf5c42deb5d8fa0bfea",
+    "audit/final_strategy_review/claude_output/PROPOSED_PROMPT_CHANGES.md": "59e805192a5d0888c33a52f1dca88ec88fa42203378e890be41928fd04645c2e",
+    "audit/final_strategy_review/claude_output/REVIEW_SUMMARY_FOR_CODEX.md": "c07e3066001db5e27cd1c08d3445c111d8ff802f819e3e420604905ebe0e8b6b"
+  },
+  "test_execution": "No new analytical pytest run needed for prompt-only changes. Earlier 41-pass result is not a newly executed result.",
+  "human_validation": "PENDING",
+  "protocol_status": "DRAFT; no human approval or formal preregistration claimed",
+  "commit_or_push": "Not performed in this prompt-integration pass"
+}

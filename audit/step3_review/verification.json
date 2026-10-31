@@ -1,0 +1,60 @@
+{
+  "scope": "read-only runtime review; synthetic probes and development-only path checks",
+  "conflicting_specification": {
+    "accepted": true,
+    "advertised_objective": "min_variance",
+    "actual_solver": "analytic_reference",
+    "spy_weight": 1.0,
+    "constraint_feasible": false
+  },
+  "compliance_scope": {
+    "reported_status": "feasible_provisional_mandate",
+    "all_rebalance_targets_feasible": true,
+    "next_session_equity_weight": 0.3689320388349514,
+    "equity_cap": 0.35
+  },
+  "independent_units_ledger": {
+    "sessions": 48,
+    "max_absolute_wealth_difference": 4.440892098500626e-16
+  },
+  "truncated_prefix_invariance": "passed, exact weights and wealth",
+  "development_weight_monitoring": {
+    "active_start": "2007-01-05",
+    "active_end": "2016-12-30",
+    "n_active": 2516,
+    "feasible_rebalance_targets": 120,
+    "n_rebalances": 120,
+    "pre_return_sessions_with_drifted_cap_breach": 1439,
+    "max_single_weight": 0.4513928828216966,
+    "max_equity_group_weight": 0.37298300491046316
+  },
+  "documentation_counterexample": {
+    "f": "x**2 on [1,2]",
+    "x": 2,
+    "x_star": 1,
+    "fw_gap": 4,
+    "primal_error": 3,
+    "twice_primal_error": 6
+  },
+  "snapshot_hashes": {
+    "verified": 46,
+    "by_dataset": {
+      "qe1_20050101_20261030_afb9ce5694": 13,
+      "qe1_20050101_20261030_r2_cd2904443b": 15,
+      "qe1_20050101_20261030_r3_6c4633a7ba": 18
+    }
+  },
+  "baseline_runtime_changes": [
+    "src\\quantedge\\portfolio.py",
+    "tests\\test_d_setup.py"
+  ],
+  "config_hash": "587ddbe363589fb6956c23c5fe8b2b544bac81d9224a0b4bb59f60f5fbc0a017",
+  "reviewed_source_sha256": {
+    "src/quantedge/portfolio.py": "d46cf43a7af521ea375fddc5a39dd9356a2bceedf947b6996da5f53d5946e827",
+    "tests/test_b_portfolio.py": "a289799ed933e455073ea5d6f69cb8b50ae2fbbcbff4006ef3cf899d959b1384",
+    "tests/test_d_setup.py": "7fd8e9f3937e4e1946a0e2e0fed73fcbcb08752210ccf7492d3b48196a3ad75f",
+    "docs/sections/b_portfolio_construction.md": "ee849f320139479ade05eb5104db7a9c1c9390ff769a62d1a0a3de8ed82277a6"
+  },
+  "protected_git_content": "config, requirements, contracts and active pointer unchanged",
+  "holdout_strategy_outcomes": "not computed; source load only, paths restricted to development"
+}

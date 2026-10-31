@@ -1,0 +1,8 @@
+ticker,hypothetical_shock,development_worst_daily_return,development_best_daily_return,interpretation
+SPY,-0.25,-0.09844707852200596,0.14519757005907641,Daily extrema are scale context only; hypothetical joint repricing duration/probability unassigned.
+EFA,-0.25,-0.11163182934860727,0.15887593761804553,Daily extrema are scale context only; hypothetical joint repricing duration/probability unassigned.
+EEM,-0.25,-0.16166210502927325,0.22769917096733927,Daily extrema are scale context only; hypothetical joint repricing duration/probability unassigned.
+AGG,-0.12,-0.068395196473159725,0.038688022973058844,Daily extrema are scale context only; hypothetical joint repricing duration/probability unassigned.
+GLD,0.10000000000000001,-0.087808264380812795,0.11290530102327678,Daily extrema are scale context only; hypothetical joint repricing duration/probability unassigned.
+XLE,0.20000000000000001,-0.14443804191398302,0.16474615021219763,Daily extrema are scale context only; hypothetical joint repricing duration/probability unassigned.
+XLK,-0.29999999999999999,-0.086538245186234652,0.13898299567506101,Daily extrema are scale context only; hypothetical joint repricing duration/probability unassigned.

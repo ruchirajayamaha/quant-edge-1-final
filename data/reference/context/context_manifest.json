@@ -1,0 +1,124 @@
+{
+  "context_id": "qe1_context_20050101_20261030_a1b_2040bb6e15",
+  "schema_version": "1.1.0",
+  "retrieved_at_utc": "2026-10-31T11:46:07Z",
+  "parent_price_dataset_id": "qe1_20050101_20261030_r3_6c4633a7ba",
+  "tickers": [
+    "SPY",
+    "EFA",
+    "EEM",
+    "AGG",
+    "GLD",
+    "XLE",
+    "XLK"
+  ],
+  "source_urls": {
+    "yfinance_split_adjusted_closes_and_actions": "https://query2.finance.yahoo.com/v8/finance/chart/{ticker} (via yfinance.download auto_adjust=False, actions=True)",
+    "fred_cpiaucsl_csv": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCSL"
+  },
+  "units": {
+    "etf_split_adjusted_closes": "USD_per_split_adjusted_share (auto_adjust=False Close; not dividend-adjusted)",
+    "etf_distributions": "USD_cash_distribution_per_split_adjusted_share_on_ex_date (actions=True Dividends)",
+    "etf_stock_splits": "split_ratio_new_shares_per_old_share_0_if_none",
+    "etf_trailing_12m_distributions": "USD_per_split_adjusted_share_rolling_365_calendar_days",
+    "etf_trailing_12m_yields": "annual_fraction_trailing_365d_dividends_divided_by_split_adjusted_close",
+    "fred_cpiaucsl": "Index_1982_1984_eq_100_seasonally_adjusted_monthly",
+    "cpi_mom_and_yoy_inflation": "fraction_change"
+  },
+  "coverage": {
+    "etf_session_start": "2005-01-03",
+    "etf_session_end": "2026-10-30",
+    "n_etf_sessions": 5492,
+    "ttm_yield_valid_start": "2006-01-03",
+    "ttm_yield_valid_end": "2026-10-30",
+    "n_ttm_yield_valid_sessions": 5240,
+    "cpi_month_start": "2004-01",
+    "cpi_month_end": "2026-09",
+    "n_cpi_months": 272,
+    "missing_or_unreleased_cpi_months_in_etf_window": [
+      "2025-10",
+      "2026-10"
+    ],
+    "unreleased_final_cpi_months_in_etf_window": [
+      "2026-10"
+    ]
+  },
+  "share_basis_verification": {
+    "price_denominator_basis": "yfinance_auto_adjust_false_split_adjusted_Close",
+    "distribution_numerator_basis": "yfinance_actions_true_split_adjusted_Dividends_on_ex_date",
+    "identity_checked": "AdjClose_t / AdjClose_{t-1} == Close_t / (Close_{t-1} - Dividend_t)",
+    "ex_div_factor_tolerance": 0.0005,
+    "max_ex_div_factor_abs_diff_by_ticker": {
+      "SPY": 6.553619760207852e-07,
+      "EFA": 3.6526076696574705e-07,
+      "EEM": 5.806242655559402e-07,
+      "AGG": 1.5961284329790715e-06,
+      "GLD": 0.0,
+      "XLE": 6.799828109471662e-07,
+      "XLK": 6.234827276685451e-07
+    },
+    "positive_distribution_event_counts": {
+      "SPY": 87,
+      "EFA": 41,
+      "EEM": 44,
+      "AGG": 261,
+      "GLD": 0,
+      "XLE": 88,
+      "XLK": 81
+    },
+    "stock_split_event_counts": {
+      "SPY": 0,
+      "EFA": 1,
+      "EEM": 2,
+      "AGG": 0,
+      "GLD": 0,
+      "XLE": 1,
+      "XLK": 1
+    },
+    "stock_split_events": [
+      {
+        "date": "2005-06-09",
+        "ticker": "EFA",
+        "split_ratio_new_per_old": 3.0
+      },
+      {
+        "date": "2005-06-09",
+        "ticker": "EEM",
+        "split_ratio_new_per_old": 3.0
+      },
+      {
+        "date": "2008-07-24",
+        "ticker": "EEM",
+        "split_ratio_new_per_old": 3.0
+      },
+      {
+        "date": "2025-12-05",
+        "ticker": "XLE",
+        "split_ratio_new_per_old": 2.0
+      },
+      {
+        "date": "2025-12-05",
+        "ticker": "XLK",
+        "split_ratio_new_per_old": 2.0
+      }
+    ],
+    "non_distribution_tickers_note": "GLD is a physical gold bullion grantor trust with 0 cash distributions; all six other ETFs (SPY, EFA, EEM, AGG, XLE, XLK) pay periodic cash dividends."
+  },
+  "use_classification": "ex_post_mandate_income_and_purchasing_power_context_only; never added to auto_adjust=True total returns; never used as an unlagged optimizer signal",
+  "limitations": [
+    "ETF total returns in DataBundle.simple_returns already include reinvested distributions via auto_adjust=True; distribution yields here decompose cash income vs price appreciation and must NEVER be added to portfolio returns.",
+    "Distributions are recorded on ex-dividend dates (not payable dates) and exclude investor-level withholding taxes.",
+    "GLD is a physical gold bullion trust paying 0 cash distributions; endowment spending from GLD requires unit sales.",
+    "FRED CPIAUCSL is monthly, seasonally adjusted, and subject to BLS seasonal-factor revisions; latest-vintage CPIAUCSL is used strictly for ex-post completed-month purchasing-power analysis and is not a point-in-time release series or forward inflation forecast.",
+    "FRED CPIAUCSL has no published observation for 2025-10 ('.') and October 2026 CPIAUCSL had not been released by the 2026-10-30 snapshot freeze date (latest published month: 2026-09); missing or unreleased months are never interpolated or extrapolated."
+  ],
+  "file_sha256": {
+    "data/reference/context/etf_distributions.parquet": "a2fa33c5b26a1de0230eacb21160fba978bcbb1d26f9379aefd70d5004370e96",
+    "data/reference/context/etf_split_adjusted_closes.parquet": "7bc64df498ecfa7eaa9a55a06cfd5d0e1d4c3c40c811cc364c141af16c1fee51",
+    "data/reference/context/etf_stock_splits.parquet": "db4ae082363d101c7a57ebc186a0e5cd1c113df03e503d6cc00191190889f269",
+    "data/reference/context/etf_trailing_12m_distributions.parquet": "a25a94c63b92b97f4efc3b3c00592aa4e8e7ded2706fa9caec09a9453d809f2e",
+    "data/reference/context/etf_trailing_12m_yields.parquet": "f1b6cb8a37f72987fd310f621d66b4639f8b75f475b895f12ed93dd71f0cb48d",
+    "data/reference/context/fred_cpiaucsl_monthly.parquet": "7ce8545a3ea3dc432757af61474107bc4477ef4976f0148e5efd6d2864aeb05e",
+    "data/reference/context/fred_cpiaucsl_raw.csv": "8556b710094027fa4724641d48be620cc37c04abfa15a0c496378cf1146c1549"
+  }
+}

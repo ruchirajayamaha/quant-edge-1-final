@@ -1,0 +1,38 @@
+{
+  "scope": "read-only runtime; synthetic checks and development-only risk results",
+  "fraction_rational_tail_oracle": {
+    "cases": 450,
+    "max_es_absolute_error": 3.552713678800501e-15,
+    "exact_var_and_permutation_checks": true
+  },
+  "strict_json_export_probe": {
+    "strict_parse_succeeds": false,
+    "error": "Non-standard JSON numeric token: NaN"
+  },
+  "development_risk_oracle": {
+    "rows": 54,
+    "saved_vs_current_max_error": 0.0,
+    "scalar_normal_empirical_oracle_max_error": 2.0816681711721685e-17,
+    "usd_and_sample_checks": true
+  },
+  "config_count_probe": {
+    "rejected_incompatible_config": false,
+    "bundle_claimed_simulations": 111,
+    "actual_comparison_simulations": [
+      25000
+    ],
+    "uncertainty_simulations": 111
+  },
+  "data_hashes": {
+    "matching": 53,
+    "expected": 53
+  },
+  "accepted_step3_4_sources": "unchanged",
+  "protected_files": "unchanged",
+  "source_sha256": {
+    "src/quantedge/var.py": "d26f9dd33dd8acd608602476855ca24288344fcc3e8db79d364002b234503932",
+    "src/quantedge/es.py": "9f4c5797a3671360273055badab8fcdcef49e63600f8f543400e200d3b730529",
+    "tests/test_c_var_es.py": "d4b6db4fbce6dd78f44d72809f84deb9dbfdb5128686e20f71ba435c5fb376b5",
+    "results/step5_development_c1_risk_tables.json": "5a98cca6bb1342e1cf15293ac64ea83066c8873f4421ea04057c08d6600aabb4"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "generated_at_utc": "2026-10-31T13:02:16.538189+00:00",
+  "scope": "Verified development sample only. Final selection/evaluation-period outputs and the committee recommendation remain pending. VaR/ES, backtest, EVT and stress figures will be generated after those modules pass review.",
+  "development_end": "2016-12-30",
+  "active_start": "2007-01-05",
+  "active_end": "2016-12-30",
+  "n_active_sessions": 2516,
+  "dataset_id": "qe1_20050101_20261030_r3_6c4633a7ba",
+  "config_hash": "587ddbe363589fb6956c23c5fe8b2b544bac81d9224a0b4bb59f60f5fbc0a017",
+  "rendering_versions": {
+    "matplotlib": "3.11.2",
+    "contourpy": "1.3.3",
+    "cycler": "0.12.1",
+    "fonttools": "4.68.0",
+    "kiwisolver": "1.5.1",
+    "pyparsing": "3.3.3"
+  },
+  "reviewed_table_source_sha256": "3caef4ca9f4f3a294d9a9d5c2c0cf73406651a78f11ff472247b6ff7433596cd",
+  "source_sha256": {
+    "src/quantedge/portfolio.py": "8e5b93b6fed3869446eabaf60a096a347380cc6c2e8ec7262ea76ba568ee2940",
+    "src/quantedge/kpis.py": "2b814cff73f0017d6c1573a8b3148755836b7a47d5ac4a8dcc8e13eaab9186a2",
+    "scripts/export_verified_development_preview.py": "3f0b8876e9fe87eb24e9d3dae1c776b91c8aab51b601cd445c285f323b77377c"
+  },
+  "artifacts_sha256": {
+    "01_kpi_comparison.csv": "a85f71974ae40edc615ea035da846a5922e059b115687c13e93caef17a2f9eb6",
+    "02_rf_sensitivity.csv": "e0f8242e19b82f005850dd370eb43ff25f539ee4ab5d7277848eca739cc4c11b",
+    "03_real_returns.csv": "c8134738abc2eedd6d1e0d017a72cf86f5832fa486d0307ce752d8f91244e558",
+    "04_distribution_income.csv": "79ebfd2e8e8d3db0a27e6c7a79abffd0b6a3cf77e8bbad578c8fc370cd15b209",
+    "05_stationarity.csv": "dbcf8270ba31dc23970f9b2a6ad6d22217124b2ec059b6d6260c2407502e48a0",
+    "06_portfolio_paths.csv": "261d66bca12cc1d420b82e9c386cae3883bf9ed214248e2077753ae36e7ab8c6",
+    "07_min_variance_holdings.csv": "a8aa0d1db90e13991b96a8b88a7fee401ba4a3cb3a6428a77b7ce0bb22ce9683",
+    "08_constraint_scope.csv": "0629261365dfcfaceef7a0c82397b04802e86533d231877d2715b98d2fe38787",
+    "figure_01_wealth_drawdown.png": "303188989085ca1c3aeea8175fea3c50388d69cd50706b611b6f9a774211ef15",
+    "figure_01_wealth_drawdown.svg": "f6295e781859722faf0eb5d8001d46b3ab9641d9e73cd66a55728773ded9c3ab",
+    "figure_02_allocation.png": "dc79fb338d22a49fa09966137440a89939430e2a6d1c722e70814edb879f3ed0",
+    "figure_02_allocation.svg": "4c778eb703ba30c1dc92062f98892681e593b471d00444ae5d917417c5f29c12",
+    "figure_03_kpis.png": "92d3cc966457be18ae1888052ccdc4f58736d40a870e2e3068b0eab05a2756fe",
+    "figure_03_kpis.svg": "99ee360715e385977b6b9037fe71e838f592bf2d5cebbd065f636738a988dd41",
+    "figure_04_income_real_returns.png": "1ce2fea2473a2674e40ba791b30af96a5c7e2a4783c9858749f2ee1e035079f3",
+    "figure_04_income_real_returns.svg": "ac5b285e46d3acae39e640c2b35e4d7cc9173f1fe6c33df0dca94f967c3d6d71",
+    "index.html": "4e50de3a57f114bb5a4c1ac44a8b082afcffdf2bca1722492310b230903935cd",
+    "README.md": "3885cd729174ec444854a4959dd040ec6a40555568bea4fe7c2497c4201a4a4d",
+    "rendering-requirements.txt": "55df4c75690a975421e881792f230fb2db2e1d9df79c874fe53cd48cd428f8f5",
+    "verified_step4_tables.json": "3caef4ca9f4f3a294d9a9d5c2c0cf73406651a78f11ff472247b6ff7433596cd"
+  }
+}

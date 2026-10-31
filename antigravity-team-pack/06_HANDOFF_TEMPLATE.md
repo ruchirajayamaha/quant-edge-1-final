@@ -1,5 +1,7 @@
 # Role A/B/C/D handoff
 
+CURRENT SOLO DEFAULT: use handoff/SOLO.md and the live solo guide. Record register/context/window IDs, actual checks, unresolved human choices and the next milestone. The individual-role template below is for explicitly selected parallel work only; do not create four handoffs/checkouts for the current single-developer workflow.
+
 Use one file per role in the IMPLEMENTATION repository: `handoff/A.md`, etc. Update it at checkpoints, especially before changing session/account. Do not copy secrets or the whole chat.
 
 - Role and branch:

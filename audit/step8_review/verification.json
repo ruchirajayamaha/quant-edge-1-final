@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "contribution_rows_checked": 84,
+  "allocation_rows_checked": 14,
+  "stress_rows_checked": 8,
+  "max_absolute_errors": {
+    "contribution_total": 1.0408340855860843e-17,
+    "contribution_marginal": 2.7755575615628914e-17,
+    "allocation_risk": 6.938893903907228e-18,
+    "stress": 4.440892098500626e-16
+  },
+  "protected_files_unchanged": 87,
+  "source_data_hashes_matching": 53,
+  "source_hashes_matching": 11,
+  "artifact_hashes_matching": 14,
+  "authority_sha256": "354a8915aebf0e85934058abe06f0b929347b8b87ee7ce1625d64c4b1ae32b92",
+  "scope": "Development contribution/sizing; explicitly authorized ex-post post2016 stress only, no strategy evaluation outcomes"
+}

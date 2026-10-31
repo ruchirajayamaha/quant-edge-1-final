@@ -1,0 +1,54 @@
+SOLO STEP 3 - BOUNDED REVIEW CORRECTION (R1-R3 ONLY)
+
+Work in C:/Users/ruchira/Desktop/qunt. Read:
+- audit/step3_review/STEP3_REVIEW.md
+- audit/step3_review/verification.json and verify_step3.py
+- handoff/SOLO.md, current runtime contracts/config
+- src/quantedge/portfolio.py and tests/test_b_portfolio.py
+- docs/sections/b_portfolio_construction.md
+
+The independent rerun passed all 49 tests. Preserve the working implementation.
+Fix these three findings, without reopening data research or adding strategies:
+
+R1: Reject conflicting objective/fixed_weights combinations before path execution.
+A fixed_weights dictionary must not silently turn min_variance or equal_weight
+into an arbitrary analytic allocation. The explicit fixed_weights objective and
+the configured 60/40 reference remain supported. Add focused regression cases
+using both a feasible override and a cap-violating override. Do not call an
+unoptimized path minimum variance or bypass the covariance-estimator validation.
+
+R2: Explicitly declare current constraint scope as rebalance-target constraints.
+Keep the existing correctly named mandate_feasible_all_rebalances information,
+but separate it from observed pre-return holdings compliance between trades.
+Add daily/pre-return cap-compliance diagnostics (count/dates, violated constraints,
+maximum exposures) with unambiguous scope and qualify any path-wide status.
+The review measured 120/120 feasible targets but 1,439/2,516 pre-return sessions
+with a cap breach caused by drift in the development-only minimum-variance path.
+This is NOT evidence that the optimizer failed or permission to change strategy.
+Do not clip holdings, add forced daily rebalancing, change caps/costs, or change
+the existing weights/returns/wealth to make monitoring green. A continuous-cap
+mandate remains a separate human policy decision, not something to invent.
+Use additive metadata/supporting diagnostics rather than changing frozen contracts.
+Test a cap-feasible target that later drifts beyond a cap and a no-breach control;
+verify the existing path arrays are unchanged by the reporting correction.
+
+R3: Correct the documentation to 0 <= f(w)-f* <= FW_gap(w), for the actual
+f(w)=w.T@Sigma_scaled@w / gradient=2*Sigma_scaled@w convention. The universal
+extra factor 2 in the current inequality is wrong. Keep the valid runtime gap
+tolerance unless a separate demonstrated bug warrants changing it. No document-
+text snapshot test is needed; explain the counterexample in the review if useful.
+
+Run relevant tests and the full current suite. The audit probe intentionally
+reproduces the old R1 bug, so after a fix it is historical evidence, not a test
+that should keep passing unchanged. Write an updated separate verification
+showing rejection instead. Verify protected config/contracts/dependencies,
+active r3 and snapshot hashes remain unchanged. Real-data checks stay strictly
+within development through 2016-12-30; do not inspect selection/evaluation paths.
+
+Update methodology, handoff, CHANGELOG and truthful AI disclosure with actual
+outcomes. Human validation stays PENDING. Do not download data, start Step 4+,
+change the primary strategy, run a new broad review, or push to GitHub.
+
+Report R1/R2/R3 resolution, files changed, exact tests/results, before/after path
+invariance, target-versus-drift diagnostics and remaining limitations. Stop after
+this bounded correction; the user will share the completion report for review.

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QuantEdge 1.0 — Step 7 EVT POT-GPD Preview</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 30px; line-height: 1.5; color: #182D43; background: #F8FAFC; }
+    h1, h2, h3 { color: #182D43; }
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; background: #E2E8F0; color: #334155; margin-right: 6px; }
+    .badge-dev { background: #FEF3C7; color: #92400E; }
+    .card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 20px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    table { border-collapse: collapse; width: 100%; margin-top: 12px; font-size: 13px; }
+    th, td { border: 1px solid #CBD5E1; padding: 8px 12px; text-align: left; }
+    th { background: #F1F5F9; font-weight: 600; }
+    tr:nth-child(even) { background: #F8FAFC; }
+    img { max-width: 100%; height: auto; border: 1px solid #E2E8F0; border-radius: 6px; margin-top: 12px; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 12px; background: #F1F5F9; padding: 2px 4px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>QuantEdge 1.0 — Step 7 EVT POT-GPD Tail Risk Preview</h1>
+  <p>
+    <span class="badge badge-dev">DEVELOPMENT ONLY (Through 2016-12-30)</span>
+    <span class="badge">Dataset: qe1_20050101_20261030_r3_6c4633a7ba</span>
+    <span class="badge">Config Hash: 587ddbe363589fb6...</span>
+  </p>
+
+  <div class="card">
+    <h2>1. Threshold Stability & Mean Residual Life Diagnostics</h2>
+    <p>Evaluation of candidate thresholds from 80% to 97.5%. The primary provisional policy is fixed at $q=0.95$ with minimum 50 strict exceedances.</p>
+    <img src="figures/figure_01_threshold_stability_and_mrl.png" alt="Figure 1: Threshold Stability and MRL">
+  </div>
+
+  <div class="card">
+    <h2>2. Descriptive Tail Fit Diagnostics (Q-Q & P-P Plots)</h2>
+    <p>Descriptive excess quantile and probability plots for strict exceedances above the 95% loss threshold. No uncalibrated parametric GOF p-values are claimed.</p>
+    <img src="figures/figure_02_gpd_tail_qq_pp_diagnostics.png" alt="Figure 2: Tail QQ/PP Diagnostics">
+  </div>
+
+  <div class="card">
+    <h2>3. 99% Risk Comparison Across Methods with Bootstrap Uncertainty</h2>
+    <p>1-day 99% VaR and Expected Shortfall across Historical, Parametric Normal, Monte Carlo Normal, and EVT (POT and Body/Tail Hybrid), with 95% moving-block bootstrap confidence intervals.</p>
+    <img src="figures/figure_03_risk_model_and_uncertainty_comparison.png" alt="Figure 3: Risk Model and Uncertainty Comparison">
+  </div>
+
+  <div class="card">
+    <h2>4. Exported Tables & Manifest</h2>
+    <ul>
+      <li><a href="tables/table_01_risk_model_comparison.csv">table_01_risk_model_comparison.csv</a></li>
+      <li><a href="tables/table_02_threshold_diagnostics.csv">table_02_threshold_diagnostics.csv</a></li>
+      <li><a href="tables/table_03_bootstrap_uncertainty.csv">table_03_bootstrap_uncertainty.csv</a></li>
+      <li><a href="step7_recorded_results.json">step7_recorded_results.json (Strict Authority)</a></li>
+      <li><a href="manifest.json">manifest.json</a></li>
+    </ul>
+  </div>
+</body>
+</html>

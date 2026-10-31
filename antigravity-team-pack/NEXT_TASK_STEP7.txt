@@ -1,0 +1,81 @@
+SOLO STEP 7 ONLY - C2/C3 UNCONDITIONAL EVT POT-GPD
+
+Work in C:/Users/ruchira/Desktop/qunt using the existing Python 3.11 .venv.
+Step 6 is technically reviewed: audit/step6_review/STEP6_CLOSURE.md. Implement
+Step 7 only, export actual results, run tests and STOP before Step 8 for Codex review.
+Read current handoff/SOLO.md, config/contracts, evt.py, var.py and
+antigravity-team-pack/03_C_RISK_EVT.txt C2/C3. Preserve all accepted Steps 1-6
+mathematics, frozen signatures, config/dependency pins, datasets and earlier previews.
+No downloads, broad data audit, strategy retuning, selection/evaluation outcomes,
+daily rolling EVT, GARCH/FHS, risk budgeting/stress, app or deployment in this task.
+
+SCOPE / POLICY BEFORE FITTING
+Use the same Step 5 terminal-development min_variance exposure and same recent
+1260-session/full 3020-session development windows through 2016-12-30. Compare
+methods on identical exposures, dates, confidence and horizon. Do not enlarge
+only EVT's window or claim these samples include COVID/2022. Register the inherited
+95% threshold and min50 strict exceedances as primary provisional policy before
+fitting. Use the existing diagnostic quantile grid as sensitivity; never choose
+the threshold yielding the friendliest VaR/backtest. Record judgement/uncertainty
+honestly if diagnostics fail to support the default. Human approval stays PENDING.
+
+IMPLEMENT
+1. evt_threshold_diagnostics: actual counts, empirical threshold, MRL, GPD shape xi,
+   beta, modified scale beta-xi*u, valid support/status/reasons on the grid. Fit
+   excesses y=L-u for L>u, scipy GPD with location fixed0. Validate data, ties,
+   insufficient excesses, positive beta, optimizer/convergence and support. Export
+   QQ/PP diagnostics; no fabricated fitted-distribution GOF p-values.
+2. Preserve estimate_evt_pot's frozen public signature and pure-tail safeguards.
+   With p_u=N_u/n and a=(1-c)/p_u, for a<1:
+   VaR=u+(beta/xi)*(a**(-xi)-1), xi->0: u-beta*log(a).
+   ES=(VaR+beta-xi*u)/(1-xi) only xi<1. Use stable expm1/log limits.
+   xi>=1: finite valid VaR may remain, ES=None + warning/reason. Respect negative-xi
+   finite upper support. Below the actual empirical tail boundary 1-p_u, pure
+   tail inference is unavailable. Never silently lower threshold/min count.
+3. Provide a separately explicit empirical-body/GPD-tail helper for 90/95/99
+   support (preserve the pure estimator's below-threshold safeguard). Its empirical
+   body has mass 1-p_u and its GPD excess tail mass p_u; define the discrete body
+   quantile and boundary convention. Body-region VaR is labelled BODY, not EVT
+   extrapolation. ES integrates the relevant body quantile segment PLUS fitted
+   upper tail, including partial empirical mass; not the pure-tail ES formula
+   applied below threshold. Test normalization, quantile monotonicity, boundary
+   continuity where mathematically applicable and ES against numerical integration.
+4. Minimal var.py integration may enable EVT dispatch while preserving C1 outputs
+   and runtime config authority. Keep pure POT and body/tail construction explicitly
+   distinguished in diagnostics. The app's future 90% route must explicitly choose
+   the labelled hybrid; don't relabel a Historical result as EVT. Do not mark EVT
+   as rolling-backtested: Step 6 primary Historical/Normal outputs remain unchanged.
+5. Bounded configurable moving-block bootstrap for min_variance tail uncertainty:
+   record block length, repetitions, seed, fixed threshold POLICY and any empirical
+   threshold re-estimation. A reasonable development default is block length10
+   and 100 repetitions; record before running, do not tune on results. Fit each
+   resample independently, report successful/failed fits and unavailable/infinite
+   ES counts; insufficient successful replicates cannot yield a fake interval.
+   Label intervals conditional on threshold policy and dependence assumptions.
+   Cache by data/exposure/config/policy/seed/repetition IDs, never on each UI rerun.
+
+TESTS / ACTUAL OUTPUTS
+Known-parameter GPD quantiles/ES, xi near0/negative/at-or-above1, support boundaries,
+min-excess counts/ties/degenerate samples, invalid inputs and no mutation; scalar
+hybrid body/tail integration checks; deterministic bounded bootstrap and failures.
+Meaningful statistical tolerances for seeded parameter recovery, no desired outcome.
+Run focused tests, connected suite and pip check. Update deferred-stub tests only
+for actually implemented interfaces. Earlier C1 risk values and Step 6 rows must
+remain unchanged, with all 53 source-data hashes verified.
+
+Write results/step7_evt_preview/: strict JSON and CSV same-window model tables,
+threshold diagnostics, QQ/PP data, fitted parameter/support/status records and
+bootstrap intervals/failures. At least 2 clean PNG/SVG figures: threshold stability/
+MRL and tail QQ/PP; add a matched risk/uncertainty comparison if inexpensive.
+Use existing isolated tmp/figure_export_deps, no new app dependencies. Figures,
+methodology and numbers derive from one persisted computed authority. Include
+offline index.html, README, all actual dates/counts/exposures/config/source hashes,
+seed/runtime and DEVELOPMENT ONLY labelling. Strict JSON null for genuine N/A,
+allow_nan=False. Recheck source/artifact hashes AFTER final script edits/export.
+
+Update docs/sections/c_var_es_and_evt.md, decision-register append, handoff/SOLO.md,
+CHANGELOG and truthful AI disclosure. Carry forward Step 6 clustering/Normal-tail
+limitations; green last250 Basel is not proof of safety. Avoid stale chat helper
+names, paths or hash claims; verify every claimed path exists. Human validation
+remains PENDING. Report actual tests, numerical results, limitations and outputs.
+STOP AFTER STEP 7 FOR CODEX REVIEW. Do not start Step 8 or inspect holdout outcomes.

@@ -1,0 +1,63 @@
+SOLO STEP 4 ONLY - REVIEW GATE RESTORED BY THE USER
+
+Work in the existing project at C:/Users/ruchira/Desktop/qunt.
+The user explicitly requires Codex review after EVERY step, including tonight.
+This supersedes the previous run-all-milestones deadline instruction.
+Step 3 R1-R3 are closed. Implement Step 4 now, then STOP for the user's review.
+If a previous instruction is already running, finish the current atomic operation
+safely, report current state and apply this scope; do not roll back good work.
+
+READ
+- handoff/SOLO.md and audit/step3_review/STEP3_CLOSURE.md
+- antigravity-team-pack/COMMON_CONTEXT.md and current runtime contracts/config
+- 01_A_DATA_VALIDATION.txt milestones A1b and A2 only
+- current src/quantedge/kpis.py and the verified portfolio APIs
+
+PRESERVE
+Keep the r3/r2/v1 snapshots, active pointer, canonical universe, existing config,
+frozen compute_kpis signature and portfolio mechanics. Do not repeat setup, RF
+research, data hardening, portfolio review or a competition-strategy review.
+Use the existing Python3.11 .venv and installed stack. Missing human economic
+choices/signatures remain PENDING; they do not block KPI implementation.
+
+IMPLEMENT STEP 4
+1. Implement compute_kpis(portfolio_returns, benchmark_returns, market_returns,
+   rf_daily) with canonical KPI_COLUMNS output. Include geometric/arithmetic
+   annual return, annualised volatility, Sharpe, Sortino, Treynor, CAPM beta/Jensen
+   alpha versus SPY, Information Ratio/tracking error versus the shared monthly
+   60/40 path, initial-wealth Max Drawdown and Calmar.
+2. State and test alignment, annualisation, excess-return, downside-target and
+   OLS-intercept conventions. Sortino downside deviation uses all observations.
+   Handle zero/near-zero denominators, too-short samples and missing/incomplete
+   RF with explicit unavailable status/reasons; do not invent zeros or use future
+   RF backfill. Distinguish geometric performance from arithmetic ratios and
+   realised regression estimates from forward CAPM expected-return assumptions.
+3. Use primary r3 RF; show the existing accrual sensitivity separately. Compare
+   portfolios/benchmark on identical eligible dates with consistent net-cost
+   conventions. Market SPY remains the stated CAPM proxy.
+4. Add the bounded A1b income/inflation context adapter separately from r3. Use
+   distributions plus compatible share/split price basis and monthly FRED CPI
+   for explicitly ex-post common-month purchasing-power results. Save source,
+   dates/units/hashes and limitations. Never add distributions again to already
+   adjusted-price total returns or treat a failed fetch as zero distributions.
+   Time-box context retrieval to about 15-20 minutes of actual effort. If blocked,
+   preserve cached successes, finish independent KPIs and report the exact open
+   context requirement; do not falsely declare the unavailable part complete.
+   Do not fetch additional optional macro series or change the RF snapshot.
+5. Add meaningful hand-computable/known-answer tests for ratios, beta/alpha,
+   information ratio, downside deviation and initial-wealth drawdown, including
+   degenerate inputs and RF/index alignment. Test income/CPI conventions where
+   implemented. Update remaining-stub tests honestly after implementing APIs.
+6. Run relevant tests and the connected suite. Use real-data performance smoke
+   checks ONLY within the existing development period through 2016-12-30.
+   Do not inspect selection/evaluation strategy outcomes or select a winner.
+   Leave fixed-exposure diagnostics requiring later risk samples for that stage.
+7. Update methodology, handoff, CHANGELOG and truthful AI disclosure. Supply the
+   actual development KPI table, source/context IDs and known-answer check results.
+
+STOP AFTER STEP 4
+Do not implement Step 5 risk, A3 backtests, EVT, stress/budgeting, app changes,
+frontier/FHS, final PDFs, deployment or GitHub push during this request.
+Return changed files/APIs, formulas/conventions, exact tests/results, actual
+data/sample/context bounds, unresolved issues and next milestone. The user will
+send the completion report to Codex; wait for that review before Step 5.

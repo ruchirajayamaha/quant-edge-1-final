@@ -1,0 +1,103 @@
+{
+  "checked_at_utc": "2026-10-31T16:01:54.592417+00:00",
+  "disposition": "Step6 technically cleared; Step7 only next; human validation pending",
+  "pytest": {
+    "passed": 96,
+    "seconds": 18.74,
+    "command": ".venv/Scripts/python.exe -m pytest -q --basetemp tmp/pytest_step6_codex_final_20261031_fca726"
+  },
+  "pip_check": "No broken requirements found",
+  "independent_verification": {
+    "checked_at_utc": "2026-10-31T15:59:57.171638+00:00",
+    "rows_checked": 10064,
+    "max_absolute_errors": {
+      "var": 1.214306433183765e-17,
+      "es": 3.122502256758253e-17,
+      "gross_loss": 1.3877787807814457e-17,
+      "coverage_lr": 1.1368683772161603e-13,
+      "coverage_p": 3.774758283725532e-15
+    },
+    "source_data_hashes": 53,
+    "protected_files_unchanged": 50,
+    "summaries": [
+      {
+        "model": "historical",
+        "confidence": 0.95,
+        "n": 2516,
+        "exceptions": 127,
+        "transitions": {
+          "n00": 2275,
+          "n01": 113,
+          "n10": 114,
+          "n11": 13
+        },
+        "lr_uc": 0.012013077724304821,
+        "lr_ind": 6.0691827974903845,
+        "lr_cc_recorded": 6.069705646090256
+      },
+      {
+        "model": "historical",
+        "confidence": 0.99,
+        "n": 2516,
+        "exceptions": 32,
+        "transitions": {
+          "n00": 2454,
+          "n01": 29,
+          "n10": 29,
+          "n11": 3
+        },
+        "lr_uc": 1.7295504198481808,
+        "lr_ind": 7.237804759541575,
+        "lr_cc_recorded": 8.972859978792485
+      },
+      {
+        "model": "parametric_normal",
+        "confidence": 0.95,
+        "n": 2516,
+        "exceptions": 127,
+        "transitions": {
+          "n00": 2278,
+          "n01": 110,
+          "n10": 111,
+          "n11": 16
+        },
+        "lr_uc": 0.012013077724304821,
+        "lr_ind": 11.864196812390674,
+        "lr_cc_recorded": 11.864719660990659
+      },
+      {
+        "model": "parametric_normal",
+        "confidence": 0.99,
+        "n": 2516,
+        "exceptions": 53,
+        "transitions": {
+          "n00": 2416,
+          "n01": 46,
+          "n10": 46,
+          "n11": 7
+        },
+        "lr_uc": 23.606199235474378,
+        "lr_ind": 15.330793046428823,
+        "lr_cc_recorded": 38.959480604539124
+      }
+    ],
+    "holdout_outcomes_inspected": false,
+    "authority_sha256": "cc540646ff72d4ba19ec440411052866b7d6bd5b47ff6f9be36fd34b940ab9d4"
+  },
+  "artifact_hashes_checked": 13,
+  "source_hashes_checked": 10,
+  "figures_visually_inspected": 2,
+  "sha256": {
+    "config.yaml": "60f55a1b7172220153ed2c9692faca98771b9c6a2cb2b18f815c7f280a2fbce1",
+    "src/quantedge/contracts.py": "7aa3a84b9951f959913a8310d1ea1fc8ff74c7ca115629bd77fa673635f76caa",
+    "src/quantedge/returns.py": "2ead8513c6c5758df5ffc7d15de113a01345912d7e4f70b4832af622db11e0e0",
+    "src/quantedge/backtest.py": "7ca8bc9c237d7667c2215a39c9e04c87792cdb306f616c2d0fcbc96c3ad12010",
+    "src/quantedge/_backtest_diagnostics.py": "c9f21f0119d1eab29c0b35ac6052d1051685400b4a7cdc469b2c77cb56ab5ac9",
+    "src/quantedge/portfolio.py": "8e5b93b6fed3869446eabaf60a096a347380cc6c2e8ec7262ea76ba568ee2940",
+    "src/quantedge/var.py": "c56f5652fe031654d4d629ac659ee26d269b66ff2f7fb5f14cb33c592175bd7d",
+    "src/quantedge/es.py": "9f4c5797a3671360273055badab8fcdcef49e63600f8f543400e200d3b730529",
+    "scripts/record_step6_backtest_results.py": "8372878448fde309211be5093e9aa2d4ec9167731f6003dc65964fddcff524be",
+    "scripts/export_step6_backtest_preview.py": "c32241b4dafa8595c86cc14059aff7ad282e8a4e974056606d47e82f471f4052"
+  },
+  "authority_sha256": "cc540646ff72d4ba19ec440411052866b7d6bd5b47ff6f9be36fd34b940ab9d4"
+}

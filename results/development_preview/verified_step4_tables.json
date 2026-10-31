@@ -1,0 +1,756 @@
+{
+  "scope": "development only, through 2016-12-30; actual computed values",
+  "dataset_id": "qe1_20050101_20261030_r3_6c4633a7ba",
+  "context_id": "qe1_context_20050101_20261030_a1b_2040bb6e15",
+  "config_hash": "587ddbe363589fb6956c23c5fe8b2b544bac81d9224a0b4bb59f60f5fbc0a017",
+  "tables": {
+    "kpis": {
+      "min_variance": [
+        {
+          "metric": "geometric_annual_return",
+          "value": 0.06653371264164118,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: compounded geometric return prod(1+R_p)^(252/N)-1 (terminal wealth=1.902400); measures realized multi-period corpus growth net of volatility drag."
+        },
+        {
+          "metric": "arithmetic_annual_return",
+          "value": 0.06826591616989995,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: linearly annualized arithmetic mean 252 * mean(R_p); exceeds geometric return by ~0.5*sigma^2 volatility drag and is not a guaranteed compounded payout rate."
+        },
+        {
+          "metric": "annualized_volatility",
+          "value": 0.08769908081242896,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: sqrt(252) * std(R_p, ddof=1); measures total symmetric return dispersion (both upside and downside)."
+        },
+        {
+          "metric": "sharpe_ratio",
+          "value": 0.7027850546810748,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: sqrt(252) * mean(R_p - rf_daily) / std(R_p - rf_daily, ddof=1) using arithmetic excess mean (6.1636%/yr over mean RF 0.6630%/yr); measures excess return per unit of total volatility."
+        },
+        {
+          "metric": "downside_deviation",
+          "value": 0.06126972633976861,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: sqrt(252 * (1/N) * sum(min(0, R_p - rf_daily)^2)) across all N=2516 sessions (1139 sessions below daily RF target; zero-target DD=6.1071%); isolates harmful below-target dispersion."
+        },
+        {
+          "metric": "sortino_ratio",
+          "value": 1.0059791496617128,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: 252 * mean(R_p - rf_daily) / downside_deviation over all N=2516 sessions (daily target=rf_daily; zero-target Sortino=1.0093); penalizes downside shortfall without penalizing upside gains."
+        },
+        {
+          "metric": "capm_beta",
+          "value": 0.28928875338653603,
+          "unit": "beta",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: OLS slope Cov(e_p, e_SPY)/Var(e_SPY) with intercept (t=47.50, p=0, R^2=0.4730); measures systematic sensitivity to US equity market excess returns."
+        },
+        {
+          "metric": "jensen_alpha",
+          "value": 0.03802772022813689,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: linearly annualized OLS intercept 252 * alpha_daily (t=1.89, p=0.05936; i.i.d. OLS SE assumes homoskedastic residuals). Realized regression intercept, distinct from forward CAPM equilibrium expected return where alpha=0."
+        },
+        {
+          "metric": "treynor_ratio",
+          "value": 0.21306071004056845,
+          "unit": "annual_fraction_per_unit_beta",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: 252 * mean(R_p - rf_daily) / capm_beta (beta=0.2893); measures annualized excess return per unit of systematic SPY market beta."
+        },
+        {
+          "metric": "tracking_error",
+          "value": 0.08287337786245844,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: sqrt(252) * std(R_p - R_b, ddof=1) against shared monthly-rebalanced 60/40 SPY/AGG benchmark (active mean=0.1922%/yr); quantifies active return dispersion relative to the reference benchmark."
+        },
+        {
+          "metric": "information_ratio",
+          "value": 0.023188434146501537,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: 252 * mean(R_p - R_b) / tracking_error (active mean=0.1922%/yr, TE=8.2873%/yr); measures consistency of active performance relative to the 60/40 benchmark."
+        },
+        {
+          "metric": "max_drawdown",
+          "value": -0.22175618468011338,
+          "unit": "fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: min_t(W_t / max(1.0, max_{s<=t} W_s) - 1) including initial wealth 1.0 (peak=2008-05-20, trough=2008-10-27); worst cumulative peak-to-trough loss experienced by the endowment."
+        },
+        {
+          "metric": "calmar_ratio",
+          "value": 0.30003092241876844,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: geometric_annual_return / abs(max_drawdown) (6.6534%/yr / 22.1756%); measures compounded annual growth per unit of worst historical drawdown."
+        }
+      ],
+      "equal_weight": [
+        {
+          "metric": "geometric_annual_return",
+          "value": 0.054482073891098375,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: compounded geometric return prod(1+R_p)^(252/N)-1 (terminal wealth=1.698347); measures realized multi-period corpus growth net of volatility drag."
+        },
+        {
+          "metric": "arithmetic_annual_return",
+          "value": 0.06871084254555483,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: linearly annualized arithmetic mean 252 * mean(R_p); exceeds geometric return by ~0.5*sigma^2 volatility drag and is not a guaranteed compounded payout rate."
+        },
+        {
+          "metric": "annualized_volatility",
+          "value": 0.1771135576046752,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: sqrt(252) * std(R_p, ddof=1); measures total symmetric return dispersion (both upside and downside)."
+        },
+        {
+          "metric": "sharpe_ratio",
+          "value": 0.3505109360161176,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: sqrt(252) * mean(R_p - rf_daily) / std(R_p - rf_daily, ddof=1) using arithmetic excess mean (6.2081%/yr over mean RF 0.6630%/yr); measures excess return per unit of total volatility."
+        },
+        {
+          "metric": "downside_deviation",
+          "value": 0.12473392512305914,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: sqrt(252 * (1/N) * sum(min(0, R_p - rf_daily)^2)) across all N=2516 sessions (1190 sessions below daily RF target; zero-target DD=12.4531%); isolates harmful below-target dispersion."
+        },
+        {
+          "metric": "sortino_ratio",
+          "value": 0.49770736804517063,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: 252 * mean(R_p - rf_daily) / downside_deviation over all N=2516 sessions (daily target=rf_daily; zero-target Sortino=0.4985); penalizes downside shortfall without penalizing upside gains."
+        },
+        {
+          "metric": "capm_beta",
+          "value": 0.7956760414252952,
+          "unit": "beta",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: OLS slope Cov(e_p, e_SPY)/Var(e_SPY) with intercept (t=134.11, p=0, R^2=0.8774); measures systematic sensitivity to US equity market excess returns."
+        },
+        {
+          "metric": "jensen_alpha",
+          "value": -0.002852730410952354,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: linearly annualized OLS intercept 252 * alpha_daily (t=-0.15, p=0.8845; i.i.d. OLS SE assumes homoskedastic residuals). Realized regression intercept, distinct from forward CAPM equilibrium expected return where alpha=0."
+        },
+        {
+          "metric": "treynor_ratio",
+          "value": 0.07802295198902233,
+          "unit": "annual_fraction_per_unit_beta",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: 252 * mean(R_p - rf_daily) / capm_beta (beta=0.7957); measures annualized excess return per unit of systematic SPY market beta."
+        },
+        {
+          "metric": "tracking_error",
+          "value": 0.07688861397676829,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: sqrt(252) * std(R_p - R_b, ddof=1) against shared monthly-rebalanced 60/40 SPY/AGG benchmark (active mean=0.2367%/yr); quantifies active return dispersion relative to the reference benchmark."
+        },
+        {
+          "metric": "information_ratio",
+          "value": 0.0307799831250919,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: 252 * mean(R_p - R_b) / tracking_error (active mean=0.2367%/yr, TE=7.6889%/yr); measures consistency of active performance relative to the 60/40 benchmark."
+        },
+        {
+          "metric": "max_drawdown",
+          "value": -0.4326207002511089,
+          "unit": "fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: min_t(W_t / max(1.0, max_{s<=t} W_s) - 1) including initial wealth 1.0 (peak=2008-05-19, trough=2008-11-20); worst cumulative peak-to-trough loss experienced by the endowment."
+        },
+        {
+          "metric": "calmar_ratio",
+          "value": 0.12593496765058856,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: geometric_annual_return / abs(max_drawdown) (5.4482%/yr / 43.2621%); measures compounded annual growth per unit of worst historical drawdown."
+        }
+      ],
+      "benchmark_60_40": [
+        {
+          "metric": "geometric_annual_return",
+          "value": 0.06069606309328557,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: compounded geometric return prod(1+R_p)^(252/N)-1 (terminal wealth=1.800957); measures realized multi-period corpus growth net of volatility drag."
+        },
+        {
+          "metric": "arithmetic_annual_return",
+          "value": 0.0663442123048382,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: linearly annualized arithmetic mean 252 * mean(R_p); exceeds geometric return by ~0.5*sigma^2 volatility drag and is not a guaranteed compounded payout rate."
+        },
+        {
+          "metric": "annualized_volatility",
+          "value": 0.12190280286136272,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: sqrt(252) * std(R_p, ddof=1); measures total symmetric return dispersion (both upside and downside)."
+        },
+        {
+          "metric": "sharpe_ratio",
+          "value": 0.489780297487488,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: sqrt(252) * mean(R_p - rf_daily) / std(R_p - rf_daily, ddof=1) using arithmetic excess mean (5.9714%/yr over mean RF 0.6630%/yr); measures excess return per unit of total volatility."
+        },
+        {
+          "metric": "downside_deviation",
+          "value": 0.08560550526279878,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: sqrt(252 * (1/N) * sum(min(0, R_p - rf_daily)^2)) across all N=2516 sessions (1132 sessions below daily RF target; zero-target DD=8.5417%); isolates harmful below-target dispersion."
+        },
+        {
+          "metric": "sortino_ratio",
+          "value": 0.6975528402631174,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: 252 * mean(R_p - rf_daily) / downside_deviation over all N=2516 sessions (daily target=rf_daily; zero-target Sortino=0.6991); penalizes downside shortfall without penalizing upside gains."
+        },
+        {
+          "metric": "capm_beta",
+          "value": 0.5757057230467604,
+          "unit": "beta",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: OLS slope Cov(e_p, e_SPY)/Var(e_SPY) with intercept (t=281.85, p=0, R^2=0.9693); measures systematic sensitivity to US equity market excess returns."
+        },
+        {
+          "metric": "jensen_alpha",
+          "value": 0.012732030613015517,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: linearly annualized OLS intercept 252 * alpha_daily (t=1.88, p=0.05981; i.i.d. OLS SE assumes homoskedastic residuals). Realized regression intercept, distinct from forward CAPM equilibrium expected return where alpha=0."
+        },
+        {
+          "metric": "treynor_ratio",
+          "value": 0.10372376189384237,
+          "unit": "annual_fraction_per_unit_beta",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: 252 * mean(R_p - rf_daily) / capm_beta (beta=0.5757); measures annualized excess return per unit of systematic SPY market beta."
+        },
+        {
+          "metric": "tracking_error",
+          "value": 0.0,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: sqrt(252) * std(R_p - R_b, ddof=1) against shared monthly-rebalanced 60/40 SPY/AGG benchmark (active mean=0.0000%/yr); quantifies active return dispersion relative to the reference benchmark."
+        },
+        {
+          "metric": "information_ratio",
+          "value": null,
+          "unit": "ratio",
+          "status": "unavailable",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: zero or near-zero tracking error against benchmark (std(R_p - R_b, ddof=1)=0.000e+00 <= 1.0e-12); Information Ratio denominator is zero."
+        },
+        {
+          "metric": "max_drawdown",
+          "value": -0.3578055344086971,
+          "unit": "fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: min_t(W_t / max(1.0, max_{s<=t} W_s) - 1) including initial wealth 1.0 (peak=2007-10-09, trough=2009-03-09); worst cumulative peak-to-trough loss experienced by the endowment."
+        },
+        {
+          "metric": "calmar_ratio",
+          "value": 0.16963422098428627,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516); 504 unaligned/NaN dates excluded across inputs: geometric_annual_return / abs(max_drawdown) (6.0696%/yr / 35.7806%); measures compounded annual growth per unit of worst historical drawdown."
+        }
+      ]
+    },
+    "rf_sensitivity": {
+      "min_variance": [
+        {
+          "metric": "annualized_mean_rf_proxy",
+          "primary_r3_value": 0.0066298489666136735,
+          "accrual_91d_value": 0.006780044154945612,
+          "difference": 0.00015019518833193825,
+          "abs_difference": 0.00015019518833193825,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "252 * mean(rf_daily): primary /252 trading-day division vs 91-day bill calendar-day accrual sensitivity on identical r3 selected DTB3 quotes."
+        },
+        {
+          "metric": "sharpe_ratio",
+          "primary_r3_value": 0.7027850546810748,
+          "accrual_91d_value": 0.7010356861326837,
+          "difference": -0.0017493685483910282,
+          "abs_difference": 0.0017493685483910282,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        },
+        {
+          "metric": "downside_deviation",
+          "primary_r3_value": 0.06126972633976861,
+          "accrual_91d_value": 0.06126941580366934,
+          "difference": -3.1053609927250703e-07,
+          "abs_difference": 3.1053609927250703e-07,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        },
+        {
+          "metric": "sortino_ratio",
+          "primary_r3_value": 1.0059791496617128,
+          "accrual_91d_value": 1.0035328590691743,
+          "difference": -0.002446290592538425,
+          "abs_difference": 0.002446290592538425,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        },
+        {
+          "metric": "capm_beta",
+          "primary_r3_value": 0.28928875338653603,
+          "accrual_91d_value": 0.28930453838340975,
+          "difference": 1.5784996873713375e-05,
+          "abs_difference": 1.5784996873713375e-05,
+          "unit": "beta",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        },
+        {
+          "metric": "jensen_alpha",
+          "primary_r3_value": 0.03802772022813689,
+          "accrual_91d_value": 0.03791968900356712,
+          "difference": -0.00010803122456977399,
+          "abs_difference": 0.00010803122456977399,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        },
+        {
+          "metric": "treynor_ratio",
+          "primary_r3_value": 0.21306071004056845,
+          "accrual_91d_value": 0.21252992558819903,
+          "difference": -0.0005307844523694261,
+          "abs_difference": 0.0005307844523694261,
+          "unit": "annual_fraction_per_unit_beta",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        }
+      ],
+      "equal_weight": [
+        {
+          "metric": "annualized_mean_rf_proxy",
+          "primary_r3_value": 0.0066298489666136735,
+          "accrual_91d_value": 0.006780044154945612,
+          "difference": 0.00015019518833193825,
+          "abs_difference": 0.00015019518833193825,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "252 * mean(rf_daily): primary /252 trading-day division vs 91-day bill calendar-day accrual sensitivity on identical r3 selected DTB3 quotes."
+        },
+        {
+          "metric": "sharpe_ratio",
+          "primary_r3_value": 0.3505109360161176,
+          "accrual_91d_value": 0.34964933779961593,
+          "difference": -0.0008615982165016689,
+          "abs_difference": 0.0008615982165016689,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        },
+        {
+          "metric": "downside_deviation",
+          "primary_r3_value": 0.12473392512305914,
+          "accrual_91d_value": 0.12473500675483533,
+          "difference": 1.0816317761869199e-06,
+          "abs_difference": 1.0816317761869199e-06,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        },
+        {
+          "metric": "sortino_ratio",
+          "primary_r3_value": 0.49770736804517063,
+          "accrual_91d_value": 0.4964989380433772,
+          "difference": -0.0012084300017934368,
+          "abs_difference": 0.0012084300017934368,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        },
+        {
+          "metric": "capm_beta",
+          "primary_r3_value": 0.7956760414252952,
+          "accrual_91d_value": 0.7956949809599141,
+          "difference": 1.893953461884479e-05,
+          "abs_difference": 1.893953461884479e-05,
+          "unit": "beta",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        },
+        {
+          "metric": "jensen_alpha",
+          "primary_r3_value": -0.002852730410952354,
+          "accrual_91d_value": -0.002884961663913721,
+          "difference": -3.2231252961366884e-05,
+          "abs_difference": 3.2231252961366884e-05,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        },
+        {
+          "metric": "treynor_ratio",
+          "primary_r3_value": 0.07802295198902233,
+          "accrual_91d_value": 0.07783233509390353,
+          "difference": -0.0001906168951188031,
+          "abs_difference": 0.0001906168951188031,
+          "unit": "annual_fraction_per_unit_beta",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        }
+      ],
+      "benchmark_60_40": [
+        {
+          "metric": "annualized_mean_rf_proxy",
+          "primary_r3_value": 0.0066298489666136735,
+          "accrual_91d_value": 0.006780044154945612,
+          "difference": 0.00015019518833193825,
+          "abs_difference": 0.00015019518833193825,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "252 * mean(rf_daily): primary /252 trading-day division vs 91-day bill calendar-day accrual sensitivity on identical r3 selected DTB3 quotes."
+        },
+        {
+          "metric": "sharpe_ratio",
+          "primary_r3_value": 0.489780297487488,
+          "accrual_91d_value": 0.48854291785226084,
+          "difference": -0.001237379635227187,
+          "abs_difference": 0.001237379635227187,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        },
+        {
+          "metric": "downside_deviation",
+          "primary_r3_value": 0.08560550526279878,
+          "accrual_91d_value": 0.08560147767874891,
+          "difference": -4.027584049867694e-06,
+          "abs_difference": 4.027584049867694e-06,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        },
+        {
+          "metric": "sortino_ratio",
+          "primary_r3_value": 0.6975528402631174,
+          "accrual_91d_value": 0.6958310740081973,
+          "difference": -0.001721766254920043,
+          "abs_difference": 0.001721766254920043,
+          "unit": "ratio",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        },
+        {
+          "metric": "capm_beta",
+          "primary_r3_value": 0.5757057230467604,
+          "accrual_91d_value": 0.5757072191531073,
+          "difference": 1.496106346920989e-06,
+          "abs_difference": 1.496106346920989e-06,
+          "unit": "beta",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        },
+        {
+          "metric": "jensen_alpha",
+          "primary_r3_value": 0.012732030613015517,
+          "accrual_91d_value": 0.012668181784277543,
+          "difference": -6.384882873797411e-05,
+          "abs_difference": 6.384882873797411e-05,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        },
+        {
+          "metric": "treynor_ratio",
+          "primary_r3_value": 0.10372376189384237,
+          "accrual_91d_value": 0.10346260419925654,
+          "difference": -0.00026115769458583127,
+          "abs_difference": 0.00026115769458583127,
+          "unit": "annual_fraction_per_unit_beta",
+          "status": "ok",
+          "note": "Sensitivity of RF-dependent KPI to 91-day bill calendar-day accrual vs primary /252 conversion on identical aligned dates."
+        }
+      ]
+    },
+    "ex_post_real_returns": {
+      "min_variance": [
+        {
+          "metric": "ex_post_nominal_annual_return_common_months",
+          "value": 0.06540133361149336,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Ex-post common completed months 2007-02..2016-12 (n=119 contiguous months, base CPI month=2007-01; partial portfolio months excluded=['2007-01']; missing/unreleased CPI months excluded=[]): compounded nominal return (W_end/W_base)^(12/119)-1 over contiguous completed NYSE months."
+        },
+        {
+          "metric": "ex_post_cpi_annual_inflation_common_months",
+          "value": 0.017927897688057914,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Ex-post common completed months 2007-02..2016-12 (n=119 contiguous months, base CPI month=2007-01; partial portfolio months excluded=['2007-01']; missing/unreleased CPI months excluded=[]): compounded FRED CPIAUCSL inflation (CPI_2016-12/CPI_2007-01)^(12/119)-1; historical realized inflation, NOT a forward inflation forecast."
+        },
+        {
+          "metric": "ex_post_real_annual_return_common_months",
+          "value": 0.04663732670187959,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Ex-post common completed months 2007-02..2016-12 (n=119 contiguous months, base CPI month=2007-01; partial portfolio months excluded=['2007-01']; missing/unreleased CPI months excluded=[]): exact Fisher real annual return (1 + G_nom)/(1 + pi_CPI) - 1; measures historical purchasing-power growth before endowment spending withdrawals."
+        },
+        {
+          "metric": "ex_post_real_wealth_multiple_common_months",
+          "value": 1.571493200575283,
+          "unit": "multiple",
+          "status": "ok",
+          "note": "Ex-post common completed months 2007-02..2016-12 (n=119 contiguous months, base CPI month=2007-01; partial portfolio months excluded=['2007-01']; missing/unreleased CPI months excluded=[]): cumulative purchasing-power multiple (nominal multiple=1.874302 / endpoint CPI ratio=1.192689)."
+        }
+      ],
+      "equal_weight": [
+        {
+          "metric": "ex_post_nominal_annual_return_common_months",
+          "value": 0.05298688005407359,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Ex-post common completed months 2007-02..2016-12 (n=119 contiguous months, base CPI month=2007-01; partial portfolio months excluded=['2007-01']; missing/unreleased CPI months excluded=[]): compounded nominal return (W_end/W_base)^(12/119)-1 over contiguous completed NYSE months."
+        },
+        {
+          "metric": "ex_post_cpi_annual_inflation_common_months",
+          "value": 0.017927897688057914,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Ex-post common completed months 2007-02..2016-12 (n=119 contiguous months, base CPI month=2007-01; partial portfolio months excluded=['2007-01']; missing/unreleased CPI months excluded=[]): compounded FRED CPIAUCSL inflation (CPI_2016-12/CPI_2007-01)^(12/119)-1; historical realized inflation, NOT a forward inflation forecast."
+        },
+        {
+          "metric": "ex_post_real_annual_return_common_months",
+          "value": 0.034441518348836464,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Ex-post common completed months 2007-02..2016-12 (n=119 contiguous months, base CPI month=2007-01; partial portfolio months excluded=['2007-01']; missing/unreleased CPI months excluded=[]): exact Fisher real annual return (1 + G_nom)/(1 + pi_CPI) - 1; measures historical purchasing-power growth before endowment spending withdrawals."
+        },
+        {
+          "metric": "ex_post_real_wealth_multiple_common_months",
+          "value": 1.3990522537078238,
+          "unit": "multiple",
+          "status": "ok",
+          "note": "Ex-post common completed months 2007-02..2016-12 (n=119 contiguous months, base CPI month=2007-01; partial portfolio months excluded=['2007-01']; missing/unreleased CPI months excluded=[]): cumulative purchasing-power multiple (nominal multiple=1.668634 / endpoint CPI ratio=1.192689)."
+        }
+      ],
+      "benchmark_60_40": [
+        {
+          "metric": "ex_post_nominal_annual_return_common_months",
+          "value": 0.06044447974850797,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Ex-post common completed months 2007-02..2016-12 (n=119 contiguous months, base CPI month=2007-01; partial portfolio months excluded=['2007-01']; missing/unreleased CPI months excluded=[]): compounded nominal return (W_end/W_base)^(12/119)-1 over contiguous completed NYSE months."
+        },
+        {
+          "metric": "ex_post_cpi_annual_inflation_common_months",
+          "value": 0.017927897688057914,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Ex-post common completed months 2007-02..2016-12 (n=119 contiguous months, base CPI month=2007-01; partial portfolio months excluded=['2007-01']; missing/unreleased CPI months excluded=[]): compounded FRED CPIAUCSL inflation (CPI_2016-12/CPI_2007-01)^(12/119)-1; historical realized inflation, NOT a forward inflation forecast."
+        },
+        {
+          "metric": "ex_post_real_annual_return_common_months",
+          "value": 0.04176777368712914,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Ex-post common completed months 2007-02..2016-12 (n=119 contiguous months, base CPI month=2007-01; partial portfolio months excluded=['2007-01']; missing/unreleased CPI months excluded=[]): exact Fisher real annual return (1 + G_nom)/(1 + pi_CPI) - 1; measures historical purchasing-power growth before endowment spending withdrawals."
+        },
+        {
+          "metric": "ex_post_real_wealth_multiple_common_months",
+          "value": 1.5004733191746007,
+          "unit": "multiple",
+          "status": "ok",
+          "note": "Ex-post common completed months 2007-02..2016-12 (n=119 contiguous months, base CPI month=2007-01; partial portfolio months excluded=['2007-01']; missing/unreleased CPI months excluded=[]): cumulative purchasing-power multiple (nominal multiple=1.789597 / endpoint CPI ratio=1.192689)."
+        }
+      ]
+    },
+    "distribution_income": {
+      "min_variance": [
+        {
+          "metric": "annualized_ex_date_distribution_yield",
+          "value": 0.019038046027642294,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516): 252 * mean_t(sum_i w_{i,t-} * Div_{i,t} / Close_{i,t-1}^{split-adj}) across 174 ex-dividend sessions. Cash income component already embedded in auto_adjust=True total return (never add again to total return)."
+        },
+        {
+          "metric": "mean_trailing_12m_distribution_yield",
+          "value": 0.019158553223701767,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516): average weighted trailing-365d distribution yield sum_i w_{i,t-} * (TTM_Div_{i,t} / Close_{i,t}^{split-adj}) across 2516/2516 sessions with full 365d trailing coverage."
+        },
+        {
+          "metric": "ending_trailing_12m_distribution_yield",
+          "value": 0.016578870834601286,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516): portfolio weighted trailing-365d distribution yield at sample end (2016-12-30); indicates run-rate cash yield available for spending before capital withdrawals."
+        }
+      ],
+      "equal_weight": [
+        {
+          "metric": "annualized_ex_date_distribution_yield",
+          "value": 0.019544514699908287,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516): 252 * mean_t(sum_i w_{i,t-} * Div_{i,t} / Close_{i,t-1}^{split-adj}) across 181 ex-dividend sessions. Cash income component already embedded in auto_adjust=True total return (never add again to total return)."
+        },
+        {
+          "metric": "mean_trailing_12m_distribution_yield",
+          "value": 0.019670217232571265,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516): average weighted trailing-365d distribution yield sum_i w_{i,t-} * (TTM_Div_{i,t} / Close_{i,t}^{split-adj}) across 2516/2516 sessions with full 365d trailing coverage."
+        },
+        {
+          "metric": "ending_trailing_12m_distribution_yield",
+          "value": 0.019201500626008762,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516): portfolio weighted trailing-365d distribution yield at sample end (2016-12-30); indicates run-rate cash yield available for spending before capital withdrawals."
+        }
+      ],
+      "benchmark_60_40": [
+        {
+          "metric": "annualized_ex_date_distribution_yield",
+          "value": 0.025632183358056216,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516): 252 * mean_t(sum_i w_{i,t-} * Div_{i,t} / Close_{i,t-1}^{split-adj}) across 160 ex-dividend sessions. Cash income component already embedded in auto_adjust=True total return (never add again to total return)."
+        },
+        {
+          "metric": "mean_trailing_12m_distribution_yield",
+          "value": 0.025806314890386983,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516): average weighted trailing-365d distribution yield sum_i w_{i,t-} * (TTM_Div_{i,t} / Close_{i,t}^{split-adj}) across 2516/2516 sessions with full 365d trailing coverage."
+        },
+        {
+          "metric": "ending_trailing_12m_distribution_yield",
+          "value": 0.0217395459965981,
+          "unit": "annual_fraction",
+          "status": "ok",
+          "note": "Sample 2007-01-05..2016-12-30 (n=2516): portfolio weighted trailing-365d distribution yield at sample end (2016-12-30); indicates run-rate cash yield available for spending before capital withdrawals."
+        }
+      ]
+    },
+    "stationarity": {
+      "min_variance": [
+        {
+          "series": "min_variance_simple_return",
+          "n_obs": 2497,
+          "adf_stat": -11.604674667673427,
+          "p_value": 2.5983137805157397e-21,
+          "used_lag": 18,
+          "crit_1pct": -3.4329715599546646,
+          "crit_5pct": -2.862698190651408,
+          "crit_10pct": -2.567386549839784,
+          "reject_unit_root_5pct": true,
+          "status": "ok",
+          "note": "[changing_weight_strategy_path] Unit-root null rejected at 5% (level compatible with I(0)); does NOT imply i.i.d. returns or constant conditional volatility."
+        },
+        {
+          "series": "min_variance_log1p_return",
+          "n_obs": 2497,
+          "adf_stat": -11.564577912581651,
+          "p_value": 3.2093084772332446e-21,
+          "used_lag": 18,
+          "crit_1pct": -3.4329715599546646,
+          "crit_5pct": -2.862698190651408,
+          "crit_10pct": -2.567386549839784,
+          "reject_unit_root_5pct": true,
+          "status": "ok",
+          "note": "[changing_weight_strategy_path] Unit-root null rejected at 5% (level compatible with I(0)); does NOT imply i.i.d. returns or constant conditional volatility."
+        }
+      ],
+      "equal_weight": [
+        {
+          "series": "equal_weight_simple_return",
+          "n_obs": 2496,
+          "adf_stat": -11.22212632141461,
+          "p_value": 2.0014530543788537e-20,
+          "used_lag": 19,
+          "crit_1pct": -3.432972611342269,
+          "crit_5pct": -2.862698654944332,
+          "crit_10pct": -2.567386797035513,
+          "reject_unit_root_5pct": true,
+          "status": "ok",
+          "note": "[changing_weight_strategy_path] Unit-root null rejected at 5% (level compatible with I(0)); does NOT imply i.i.d. returns or constant conditional volatility."
+        },
+        {
+          "series": "equal_weight_log1p_return",
+          "n_obs": 2496,
+          "adf_stat": -11.041073654804133,
+          "p_value": 5.364227276654305e-20,
+          "used_lag": 19,
+          "crit_1pct": -3.432972611342269,
+          "crit_5pct": -2.862698654944332,
+          "crit_10pct": -2.567386797035513,
+          "reject_unit_root_5pct": true,
+          "status": "ok",
+          "note": "[changing_weight_strategy_path] Unit-root null rejected at 5% (level compatible with I(0)); does NOT imply i.i.d. returns or constant conditional volatility."
+        }
+      ],
+      "benchmark_60_40": [
+        {
+          "series": "benchmark_60_40_simple_return",
+          "n_obs": 2495,
+          "adf_stat": -11.26058699724454,
+          "p_value": 1.6258097459066018e-20,
+          "used_lag": 20,
+          "crit_1pct": -3.4329736635735393,
+          "crit_5pct": -2.8626991196096556,
+          "crit_10pct": -2.5673870444295406,
+          "reject_unit_root_5pct": true,
+          "status": "ok",
+          "note": "[changing_weight_strategy_path] Unit-root null rejected at 5% (level compatible with I(0)); does NOT imply i.i.d. returns or constant conditional volatility."
+        },
+        {
+          "series": "benchmark_60_40_log1p_return",
+          "n_obs": 2495,
+          "adf_stat": -11.090832407842937,
+          "p_value": 4.086217259732551e-20,
+          "used_lag": 20,
+          "crit_1pct": -3.4329736635735393,
+          "crit_5pct": -2.8626991196096556,
+          "crit_10pct": -2.5673870444295406,
+          "reject_unit_root_5pct": true,
+          "status": "ok",
+          "note": "[changing_weight_strategy_path] Unit-root null rejected at 5% (level compatible with I(0)); does NOT imply i.i.d. returns or constant conditional volatility."
+        }
+      ]
+    }
+  }
+}

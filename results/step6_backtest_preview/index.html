@@ -1,0 +1,139 @@
+<!doctype html><html lang="en"><meta charset="utf-8">
+<title>Quant Edge Step 6 development backtests</title>
+<style>body{font:15px/1.55 system-ui,sans-serif;background:#f1f5f8;color:#182d43;margin:0}main{max-width:1180px;margin:auto;padding:30px 24px}h1{font-size:30px}section{background:white;padding:22px;margin:22px 0;border:1px solid #dce3e8;border-radius:12px}img{width:100%;height:auto}a{color:#147d73}.notice{background:#e2eeec;padding:18px;border-left:5px solid #147d73}.scroll{overflow:auto}table{border-collapse:collapse;font-size:12px}td,th{padding:8px;border-bottom:1px solid #dde4e9;text-align:right}td:first-child,th:first-child{text-align:left}code{font-size:12px;overflow-wrap:anywhere}</style>
+<main><p>QUANT EDGE / SOLO STEP 6</p><h1>Development rolling validation</h1>
+<div class="notice"><strong>DEVELOPMENT OOS RESEARCH — through 2016-12-30.</strong>
+These changing-exposure forecasts use only prior observations. This sample overlaps development and is not final holdout evidence. Human validation and mandate approval remain pending.
+<br>Primary: Historical VaR; comparison: Normal. Window: 500 sessions; portfolio: min_variance; one-day gross market loss, before transaction costs.
+<br>Dataset <code>qe1_20050101_20261030_r3_6c4633a7ba</code><br>Config <code>587ddbe363589fb6956c23c5fe8b2b544bac81d9224a0b4bb59f60f5fbc0a017</code>
+<br>Actual backtest runtime: 22.40 seconds. Code version: <code>d7ccafe7a2cb7f1c4794ac4a5ee221278068dce6-working-tree</code>.</div>
+<section><h2>Rolling forecasts, actual loss and exceptions</h2><img src="figure_01_rolling_var_exceptions.svg" alt="Rolling forecasts, actual loss and exceptions"><p><a href="figure_01_rolling_var_exceptions.png">300-dpi PNG</a> · <a href="figure_01_rolling_var_exceptions.svg">Vector SVG</a></p></section><section><h2>Observed and expected annual exceptions</h2><img src="figure_02_annual_exception_calibration.svg" alt="Observed and expected annual exceptions"><p><a href="figure_02_annual_exception_calibration.png">300-dpi PNG</a> · <a href="figure_02_annual_exception_calibration.svg">Vector SVG</a></p></section>
+<section><h2>Coverage tests</h2><p>Asymptotic p-values require care with sparse exceptions. Non-rejection is not proof of safe losses or model adequacy. Test-specific availability and transition counts are retained in the authority JSON.</p><div class="scroll"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>model</th>
+      <th>confidence</th>
+      <th>n_valid</th>
+      <th>n_skipped</th>
+      <th>n_exceedances</th>
+      <th>expected_rate</th>
+      <th>observed_rate</th>
+      <th>p_uc</th>
+      <th>p_ind</th>
+      <th>p_cc</th>
+      <th>status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>historical</td>
+      <td>0.9500</td>
+      <td>2516</td>
+      <td>0</td>
+      <td>127</td>
+      <td>0.0500</td>
+      <td>0.0505</td>
+      <td>0.9127</td>
+      <td>0.0138</td>
+      <td>0.0481</td>
+      <td>ok</td>
+    </tr>
+    <tr>
+      <td>historical</td>
+      <td>0.9900</td>
+      <td>2516</td>
+      <td>0</td>
+      <td>32</td>
+      <td>0.0100</td>
+      <td>0.0127</td>
+      <td>0.1885</td>
+      <td>0.0071</td>
+      <td>0.0113</td>
+      <td>warning</td>
+    </tr>
+    <tr>
+      <td>parametric_normal</td>
+      <td>0.9500</td>
+      <td>2516</td>
+      <td>0</td>
+      <td>127</td>
+      <td>0.0500</td>
+      <td>0.0505</td>
+      <td>0.9127</td>
+      <td>0.0006</td>
+      <td>0.0027</td>
+      <td>ok</td>
+    </tr>
+    <tr>
+      <td>parametric_normal</td>
+      <td>0.9900</td>
+      <td>2516</td>
+      <td>0</td>
+      <td>53</td>
+      <td>0.0100</td>
+      <td>0.0211</td>
+      <td>0.0000</td>
+      <td>0.0001</td>
+      <td>0.0000</td>
+      <td>ok</td>
+    </tr>
+  </tbody>
+</table></div></section>
+<section><h2>Latest 99% / 250-session Basel diagnostic</h2><p>Educational diagnostic only; not bank regulatory approval. A block with missing or unusable pairs cannot receive a traffic-light zone.</p><div class="scroll"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>model</th>
+      <th>status</th>
+      <th>reason</th>
+      <th>zone</th>
+      <th>confidence</th>
+      <th>window_sessions</th>
+      <th>n_valid</th>
+      <th>n_exceedances</th>
+      <th>expected_exceedances</th>
+      <th>block_start</th>
+      <th>block_end</th>
+      <th>educational_only</th>
+      <th>note</th>
+      <th>n_missing_sessions</th>
+      <th>n_invalid_pairs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>historical</td>
+      <td>ok</td>
+      <td>None</td>
+      <td>green</td>
+      <td>0.99</td>
+      <td>250</td>
+      <td>250</td>
+      <td>2</td>
+      <td>2.5</td>
+      <td>2016-01-06</td>
+      <td>2016-12-30</td>
+      <td>True</td>
+      <td>Educational 250-session 99% one-day diagnostic; not regulatory approval.</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>parametric_normal</td>
+      <td>ok</td>
+      <td>None</td>
+      <td>green</td>
+      <td>0.99</td>
+      <td>250</td>
+      <td>250</td>
+      <td>3</td>
+      <td>2.5</td>
+      <td>2016-01-06</td>
+      <td>2016-12-30</td>
+      <td>True</td>
+      <td>Educational 250-session 99% one-day diagnostic; not regulatory approval.</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table></div></section>
+<section><h2>Actual machine-readable outputs</h2><ul><li><a href="01_daily_backtest_rows.csv">01_daily_backtest_rows.csv</a></li><li><a href="02_coverage_summary.csv">02_coverage_summary.csv</a></li><li><a href="04_pre_return_weights.csv">04_pre_return_weights.csv</a></li><li><a href="annual_exception_display_summary.csv">annual_exception_display_summary.csv</a></li></ul><p><a href="backtest_results.json">Strict JSON authority</a> · <a href="manifest.json">SHA-256 manifest</a> · <a href="README.md">Reproduction notes</a></p></section></main></html>

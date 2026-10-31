@@ -1,0 +1,41 @@
+BOUNDED STEP 7 REVIEW CORRECTION - REPORT/OUTPUT CONSISTENCY ONLY
+
+Work in C:/Users/ruchira/Desktop/qunt. Read audit/step7_review/STEP7_REVIEW.md
+and CODEX_REVIEW_VERIFICATION.json. Core EVT formulas pass; 105 tests passed;
+the saved JSON, C1 baseline and bootstrap guards are valid. Do not rewrite EVT,
+retune thresholds, rerun bootstrap/download data or start Step 8.
+
+R1: Generate docs/sections/c_var_es_and_evt.md Section 7's numerical tables and
+numeric prose directly from results/step7_evt_preview/step7_recorded_results.json.
+Current Section 7 has wrong Historical ES, EVT/USD values, factor10 bps errors
+and wrong hybrid95 bootstrap intervals. Preserve Sections1-6 and the numerical
+authority byte-for-byte. Use loss fraction *100 for percent, *10000 for bps,
+*10000000 for USD. Report purePOT95 bootstrap intervals as unavailable (58/100
+recent,62/100 full < required80); never copy hybrid intervals under purePOT.
+All nulls/statuses/counts must propagate. Match all model rows and bootstrap
+intervals/medians/statuses/counts, not just the listed examples. A deterministic
+doc generator consuming saved JSON is enough; no financial recalculation needed.
+Add a consistency regression for the actual generated Section7/authority values,
+including body rows, USD/bps conversions, pure/hybrid uncertainty and N/A cases.
+
+R2: Correct interpretation/implementation claims wherever they occur. Positive
+xi point estimates are consistent with fitted heavy tails, not proof or a formal
+Gaussian rejection; both recorded block-bootstrap xi intervals include0. QQ/PP
+plots are descriptive. Empirical-body CDF is discrete with atoms; the GPD tail
+matches F(u) from the right, not a smooth globally continuous CDF. Body ES uses
+exact discrete integration. Bootstrap is fixed-length moving-block, not stationary.
+SEs are analytic iid asymptotics, not observed-Hessian covariance. Optimizer and
+policy/approval descriptions must match actual code and pending human governance.
+Carry Step6 clustering and unconditional EVT limitations forward honestly.
+
+Finish provenance: add source SHA256 and authority SHA256 to Step7 manifest after
+final script/doc changes and export; validate them, not only artifact hashes.
+Standalone figures must say DEVELOPMENT ONLY, actual dates/exposure, one-day
+pre-cost units. Do not imply 2012 start when recent sample begins 2011-12-29.
+Update handoff/CHANGELOG/AI disclosure with truthful fixes. Preserve earlier
+previews, protected75files, config/data, accepted Step3-6 values and EVT authority.
+
+Run focused new consistency checks + connected suite, pip check and hash checks.
+Report actual correct table paths/results and unavailable intervals from files.
+STOP after this bounded correction for Codex review; do not start Step8 or
+inspect selection/evaluation strategy outcomes. No GitHub push in this task.

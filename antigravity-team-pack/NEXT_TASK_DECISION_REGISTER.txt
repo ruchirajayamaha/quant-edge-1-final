@@ -1,0 +1,35 @@
+REFERENCE ONLY - B0 HUMAN INPUT PREPARATION
+
+Superseded as the next action by NEXT_TASK_STEP3.txt. The B0 factual draft
+already exists. Start Step 3 implementation with inherited provisional settings;
+do not wait for the human-input exercise below. These questions support later
+mandate decisions and do not block portfolio code or development-period tests.
+
+The final-round prompt review has been integrated. Read:
+- antigravity-team-pack/COMMON_CONTEXT.md and SOLO_START_HERE.md
+- antigravity-team-pack/02_B_PORTFOLIO_DECISIONS.txt, milestone B0
+- audit/final_strategy_review/PROMPT_INTEGRATION_DECISIONS.md
+- audit/decision_register/REGISTER.md
+- current config.yaml and handoff/SOLO.md
+
+Work on the existing project. Do not repeat setup/data/r3, download new context data,
+change runtime config/code, compute portfolio results or start Step 3 in this task.
+
+Prepare the existing DRAFT register for human review:
+1. Confirm inherited dataset/schema/chronology/caps against actual files. They are
+   provisional existing settings, not newly approved client constraints.
+2. Show the implied AGG/GLD/equity bounds and the proposed rule/validation/window policy.
+   Do not tune anything or inspect candidate strategy performance.
+3. Ask only the genuinely decisive human inputs: horizon/spending/inflation/fee/growth
+   convention/ranges, risk tolerances and permitted adjustments. Team roles, deadline,
+   submission route and judge access remain visibly pending if unknown. Do not invent them.
+4. Record historical data exposure honestly: asset quality/full-sample statistics were
+   already inspected; portfolio strategy outcomes have not yet been evaluated.
+5. Separate software-readiness, provisional exploratory choices and human-approved
+   evaluation protocol. A draft Git checkpoint is not a signed preregistration.
+6. Keep an append-only change history. Prepare the final selected protocol for a dated
+   local commit before strategy selection/evaluation, once humans actually supply it.
+   Missing names/deadline do not prevent independent implementation/synthetic checks.
+
+Return a compact list of filled facts, unresolved choices and the exact next bounded
+task. Human validation stays PENDING. Do not silently edit economics to unblock the run.

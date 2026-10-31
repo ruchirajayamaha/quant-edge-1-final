@@ -1,0 +1,112 @@
+{
+  "scope": "post-fix R1-R3 verification; synthetic repros; development-only strategy checks; 46+7 hash checks",
+  "r1_positive_returns_below_rf": {
+    "crashes": false,
+    "downside_deviation_rf": 0.0012549900398011135,
+    "sortino_ratio_rf": -1.3606629276000366e-15,
+    "sortino_status": "ok",
+    "sortino_zero_target": null,
+    "sortino_note": "Sample 2010-01-04..2010-01-07 (n=4): 252 * mean(R_p - rf_daily) / downside_deviation over all N=4 sessions (daily target=rf_daily; zero-target Sortino=unavailable (all raw returns >= 0)); penalizes downside shortfall without penalizing upside gains."
+  },
+  "r2_interior_cpi_gap": {
+    "default_endpoint_cpi_policy": {
+      "declared_start": "2010-01",
+      "declared_end": "2010-05",
+      "base_cpi_month": "2009-12",
+      "months_used": 5,
+      "calendar_months_in_span": 5,
+      "computed_cpi_multiplier": 1.23,
+      "declared_endpoint_cpi_multiplier": 1.23,
+      "missing_current_cpi_months_excluded": [
+        "2010-02"
+      ],
+      "missing_prior_cpi_months_excluded": [
+        "2010-03"
+      ],
+      "reported_excluded_cpi_months": [
+        "2010-02",
+        "2010-03"
+      ],
+      "all_statuses": [
+        "warning",
+        "warning",
+        "warning",
+        "warning"
+      ],
+      "real_annual_return": -0.3915460251797296,
+      "scattered_diagnostic_classification": "scattered_noncontiguous_monthly_factors_not_an_endpoint_ratio"
+    },
+    "longest_contiguous_cpi_block_policy": {
+      "declared_start": "2010-04",
+      "declared_end": "2010-05",
+      "base_cpi_month": "2010-03",
+      "months_used": 2,
+      "computed_cpi_multiplier": 1.0165289256198347,
+      "declared_endpoint_cpi_multiplier": 1.0165289256198347,
+      "outside_selected_block_months_excluded": [
+        "2010-01"
+      ],
+      "reported_excluded_cpi_months": [
+        "2010-02",
+        "2010-03"
+      ],
+      "all_statuses": [
+        "ok",
+        "ok",
+        "ok",
+        "ok"
+      ]
+    }
+  },
+  "r2_month_coverage_exact_dates": {
+    "missing_nyse_date": "2010-01-05",
+    "unexpected_saturday": "2010-01-09",
+    "observed_rows": 19,
+    "expected_nyse_rows": 19,
+    "falsely_counted_complete_months": 0,
+    "excluded_reason": {
+      "reason": "non_nyse_or_mismatched_session_dates",
+      "observed_sessions": 19,
+      "expected_nyse_sessions": 19,
+      "missing_nyse_dates": [
+        "2010-01-05"
+      ],
+      "unexpected_non_nyse_dates": [
+        "2010-01-09"
+      ]
+    }
+  },
+  "r3_custom_context_hash_and_identity": {
+    "untouched_relocated_copy_accepted": true,
+    "tampered_relocated_copy_rejected": true,
+    "tampered_rejection_error": "SHA-256 integrity mismatch on context file C:\\Users\\ruchira\\Desktop\\qunt\\tmp\\step4_postfix_verify_q09m0ld3\\context\\etf_split_adjusted_closes.parquet (manifest entry data/reference/context/etf_split_adjusted_closes.parquet): expected 7bc64df498ecfa7eaa9a55a06cfd5d0e1d4c3c40c811cc364c141af16c1fee51, got 08d2f00e7d84cf9c8a09425da180b02a73c1fa8560a2ff9ca2cde9c9e76348e1.",
+    "mismatched_frozen_2016_rejected_by_default": true,
+    "mismatched_rejection_error": "Context snapshot qe1_context_20050101_20261030_a1b_2040bb6e15 coverage [2005-01-03..2026-10-30] (n=5492) does not match requested config NYSE coverage [2005-01-03..2016-12-30] (n=3021, requested_start='2005-01-01', frozen_end_date='2016-12-30'). Pass slice_to_config=True to request an explicitly bounded compatible sub-view.",
+    "explicit_bounded_view_context_id": "qe1_context_20050101_20261030_a1b_2040bb6e15__bounded_20050103_20161230",
+    "explicit_bounded_view_end": "2016-12-30"
+  },
+  "independent_development_kpi_oracle": {
+    "start": "2007-01-05",
+    "end": "2016-12-30",
+    "n_obs": 2516,
+    "metrics_checked": 13,
+    "max_absolute_difference": 2.220446049250313e-16,
+    "alpha_t_difference_vs_statsmodels": 2.6645352591003757e-15,
+    "development_119m_real_return_unchanged": true,
+    "development_119m_real_annual_return": 0.04663732670187959
+  },
+  "hashes": {
+    "market_snapshots": 46,
+    "context_files": 7,
+    "all_match": true
+  },
+  "protected_files": "config, dependencies, contracts, active pointer and pre-context data adapter unchanged",
+  "post_fix_sha256": {
+    "src/quantedge/kpis.py": "2b814cff73f0017d6c1573a8b3148755836b7a47d5ac4a8dcc8e13eaab9186a2",
+    "src/quantedge/data.py": "6f76f173498122819bc381ec707703c646ecaa1a2cef8c5528dc1fce1ac56efd",
+    "tests/test_a_kpis.py": "e6ebe8e7c2798503417a32dc96172e795b60187d69201052b88a0be036b5888d",
+    "docs/sections/a_kpis_and_capm.md": "8966fcf367dc688bed36da00eaf8e7933958aa67fabdf2934efee8356706bcf0",
+    "data/reference/context/context_manifest.json": "13502c02ccb435072cee2cd85e9dd2b6fafeb6b9a12a6ff59ec6ea507f765af3"
+  },
+  "holdout_strategy_results": "not computed; only development paths and synthetic probes"
+}

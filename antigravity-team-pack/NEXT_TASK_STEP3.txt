@@ -1,0 +1,42 @@
+START SOLO STEP 3 NOW - B1 PORTFOLIO IMPLEMENTATION
+
+Work in the existing project at C:/Users/ruchira/Desktop/qunt.
+Read handoff/SOLO.md, antigravity-team-pack/COMMON_CONTEXT.md, CONTRACTS.md,
+02_B_PORTFOLIO_DECISIONS.txt milestone B1, current runtime contracts/config,
+and audit/decision_register/REGISTER.md.
+
+Setup, data validation and r3 are complete. The factual B0 draft already exists.
+Pending human spending/return/risk choices do NOT block this implementation.
+Do not stop for a separate B0 approval round or ask to repeat completed work.
+Record inherited settings as provisional and proceed with the engineering task.
+
+Implement ONLY Step 3:
+1. Implement construct_weights and build_portfolio_path using the current APIs.
+   Support constrained minimum variance with sample covariance ddof=1,
+   equal-weight reference and monthly-rebalanced 60/40 SPY/AGG reference.
+   Label references that violate the proposed portfolio caps.
+2. Preserve r3, snapshot files, active pointer and current config/schema.
+   Use offline load_data. Do not add dependencies unless a concrete necessity
+   is demonstrated; inspect the installed numerical stack first.
+3. Use only past information for each weight decision; preserve canonical ticker
+   order, fully invested feasible weights, holdings drift between rebalances,
+   weights_before timing, documented initial investment and transaction costs.
+   State the turnover convention used with the existing 5bps cost setting.
+   Never repair an infeasible optimizer result by silent clipping/renormalisation.
+4. Add focused tests for known-answer weights, feasible/infeasible constraints,
+   drift, costs, shared benchmark paths and future-data invariance.
+   A real-data smoke check may use the development period through 2016-12-30.
+   Do not inspect selection/evaluation-period strategy results or choose a winner.
+5. Append implementation/provisional status to the existing decision register.
+   Keep human choices/signatures PENDING. Do not invent a final nominal target,
+   approved mandate, completed preregistration or untouched-data claim.
+6. Run relevant tests, update docs/sections/b_portfolio_construction.md,
+   handoff/SOLO.md, CHANGELOG.md and the truthful AI disclosure.
+
+No Step 4+, new downloads, KPIs/risk comparisons, final recommendation, frontier,
+FHS, app redesign or new strategy review belongs in this task. Defer metrics
+whose functions are still stubs. Do not push to GitHub in this task.
+
+Finish with implemented files/APIs, actual test commands/results, the development
+smoke-check bounds, unresolved issues and the next milestone. Proceed now;
+pending nonessential human/logistics fields are not a reason to pause coding.

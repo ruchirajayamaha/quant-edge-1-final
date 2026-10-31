@@ -1,0 +1,92 @@
+SOLO STEP 5 ONLY - C1 HISTORICAL / NORMAL / MONTE CARLO VaR AND ES
+
+Work in C:/Users/ruchira/Desktop/qunt. Step 4 R1-R3 are closed by Codex.
+The user requires independent review after EVERY step. Implement Step 5 only,
+run its tests, provide the actual completion report and STOP before Step 6.
+
+READ
+- audit/step4_review/STEP4_CLOSURE.md and handoff/SOLO.md
+- antigravity-team-pack/COMMON_CONTEXT.md, CONTRACTS.md and current runtime contracts/config
+- antigravity-team-pack/03_C_RISK_EVT.txt milestone C1 only; C2/C3/C4 are not authorised in this task
+- existing var.py / es.py stubs and relevant portfolio / KPI interfaces
+
+PRESERVE
+Keep r3/r2/v1/context snapshots, pointer, config, dependency pins, verified
+portfolio mechanics, KPI formulas and frozen public signatures. Use the existing
+Python3.11 .venv. No market downloads, new strategy research or data re-audit.
+Human economic decisions and validation remain PENDING without stopping coding.
+
+IMPLEMENT
+1. normal_moments: one canonical arithmetic sample mean and covariance ddof=1,
+   reused by normal analytic risk, normal MC and later Euler contributions.
+   Validate finite training data, canonical ticker/weight order, enough rows,
+   covariance symmetry/PSD and degenerate variance; never silently repair
+   invalid portfolio weights or materially invalid covariance matrices.
+2. estimate_risk: fixed-exposure simple returns R=train_asset_returns@weights,
+   one-day losses L=-R, before transaction costs. Implement historical,
+   parametric_normal and monte_carlo_normal with proper RiskEstimate statuses,
+   sample bounds, n_obs, units, inputs/seed/count diagnostics and reasons.
+   Preserve nonpositive loss quantiles; do not apply abs() or floor gains to zero.
+3. Historical VaR: explicitly state/test the empirical quantile convention.
+   empirical_tail_weights must integrate exactly the worst alpha=1-confidence
+   empirical probability mass, including fractional boundary observations and
+   deterministic equal sharing among ties. The helper's boundary convention
+   must be coherent with its calculation; a linearly interpolated quantile may
+   not identify the correct order-statistic boundary when alpha*n is fractional.
+   Historical ES equals tail_weights@losses and weights sum to 1. Do not use a
+   naive mean(losses >= VaR) when it disagrees with the required tail mass.
+4. Normal analytic: mu=w@mean, variance=w@cov@w;
+   VaR=-mu+sigma*norm.ppf(c), ES=-mu+sigma*norm.pdf(z)/(1-c).
+   Handle zero volatility consistently. Explain the unbounded normal simple-
+   return approximation rather than truncating draws to manufacture agreement.
+5. Normal MC: use those SAME fitted asset moments, fixed seed and the configured
+   25,000 draws. Use multivariate simulation or a demonstrably equivalent
+   portfolio projection and document the convention. Quantify Monte Carlo
+   error with a bounded independent/repeated-seed check; choose tolerances and
+   displayed precision accordingly. Do not change the primary draw count or
+   add Student-t/GARCH just to produce different bars.
+   Keep the frozen estimate_risk signature; provide a clear consistent route
+   to the existing config settings, not conflicting hard-coded defaults.
+6. get_risk_forecaster: export the proper RiskForecastFn bound to each supported
+   core method, consuming only the passed historical training frame/exposure.
+   Step 6 will implement rolling validation; do not duplicate backtest.py now.
+   EVT remains deferred until Step 7 and cannot return fabricated core results.
+7. Support90/95/99; produce matched95/99development comparison tables across
+   the same exposure, observations, confidence and one-day horizon. Use recent
+   and full-development fixed-exposure diagnostic samples with explicit actual
+   dates/counts. Do not claim a pre-2017 smoke sample includes COVID/2022.
+   The generic code must support the later current/full-history views without
+   using future observations in any historical forecast.
+8. Reuse the Step 4 diagnostic helper to inspect the ACTUAL fixed-exposure
+   return/log1p series used by the development risk model; distinguish it from
+   the changing-weight net strategy series. Do not demand a desired ADF result.
+
+TEST / HANDOFF
+Add known-answer loss-sign/normal-formula/zero-volatility checks, hand-calculated
+fractional empirical tails and ties, quantile/ES confidence monotonicity where
+defined, ES>=VaR, canonical alignment, fixed-seed repeatability and meaningful
+MC-versus-analytic tolerances. Verify callbacks use the supplied model/exposure
+and contain no hidden current/future market fetch. Test finite/invalid inputs.
+Update remaining-stub tests truthfully; leave later analytical stubs explicit.
+
+Run focused tests and the connected suite. Real-data strategy/risk smoke checks
+stay within development through 2016-12-30; no selection/evaluation strategy
+outcome inspection or winner selection. Save actual computed tables with sample,
+exposure/config/source/seed/count IDs. Derive the report from actual files and
+outputs: do not invent hashes, example vectors, timings or before/after numbers.
+Update methodology, handoff, CHANGELOG and truthful AI disclosure.
+
+STOP AFTER STEP 5. No Step 6 backtests, EVT fitting, risk budgeting/stress, app,
+optional frontier/FHS, final document work or GitHub push in this request.
+Return implemented APIs/files, formulas/conventions, real sample/risk tables,
+tests actually run/results, unresolved issues and next milestone for Codex review.
+
+VISIBLE OUTPUTS: Save the actual development risk comparison tables as CSV/JSON
+and report-ready figures (same-exposure95/99method comparison and an accurately
+labelled loss-distribution/risk-marker view). Use core RiskEstimate outputs as
+the sole numerical source; plotting scripts must not implement another risk
+engine. The existing results/development_preview/ demonstrates the approved
+Steps1-4 exports. Isolated Matplotlib render dependencies are available in
+tmp/figure_export_deps; keep them outside the app requirements. Label dates,
+weights/confidence/horizon/status and development scope. Export only completed
+Step5 results, not placeholder EVT/backtest figures, and still stop for review.

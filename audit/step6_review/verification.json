@@ -1,0 +1,77 @@
+{
+  "checked_at_utc": "2026-10-31T15:59:57.171638+00:00",
+  "rows_checked": 10064,
+  "max_absolute_errors": {
+    "var": 1.214306433183765e-17,
+    "es": 3.122502256758253e-17,
+    "gross_loss": 1.3877787807814457e-17,
+    "coverage_lr": 1.1368683772161603e-13,
+    "coverage_p": 3.774758283725532e-15
+  },
+  "source_data_hashes": 53,
+  "protected_files_unchanged": 50,
+  "summaries": [
+    {
+      "model": "historical",
+      "confidence": 0.95,
+      "n": 2516,
+      "exceptions": 127,
+      "transitions": {
+        "n00": 2275,
+        "n01": 113,
+        "n10": 114,
+        "n11": 13
+      },
+      "lr_uc": 0.012013077724304821,
+      "lr_ind": 6.0691827974903845,
+      "lr_cc_recorded": 6.069705646090256
+    },
+    {
+      "model": "historical",
+      "confidence": 0.99,
+      "n": 2516,
+      "exceptions": 32,
+      "transitions": {
+        "n00": 2454,
+        "n01": 29,
+        "n10": 29,
+        "n11": 3
+      },
+      "lr_uc": 1.7295504198481808,
+      "lr_ind": 7.237804759541575,
+      "lr_cc_recorded": 8.972859978792485
+    },
+    {
+      "model": "parametric_normal",
+      "confidence": 0.95,
+      "n": 2516,
+      "exceptions": 127,
+      "transitions": {
+        "n00": 2278,
+        "n01": 110,
+        "n10": 111,
+        "n11": 16
+      },
+      "lr_uc": 0.012013077724304821,
+      "lr_ind": 11.864196812390674,
+      "lr_cc_recorded": 11.864719660990659
+    },
+    {
+      "model": "parametric_normal",
+      "confidence": 0.99,
+      "n": 2516,
+      "exceptions": 53,
+      "transitions": {
+        "n00": 2416,
+        "n01": 46,
+        "n10": 46,
+        "n11": 7
+      },
+      "lr_uc": 23.606199235474378,
+      "lr_ind": 15.330793046428823,
+      "lr_cc_recorded": 38.959480604539124
+    }
+  ],
+  "holdout_outcomes_inspected": false,
+  "authority_sha256": "cc540646ff72d4ba19ec440411052866b7d6bd5b47ff6f9be36fd34b940ab9d4"
+}

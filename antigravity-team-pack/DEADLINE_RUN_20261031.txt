@@ -1,0 +1,157 @@
+CURRENT CHECKPOINT: Steps1-8 are implemented and technically checked. Step8 outputs: results/step8_risk_stress_preview/index.html; 127 tests pass. STOP before Step9 integration. Human validation/mandate choices remain PENDING. This checkpoint supersedes older next-task text below.
+
+DEADLINE PRIORITY PLAN - REVIEW REQUIRED AFTER EACH STEP, 2026-10-31
+
+Continue the existing project at C:/Users/ruchira/Desktop/qunt.
+USER UPDATE: Codex review is required after EVERY step. The earlier instruction
+to run all milestones without stopping is withdrawn. Steps 1-5 are reviewed.
+Use NEXT_TASK_STEP6.txt now, complete Step 6 only, and stop for review. The plan below is a priority/reference
+queue for later separately reviewed steps, not permission to execute all of them.
+Do not restart completed work. Finish an already-running atomic fix safely first.
+Use one writer in the existing checkout; do not launch competing coding sessions.
+
+The exact submission time, route and judge access must come from the user.
+Record them when supplied. Do not assume that tonight means midnight or that
+prepared local files have been uploaded. Reserve the final 45-60 minutes before
+the actual cutoff for packaging, human checks and upload/access verification.
+Until the cutoff is known, continue the current authorised step, then stop for review.
+
+READ ONLY WHAT IS NEEDED NOW
+- handoff/SOLO.md and current src/quantedge contracts/config.
+- audit/step3_review/STEP3_REVIEW.md and the actual R1-R3 correction status.
+- The official final challenge PDF (use existing extraction for text if available).
+- Relevant sections of role prompts as each task is implemented.
+Do not start another competition-strategy/literature review or data-hardening cycle.
+
+PRESERVE / CUT SCOPE
+Preserve verified r3, its parents, active pointer, canonical seven ETFs, Python3.11
+environment, existing usable modules and pinned dependency stack.
+Defer B4 frontier, EWMA-FHS, Student-t MC, GARCH, copulas/wavelets, reverse-stress
+research, extra optimizers, extra macro series, broad threshold searches and UI polish.
+Use the core candidate/risk/decision table as the frontier fallback.
+Innovation discussion can explain actually implemented RF provenance, transparent
+model comparisons and target-versus-drift monitoring, without claiming novel methods.
+Required VaR/ES, EVT, validation, risk budgeting, stress, app and documents are NOT cut.
+
+CHRONOLOGY / HUMAN CHOICES
+Before inspecting selection/evaluation strategy outcomes, append the actual
+computational protocol and timestamp to audit/decision_register/REGISTER.md.
+Use inherited configured minimum variance as the primary case-study rule and
+equal-weight/60-40 as fixed references, not a performance-selected winner.
+Keep existing chronology/caps/costs, historical VaR primary, fixed seeds and no
+evaluation-driven tuning. Record an honest dated local checkpoint.
+Human economic assumptions/signatures remain PENDING unless actually supplied.
+Describe results as a retrospective chronological exercise under provisional
+assumptions; never claim completed human preregistration or an entirely unseen dataset.
+Do not invent spending/inflation/fees/risk tolerances to manufacture feasibility.
+Pending human fields do not stop implementation or clearly labelled case-study outputs.
+
+PRIORITY ORDER - CHECKPOINT EACH STEP, THEN STOP FOR CODEX REVIEW
+
+1. FINISH STEP 3 CORRECTIONS
+   Resolve R1 conflicting objective/fixed-weight overrides, R2 rebalance-target
+   versus observed-drift compliance reporting, and R3 the documented FW inequality.
+   If already resolved and tested, reuse the evidence; do not repeat the fix cycle.
+   Preserve existing valid path mechanics and run relevant regression checks.
+
+2. BUILD THE MANDATORY NUMERICAL CORE
+   Implement the existing compute_kpis interface: geometric return/annual volatility,
+   Sharpe, Sortino, Treynor, Jensen alpha/beta versus SPY, Information Ratio/tracking
+   error versus shared 60/40, initial-wealth Max Drawdown and Calmar. Align dates/RF,
+   state annualisation and handle denominator failures honestly.
+
+   Implement same-portfolio historical, parametric-normal and seeded normal-MC
+   VaR/ES at 90/95/99, with required 95/99 exports and fractional empirical ES mass.
+   Config controls the current 25,000 MC draws; verify normal/MC agreement within
+   simulation error, adapt displayed precision, cache fixed-seed results.
+   Label recent-risk and full-history fixed-exposure sensitivity; match inputs
+   across methods in each view. No full-history information in earlier forecasts.
+
+   Implement primary historical-VaR rolling backtesting at 95/99 using past-only
+   training and weights_before. Provide exception dates, Kupiec, Christoffersen
+   independence and the valid 99%/250-consecutive-pair Basel diagnostic.
+   Only expose supported backtest callbacks; no every-model rolling requirement.
+
+   Implement unconditional POT-GPD with a small documented development-period
+   threshold policy, actual exceedance counts, MRL/modified-scale/QQ diagnostics,
+   xi near-zero/support/infinite-ES safeguards and cached bounded uncertainty if
+   feasible. Use the specified empirical-body/GPD-tail construction for 90%
+   without downward tail extrapolation. Genuine fit failures stay visible.
+
+   Implement normal VaR/ES Euler contributions and historical ES contributions
+   using the shared fractional-tail helper. Verify sums and derivative examples.
+   Provide a small predeclared feasible alternative set and USD/return-risk tradeoffs.
+   Replay GFC, COVID and 2022 daily crisis paths with drift; add the configured
+   seven-ticker hypothetical with explicit provisional rationale and USD attribution.
+   Do not add daily GARCH/EVT backtests or an ES-frontier optimizer.
+
+3. ADD BOUNDED MANDATE CONTEXT WITHOUT CHANGING r3
+   Time-box a separate distribution/compatible-price and monthly CPI context fetch
+   to roughly 15-20 minutes of actual elapsed effort; cache successful inputs with
+   hashes/units/dates/sources. An unavailable source does not stop the price-risk core.
+   Use a consistent share/split basis, no double dividend counting, no inferred zero
+   distributions after a failed request. CPI supports ex-post common-month real
+   return, not an unlagged optimizer signal or forward inflation assumption.
+   Do not chase optional macro breadth. Disclose genuinely unavailable context.
+   Explain income/real-growth objectives and remaining evidence gaps explicitly.
+
+4. INTEGRATE A WORKING STREAMLIT APP EARLY
+   Wire the core progressively through one pipeline/result bundle; do not wait
+   until all optional diagnostics are perfect. Replace the obsolete D0 Home stub.
+   Show Decision/Evidence, Portfolio/KPIs, Risk/EVT, Backtest, Stress/Budget and
+   Assumptions/Limitations views. Confidence90/95/99, model and date controls must
+   genuinely affect their supported calculations or state a precise limitation.
+   Backtest is the labelled primary historical model until others are implemented.
+   Display actual allocation, USD10M downside, model disagreement, exceptions,
+   scenario outcomes, cost/provisional assumptions and target/drift constraint scope.
+   A pending committee decision stays pending; prepare quantified accept/adjust/
+   reject alternatives for the humans instead of inventing an approved conclusion.
+   Cache analytics; no independent UI math or synthetic final figures.
+   Keep launch: streamlit run app/Home.py after documented setup.
+
+5. PRODUCE REAL SUBMISSION ARTIFACTS FROM THE SAME RESULTS
+   Freeze/hash the actual reference bundle. Produce a readable 7-15-page PDF memo,
+   a one-page tear sheet and a separate one-page plain-English recommendation
+   export (reuse the content where appropriate; do not assume organiser waiver).
+   Cover the actual rubric: investment decisions30, correctness25, software15,
+   innovation15, communication15. Trace every mandatory requirement to evidence.
+   Include the human-selected/substantiated recommendation once supplied. Before
+   that, prepare a clearly marked draft for that human decision; never silently
+   call a draft recommendation a completed compliant submission.
+   Use local PDF/document libraries if available. Check actual page counts and
+   render/readability. Do not delay analytics for elaborate branding/layout.
+   Update README, AI disclosure, limitations, reproducibility and source tables.
+   Prepare concise formula/hand-check/viva materials; only humans sign validation.
+   A full pitch deck is required only if the organisers require it for this stage.
+
+6. FINAL VERIFICATION AND DELIVERY CHECKPOINT
+   Run focused known-answer/no-look-ahead tests and the final connected suite;
+   update stub-count tests honestly as implementations replace stubs.
+   Independently check headline return, drawdown, normal VaR, ES/contribution and
+   stress USD amounts by different routes. Verify snapshot hashes/protected data.
+   Run AppTest with real cached data and representative controls; check offline
+   rendering, the documented app launch and clean-environment setup if time allows.
+   Record skipped checks explicitly rather than claiming they passed.
+   Prepare a final submission folder and local Git checkpoint. Updating the existing
+   private GitHub repository was previously authorised; push only the verified final
+   checkpoint to the existing origin if authenticated. No force push, visibility
+   change, new repository, unauthorised public hosting or form submission.
+   Private repo access and any required hosted app URL must be verified against the
+   actual submission instructions; a localhost URL is not a hosted app URL.
+
+WORKING RULES
+Report meaningful progress every 15-20 minutes: completed outputs, actual failures,
+remaining mandatory gaps and the next action. Continue tasks inside the current
+step after passing checks, then stop at the user's review gate. New correctness
+bugs are fixed; optional polish/research is deferred. No fabricated performance,
+citations, test passes, human validation, competition readiness or successful upload.
+
+When blocked on a human-only choice, prepare the concrete evidence/question and
+continue independent work inside the currently authorised step. Do not start
+later stages while awaiting review. Final human recommendation/validation
+and judge access may remain real blockers to a claim of a complete submission.
+
+FINAL REPORT
+Give exact artifact paths, PDF page counts, launch command, result/dataset/code IDs,
+tests actually run, Git remote/commit state, and a short mandatory-gap list.
+Distinguish ready local artifacts, published repo content and files actually submitted.

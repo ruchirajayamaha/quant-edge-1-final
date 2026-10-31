@@ -1,0 +1,130 @@
+SOLO STEP 6 ONLY - A3 ROLLING BACKTESTING AND COVERAGE VALIDATION
+
+Work in C:/Users/ruchira/Desktop/qunt using the existing Python 3.11 .venv.
+Steps 1-5 and bounded corrections are technically reviewed. Implement Step 6,
+produce real development outputs, run checks and STOP before Step 7 for Codex review.
+The submission is tonight: keep this task bounded and use one coding writer.
+
+READ FIRST
+- audit/step5_review/STEP5_CLOSURE.md, current verification_after_fixes.json and handoff/SOLO.md.
+- Current contracts.py, backtest.py, portfolio.py path interfaces and var.get_risk_forecaster.
+- antigravity-team-pack/COMMON_CONTEXT.md and CONTRACTS.md; 01_A_DATA_VALIDATION.txt A3 only.
+- Current config.yaml and audit/decision_register/REGISTER.md.
+Current runtime files and verified artifacts override stale chat hashes/dimensions.
+
+PRESERVE
+Keep r3/r2/v1/context data, active pointer, config, dependency pins, frozen public
+signatures and verified Steps 3-5 mathematics/results unchanged. No downloads or
+data re-audit. New code belongs in backtest.py, focused tests, bounded recorder/
+export scripts, documentation and handoff. Remaining later stubs stay explicit.
+
+FIXED DEVELOPMENT PROTOCOL - RECORD BEFORE COMPUTING
+Use inherited primary_backtest_model=historical, previous 500 asset-return sessions,
+one-day gross market losses, 95% and 99% confidence. Add the cheap parametric_normal
+comparison on exactly the same primary portfolio dates/weights. Support 90% in the
+generic engine and synthetic tests. Use the accepted drifting min_variance path;
+reference HS results may be added only if cheap. Do not optimize/tune the strategy,
+window, model or confidence after seeing exceptions, and never require a green zone.
+Record this inherited software protocol in the register with human approval PENDING.
+Real-data results in THIS step must stop at 2016-12-30 and be labelled DEVELOPMENT
+OOS RESEARCH, not final holdout validation. Human mandate/protocol choices do not
+block implementation or development tests; do not invent signatures or approval.
+The generic implementation must later support registered selection/evaluation
+segments, but do not inspect or export their outcomes in this bounded task.
+
+IMPLEMENT THE THREE FROZEN PUBLIC APIS
+1. rolling_backtest(asset_returns, weights_before, forecast_fn, *, confidence,
+   window, seed=None) -> DataFrame matching BACKTEST_COLUMNS.
+   For target t, train on exactly the preceding window sessions (exclude t),
+   assert train_end < t, use weights_before.loc[t] and call the existing generic
+   RiskForecastFn. Realized gross loss is -(asset_returns.loc[t] @ weights_before.loc[t]).
+   Preserve full prior asset history for training warmup; do not first truncate
+   asset_returns to the later weights index and discard already available history.
+   Forecast/realization share that SAME known exposure. Do not use one terminal
+   weight for the whole backtest, weights_after[t], or reoptimize inside this engine.
+   Do not compare pre-cost risk forecasts against net returns/cost jumps; costs
+   remain in performance metrics. Preserve signed losses, including negative VaR.
+   Exceedance means realized_loss > forecast_var; equality is not an exception.
+   Validate canonical ticker/date alignment and input non-mutation. Use the
+   shared NYSE calendar to detect genuine missing sessions rather than mistaking
+   weekends/holidays for gaps. Never relabel a gap-spanning move as a one-day pair.
+   Keep requested target rows with missing weights, short history, invalid data,
+   failed callback or unavailable forecast as explicit skipped/unavailable rows
+   with reason and missing exceedance, never False or zero-filled observations.
+   Distinguish an eligible warning forecast from an unusable one. Model/confidence,
+   training dates and finite valid VaR must actually match the callback result.
+
+2. coverage_tests(backtest_rows) -> DataFrame matching COVERAGE_TEST_COLUMNS.
+   Group correctly by model/confidence; never merge different portfolios/groups.
+   Report eligible/skipped counts, exceptions, expected probability 1-confidence,
+   observed rate and all three LR tests: Kupiec POF (df=1), Christoffersen independence
+   (df=1), conditional coverage (df=2) where identifiable. Use stable log likelihoods
+   with mathematically defined zero-count terms; test no/all exceptions and tiny
+   samples without accidental division/log errors. Independence transition counts
+   n00/n01/n10/n11 use consecutive eligible NYSE sessions only: never connect two
+   rows across skipped/missing dates. Return diagnostic counts and test-specific
+   availability/reasons, e.g. in attrs or additive metadata while retaining schema.
+   No fabricated p-value=1 pass for an unidentifiable test. Conditional coverage
+   needs coherent samples/assumptions; document any treatment of disconnected
+   valid runs and mark a test unavailable when assumptions cannot be justified.
+   Clamp only insignificant negative LR roundoff; substantial invalid values are
+   errors. Warn about sparse expected exceptions/asymptotic low-count limitations.
+   A non-rejection is not proof of model validity, safe losses or compliance.
+
+3. basel_traffic_light(backtest_rows_99) -> dict.
+   This is the educational 250-consecutive-valid-session 99% one-day diagnostic:
+   green 0-4 exceptions, yellow 5-9, red >=10. Use the fixed endpoint: the latest
+   supplied eligible end date, normally requested analysis end. Its last 250 NYSE
+   sessions must ALL have valid pairs; do not drop gaps or search backward for a
+   friendlier old block. Insufficient length, end-of-period failure, missing NYSE
+   sessions, mixed models/confidences or 90/95% input must yield an explicit
+   insufficient/not-applicable state, not an invented zone. Report exact block
+   bounds, 250-pair count, exceptions and expected 2.5. No bank-regulatory claim.
+
+RUNTIME AND SCOPE
+Use the generic existing risk callbacks; do not duplicate HS/Normal formulas.
+Record actual elapsed time. Do not launch daily 25,000-draw MC, EVT, GARCH, bootstrap
+research or a large grid in this step. Future backtest UI options must expose only
+implemented/validated model runs; Step 5 risk-only MC estimates are not rolling MC
+validation. Any future MC callback uses a deterministic origin seed policy recorded
+in metadata, so appending future targets cannot change earlier forecasts.
+
+MEANINGFUL TESTS
+- Spy callback verifies exact previous window, date t exclusion and correct weights.
+- Perturb target/future returns and confirm prior forecasts do not change; appending
+  future data leaves earlier rows unchanged. Realizations may change at changed dates.
+- Hand-computable gross P&L, negative/equal-to-VaR losses, skipped/warning forecasts,
+  missing weights, genuine NYSE gaps, canonical order and input non-mutation.
+- Independent scalar likelihood oracle for known exception sequences; same totals
+  but clustered versus dispersed exceptions; 0/1 transition counts, no/all exceptions,
+  too-short samples, mixed groups and no transition bridging across gaps.
+- Basel boundaries 4/5/9/10, exactly 250 pairs, 249 insufficient, 95% not applicable,
+  interior/end gaps and deterministic latest endpoint. No random test forced to pass.
+- Update stub tests truthfully. Run focused tests, then the connected suite and
+  pip check. If sandbox default temp is inaccessible, use a NEW workspace-local
+  --basetemp path; do not alter application code to fix OS temp permissions.
+
+ACTUAL VISIBLE OUTPUTS REQUIRED
+Create results/step6_backtest_preview/ (preserve earlier previews) containing:
+- Daily backtest rows CSV and strict JSON; model/confidence coverage summary CSV;
+  transition counts and Basel block/diagnostic JSON with reasons and provenance.
+- At least two clean PNG + SVG figures: (1) actual daily gross loss vs rolling VaR,
+  highlighting exceptions and gaps with 95/99 panels; (2) coverage/exception summary
+  or annual exception timeline showing observed versus expected counts.
+- Offline index.html, short README and SHA-256 manifest. Include dataset/config/code
+  IDs, sample dates, 500-session window, exposure/loss conventions and actual runtime.
+  Use existing isolated tmp/figure_export_deps plotting tools, no new app dependencies.
+  Derive plots and text from persisted computed tables, not a second risk engine.
+  Strict JSON null for genuine N/A, allow_nan=False; never hide invalid core results.
+  Verify artifact/source hashes AFTER the final script/doc edit and final export.
+
+HANDOFF AND STOP
+Write docs/sections/a_backtesting.md with formulas, boundaries, limitations, one
+hand-check example and plain-language implications of the actual results. Update
+handoff/SOLO.md, CHANGELOG, the register append and truthful AI disclosure. Verify
+all 53 market/context hashes and preservation of accepted Steps 3-5 source/results.
+Report implemented files/APIs, actual valid/skipped dates and counts, actual 95/99
+coverage tests and Basel status, runtime, tests/commands, hashes and figure paths.
+Do not invent dates, p-values, timings, hashes, human validation or favourable results.
+STOP AFTER STEP 6 FOR CODEX REVIEW. Do not start Step 7 EVT, risk budgeting/stress,
+app/deployment/final documents, selection/evaluation outcome inspection or GitHub push.

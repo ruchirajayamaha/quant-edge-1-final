@@ -1,0 +1,17 @@
+{
+  "step4_review": "closed; proceed Step 5 only, then review",
+  "independent_pytest": "61 passed in 9.68s; exit 0",
+  "post_fix_verifier": "independently rerun; exit 0",
+  "verified_snapshot_hashes": 53,
+  "sha256": {
+    "src/quantedge/kpis.py": "2b814cff73f0017d6c1573a8b3148755836b7a47d5ac4a8dcc8e13eaab9186a2",
+    "src/quantedge/data.py": "6f76f173498122819bc381ec707703c646ecaa1a2cef8c5528dc1fce1ac56efd",
+    "src/quantedge/portfolio.py": "8e5b93b6fed3869446eabaf60a096a347380cc6c2e8ec7262ea76ba568ee2940",
+    "tests/test_a_kpis.py": "e6ebe8e7c2798503417a32dc96172e795b60187d69201052b88a0be036b5888d",
+    "data/reference/context/context_manifest.json": "13502c02ccb435072cee2cd85e9dd2b6fafeb6b9a12a6ff59ec6ea507f765af3",
+    "docs/sections/a_kpis_and_capm.md": "d4f4008d37da1ce951d03d51c7eab38195065ad04a7fefb9e12c0273d0517722",
+    "audit/step4_review/CODEX_VERIFIED_STEP4_RESULTS.json": "3caef4ca9f4f3a294d9a9d5c2c0cf73406651a78f11ff472247b6ff7433596cd"
+  },
+  "human_validation": "PENDING",
+  "runtime_changed_by_closure_review": false
+}

@@ -1,0 +1,48 @@
+{
+  "scope": "tracked and unignored project files; token/private-key pattern scan, no secret values printed",
+  "files_scanned": 946,
+  "suspected_secret_paths": [],
+  "files_above_50MB": [],
+  "largest_10": [
+    {
+      "path": "results/step6_backtest_preview/backtest_results.json",
+      "bytes": 4391693
+    },
+    {
+      "path": "results/development_preview.zip",
+      "bytes": 2158191
+    },
+    {
+      "path": "results/step6_backtest_preview/01_daily_backtest_rows.csv",
+      "bytes": 1742361
+    },
+    {
+      "path": "results/final/daily_performance.csv",
+      "bytes": 1725940
+    },
+    {
+      "path": "Quant edge 1.0 Final Challenge 1.pdf",
+      "bytes": 1671295
+    },
+    {
+      "path": "output/pdf/investment_memo.pdf",
+      "bytes": 1242900
+    },
+    {
+      "path": "submission/investment_memo.pdf",
+      "bytes": 1242900
+    },
+    {
+      "path": "results/step6_backtest_preview/figure_01_rolling_var_exceptions.png",
+      "bytes": 924700
+    },
+    {
+      "path": "results/development_preview/figure_02_allocation.svg",
+      "bytes": 907833
+    },
+    {
+      "path": "results/step5_c1_preview/figure_01_c1_var_es_95_99_comparison.png",
+      "bytes": 831599
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+SOLO STEP 4 - BOUNDED REVIEW CORRECTION R1-R3
+
+Work in C:/Users/ruchira/Desktop/qunt. Read:
+- audit/step4_review/STEP4_REVIEW.md
+- audit/step4_review/verification.json and verify_step4.py
+- current kpis.py, appended A1b adapter in data.py and tests/test_a_kpis.py
+- handoff/SOLO.md and current Step 4 methodology
+
+The independent review reran 58 passing tests and verified all 13 development
+KPIs using Python statistics/math and statsmodels OLS (maximum difference
+2.22e-16). Preserve the good financial formulas and actual development results.
+Implement only these local corrections:
+
+R1 - Positive raw returns with some negative RF-excess returns must not crash
+compute_kpis. The optional zero-target Sortino can be None, so render/handle
+that diagnostic safely. Keep the valid primary RF-target Sortino and other
+metrics available. Add the synthetic regression from the review.
+
+R2 - Make real-return period semantics correct for INTERNAL missing CPI months.
+Do not concatenate disconnected valid-month factors and label their product a
+full start/end wealth or CPI ratio. Use an explicit, performance-independent
+contiguous interval policy OR valid endpoint CPI plus complete nominal returns
+for full-span growth, with unavailable intermediate months reported separately.
+Any scattered-month diagnostic must be labelled as such. Report all exclusions,
+including the month excluded because its prior CPI is missing. Match actual NYSE
+session dates, not just row counts, before claiming a complete month.
+Test an internal CPI gap, a missing NYSE day replaced by a non-session date with
+the same row count, and the existing valid contiguous case. Keep ex-post use,
+correct annualisation/duration, partial-month rules and no future fill explicit.
+Do NOT research/reconstruct/fabricate the unavailable October 2025 CPI print.
+
+R3 - Resolve the actual context payload files once; hash AND read those same files.
+An alternate context_dir must not verify the repository originals while loading
+an altered copy. Test untouched relocation success, altered-copy rejection and
+default-path tamper rejection using isolated temporary fixtures.
+Check cache/config compatibility (tickers, frozen coverage and compatible ETF
+parent/provenance). A frozen-2016 call must not silently return an unrestricted
+2026 context as matching. Use a clear offline mismatch error or an explicitly
+bounded compatible view with truthful identity. Never override offline mode.
+
+Refresh documentation/completion-summary discrepancies to actual current test
+vectors, beta threshold and input-validation policy. This is not permission to
+retune financial formulas merely to reproduce stale reported numbers.
+
+Preserve config.yaml, requirements, frozen contracts, active r3/r2/v1 and all
+existing data snapshot bytes. Prefer no context redownload or regeneration:
+the current stored context hashes are correct. Preserve original review evidence;
+write separate post-fix verification. The pre-fix probe is historical evidence
+and is expected to stop reproducing bugs after they are corrected.
+
+Run meaningful new regression checks, the connected suite and 46+7 hash checks.
+Verify the previously valid development KPI values remain unchanged unless an
+explicit justified period-policy difference applies. Use development data only;
+do not inspect selection/evaluation strategy outcomes. Update methodology,
+handoff, CHANGELOG and truthful AI disclosure. Human validation stays PENDING.
+
+Report R1/R2/R3 resolutions, actual tests, before/after valid KPI comparisons,
+cache integrity/compatibility evidence and actual period/exclusion metadata.
+STOP after these Step 4 corrections for Codex review. Do not start Step 5,
+new risk models, app redesign, new macro research or GitHub publication.

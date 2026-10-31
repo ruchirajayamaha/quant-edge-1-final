@@ -1,0 +1,51 @@
+{
+  "kpi_cells_checked": 39,
+  "kpi_csv_matches_verified_source": true,
+  "figures": {
+    "figure_01_wealth_drawdown.png": {
+      "size": [
+        3510,
+        2490
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "figure_02_allocation.png": {
+      "size": [
+        3510,
+        2280
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "figure_03_kpis.png": {
+      "size": [
+        3510,
+        2490
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "figure_04_income_real_returns.png": {
+      "size": [
+        3510,
+        2130
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    }
+  },
+  "source_snapshot_hashes_verified": 53,
+  "reviewed_runtime_sources_unchanged": true,
+  "artifact_hashes_match": true,
+  "archive_entries": 21,
+  "scope": "development 2007-01-05 through 2016-12-30 only; no holdout outcomes"
+}

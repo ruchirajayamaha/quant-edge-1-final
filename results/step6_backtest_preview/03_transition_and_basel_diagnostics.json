@@ -1,0 +1,154 @@
+[
+  {
+    "model": "historical",
+    "confidence": 0.95,
+    "diagnostics": {
+      "diagnostics": [
+        {
+          "model": "historical",
+          "confidence": 0.95,
+          "n00": 2275,
+          "n01": 113,
+          "n10": 114,
+          "n11": 13,
+          "n_transitions": 2515,
+          "valid_runs": 1,
+          "uc_status": "ok",
+          "uc_reason": null,
+          "ind_status": "ok",
+          "ind_reason": null,
+          "cc_status": "ok",
+          "cc_reason": null,
+          "lr_uc_transition": 0.000522848599871395,
+          "p_uc_transition": 0.9817572547939201,
+          "skipped_reason_counts": {},
+          "transition_likelihood": "condition_on_first_observation_of_each_run"
+        }
+      ],
+      "likelihood_convention": "UC: all eligible N; IND/CC: conditional on first state; CC unavailable across disconnected valid runs"
+    },
+    "basel": null
+  },
+  {
+    "model": "historical",
+    "confidence": 0.99,
+    "diagnostics": {
+      "diagnostics": [
+        {
+          "model": "historical",
+          "confidence": 0.99,
+          "n00": 2454,
+          "n01": 29,
+          "n10": 29,
+          "n11": 3,
+          "n_transitions": 2515,
+          "valid_runs": 1,
+          "uc_status": "ok",
+          "uc_reason": null,
+          "ind_status": "ok",
+          "ind_reason": null,
+          "cc_status": "ok",
+          "cc_reason": null,
+          "lr_uc_transition": 1.735055219250853,
+          "p_uc_transition": 0.18776658476134367,
+          "skipped_reason_counts": {},
+          "transition_likelihood": "condition_on_first_observation_of_each_run"
+        }
+      ],
+      "likelihood_convention": "UC: all eligible N; IND/CC: conditional on first state; CC unavailable across disconnected valid runs"
+    },
+    "basel": {
+      "status": "ok",
+      "reason": null,
+      "zone": "green",
+      "model": "historical",
+      "confidence": 0.99,
+      "window_sessions": 250,
+      "n_valid": 250,
+      "n_exceedances": 2,
+      "expected_exceedances": 2.5,
+      "block_start": "2016-01-06",
+      "block_end": "2016-12-30",
+      "educational_only": true,
+      "note": "Educational 250-session 99% one-day diagnostic; not regulatory approval.",
+      "n_missing_sessions": 0,
+      "n_invalid_pairs": 0
+    }
+  },
+  {
+    "model": "parametric_normal",
+    "confidence": 0.95,
+    "diagnostics": {
+      "diagnostics": [
+        {
+          "model": "parametric_normal",
+          "confidence": 0.95,
+          "n00": 2278,
+          "n01": 110,
+          "n10": 111,
+          "n11": 16,
+          "n_transitions": 2515,
+          "valid_runs": 1,
+          "uc_status": "ok",
+          "uc_reason": null,
+          "ind_status": "ok",
+          "ind_reason": null,
+          "cc_status": "ok",
+          "cc_reason": null,
+          "lr_uc_transition": 0.000522848599871395,
+          "p_uc_transition": 0.9817572547939201,
+          "skipped_reason_counts": {},
+          "transition_likelihood": "condition_on_first_observation_of_each_run"
+        }
+      ],
+      "likelihood_convention": "UC: all eligible N; IND/CC: conditional on first state; CC unavailable across disconnected valid runs"
+    },
+    "basel": null
+  },
+  {
+    "model": "parametric_normal",
+    "confidence": 0.99,
+    "diagnostics": {
+      "diagnostics": [
+        {
+          "model": "parametric_normal",
+          "confidence": 0.99,
+          "n00": 2416,
+          "n01": 46,
+          "n10": 46,
+          "n11": 7,
+          "n_transitions": 2515,
+          "valid_runs": 1,
+          "uc_status": "ok",
+          "uc_reason": null,
+          "ind_status": "ok",
+          "ind_reason": null,
+          "cc_status": "ok",
+          "cc_reason": null,
+          "lr_uc_transition": 23.6286875581103,
+          "p_uc_transition": 1.168327059529812e-06,
+          "skipped_reason_counts": {},
+          "transition_likelihood": "condition_on_first_observation_of_each_run"
+        }
+      ],
+      "likelihood_convention": "UC: all eligible N; IND/CC: conditional on first state; CC unavailable across disconnected valid runs"
+    },
+    "basel": {
+      "status": "ok",
+      "reason": null,
+      "zone": "green",
+      "model": "parametric_normal",
+      "confidence": 0.99,
+      "window_sessions": 250,
+      "n_valid": 250,
+      "n_exceedances": 3,
+      "expected_exceedances": 2.5,
+      "block_start": "2016-01-06",
+      "block_end": "2016-12-30",
+      "educational_only": true,
+      "note": "Educational 250-session 99% one-day diagnostic; not regulatory approval.",
+      "n_missing_sessions": 0,
+      "n_invalid_pairs": 0
+    }
+  }
+]

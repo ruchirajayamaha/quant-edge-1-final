@@ -1,8 +1,12 @@
+CURRENT CHECKPOINT: Steps1-8 are implemented and technically checked. Step8 outputs: results/step8_risk_stress_preview/index.html; 127 tests pass. STOP before Step9 integration. Human validation/mandate choices remain PENDING. This checkpoint supersedes older next-task text below.
+
 # Quant Edge: Antigravity 4 දෙනාගේ වැඩ බෙදීම
 
 **එක්කෙනෙක් implement කරනවා නම් [SOLO_START_HERE.md](SOLO_START_HERE.md) භාවිත කරන්න.** එහි එක Antigravity chat එකක කරන පිළිවෙළ සහ starter/continuation prompts තියෙනවා. පහළ guide එක හතර දෙනාගේ workflow එකටයි.
 
-මේක දැනට තියෙන official challenge PDF එක, Claude prompt-pack PDF එක සහ `initial prompt.txt` review කරලා හදපු implementation prompt pack එකක්. Project code තවම ලියලා නැහැ. මුල් files වෙනස් කරලා නැහැ.
+**Current update (2026-10-31):** Steps 1-5 සහ corrections review කරලා ඉවරයි. දැන් [NEXT_TASK_STEP6.txt](NEXT_TASK_STEP6.txt) භාවිත කරලා rolling backtesting සහ coverage tests කරන්න; Step 7ට කලින් review සඳහා නවත්වන්න. Human choices/validation PENDING ලෙස තබන්න. පහළ four-person plan එක historical alternative එකක්; current solo guide සහ runtime/handoff එක ප්‍රමුඛයි.
+
+මේක official challenge සහ upstream prompts මත පදනම් වූ implementation prompt pack එකක්. Current completed/pending work සඳහා handoff/SOLO.md බලන්න; මේ මුල් four-person plan එකෙන් project එක නැවත generate කරන්න එපා. Original source PDFs සහ upstream initial prompt preserved.
 
 **Claude plan එකේ direction එක හරි. ඒක ඒ විදිහටම sessions 4කට දුන්නොත් duplicated work, merge conflicts සහ unnecessary extensions නිසා usage වැය වෙයි.** මෙහි core requirements තියාගෙන optional වැඩ පසුවට දාලා තියෙනවා.
 

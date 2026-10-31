@@ -2030,3 +2030,741 @@ def load_data(
         parent_dataset_id=None,
         extra_notes=extra_notes,
     )
+
+
+# ---------------------------------------------------------------------------
+# Bounded A1b Income & Inflation Context Snapshot Adapter (SOLO STEP 4 / A1b)
+# ---------------------------------------------------------------------------
+
+from dataclasses import dataclass  # noqa: E402
+
+DISTRIBUTION_BEARING_TICKERS: tuple[str, ...] = ("SPY", "EFA", "EEM", "AGG", "XLE", "XLK")
+NON_DISTRIBUTION_TICKERS: tuple[str, ...] = ("GLD",)
+FRED_CPIAUCSL_SERIES: str = "CPIAUCSL"
+FRED_CPIAUCSL_CSV_URL: str = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCSL"
+DEFAULT_CONTEXT_SUBDIR: str = "data/reference/context"
+
+
+@dataclass(frozen=True)
+class ContextSnapshotBundle:
+    """Bounded A1b income and inflation context snapshot (separate from ``r3``).
+
+    Attributes:
+        context_id: Deterministic identifier for the context snapshot.
+        split_adjusted_closes: NYSE session grid x canonical ticker DataFrame of
+            split-adjusted (non-dividend-adjusted) closes from ``yfinance`` with
+            ``auto_adjust=False``, on the same share/split basis as ``distributions``.
+        distributions: NYSE session grid x canonical ticker DataFrame of cash
+            distributions (``Dividends``) per split-adjusted share on ex-dividend dates.
+        stock_splits: NYSE session grid x canonical ticker DataFrame of split ratios
+            (new shares per old share; ``0.0`` on non-split dates).
+        trailing_12m_distributions: Rolling 365-calendar-day cash distribution sum
+            per split-adjusted share (``NaN`` before 365 calendar days of coverage).
+        trailing_12m_yields: Rolling 365-calendar-day distribution yield fraction
+            ``trailing_12m_distributions / split_adjusted_closes`` (``NaN`` before
+            365 calendar days of coverage).
+        cpi_monthly: Monthly FRED ``CPIAUCSL`` table with ``obs_date``, ``month_period``,
+            ``cpi_index``, ``mom_inflation``, and ``yoy_inflation``.
+        manifest: Full parsed ``context_manifest.json`` dictionary with source URLs,
+            retrieval timestamp, units, coverage bounds, share-basis verification,
+            limitations, and per-file SHA-256 digests.
+    """
+
+    context_id: str
+    split_adjusted_closes: pd.DataFrame
+    distributions: pd.DataFrame
+    stock_splits: pd.DataFrame
+    trailing_12m_distributions: pd.DataFrame
+    trailing_12m_yields: pd.DataFrame
+    cpi_monthly: pd.DataFrame
+    manifest: dict[str, Any]
+
+
+def extract_split_adjusted_closes_and_distributions(
+    raw_yf_actions_frame: pd.DataFrame,
+    tickers: Sequence[str] = CANONICAL_TICKERS,
+    *,
+    require_dividend_events: bool = True,
+    ex_div_factor_tol: float = 5e-4,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, dict[str, Any]]:
+    """Extract split-adjusted closes, cash distributions, and splits from ``yfinance`` (``auto_adjust=False, actions=True``).
+
+    Guarantees:
+    1. Rejects ``auto_adjust=True`` frames (where ``'Adj Close'`` is absent) so cash
+       distributions are never divided by dividend-adjusted total-return closes.
+    2. Rejects empty or failed dividend responses where distribution-bearing ETFs
+       (``SPY, EFA, EEM, AGG, XLE, XLK``) report zero positive distributions.
+    3. Verifies share/split basis consistency across all non-split ex-dividend dates
+       via ``AdjClose_t / AdjClose_{t-1} == Close_t / (Close_{t-1} - D_t)``.
+    """
+    if not isinstance(raw_yf_actions_frame, pd.DataFrame) or raw_yf_actions_frame.empty:
+        raise DataUnavailableError(
+            "yfinance actions frame is empty or not a DataFrame; refusing to infer zero distributions."
+        )
+    if not isinstance(raw_yf_actions_frame.columns, pd.MultiIndex) or raw_yf_actions_frame.columns.nlevels != 2:
+        raise ValueError(
+            "Expected a 2-level MultiIndex DataFrame from yfinance.download(..., auto_adjust=False, actions=True)."
+        )
+
+    canonical = list(tickers)
+    lvl0 = set(map(str, raw_yf_actions_frame.columns.get_level_values(0)))
+    lvl1 = set(map(str, raw_yf_actions_frame.columns.get_level_values(1)))
+
+    if "Close" in lvl0:
+        field_level = 0
+        fields = lvl0
+    elif "Close" in lvl1:
+        field_level = 1
+        fields = lvl1
+    else:
+        raise ValueError("Could not locate 'Close' in yfinance actions MultiIndex frame.")
+
+    if "Adj Close" not in fields:
+        raise ValueError(
+            "Missing 'Adj Close' alongside 'Close': frame appears to come from auto_adjust=True. "
+            "Dividend yields must use split-adjusted Close (auto_adjust=False), never dividend-adjusted Close."
+        )
+    if "Dividends" not in fields:
+        raise DataUnavailableError(
+            "Missing 'Dividends' field in yfinance frame (actions=True required); refusing to infer zero distributions."
+        )
+
+    def _slice_field(field_name: str, *, optional_zero: bool = False) -> pd.DataFrame:
+        if field_name not in fields:
+            if optional_zero:
+                base = _slice_field("Close")
+                return pd.DataFrame(0.0, index=base.index, columns=canonical, dtype=float)
+            raise DataUnavailableError(f"Missing required field {field_name!r} in yfinance actions frame.")
+        sub = (
+            raw_yf_actions_frame[field_name].copy()
+            if field_level == 0
+            else raw_yf_actions_frame.xs(field_name, axis=1, level=1).copy()
+        )
+        missing = [t for t in canonical if t not in sub.columns]
+        if missing:
+            raise DataUnavailableError(
+                f"Missing canonical tickers {missing} in yfinance field {field_name!r}."
+            )
+        sub = sub[canonical].apply(pd.to_numeric, errors="coerce")
+        sub.index = _normalize_session_index(sub.index)
+        sub = sub[~sub.index.duplicated(keep="first")].sort_index()
+        return sub.astype(float)
+
+    close_df = _slice_field("Close")
+    adj_close_df = _slice_field("Adj Close")
+    div_df = _slice_field("Dividends").fillna(0.0)
+    split_df = _slice_field("Stock Splits", optional_zero=True).fillna(0.0)
+
+    if (close_df.dropna(how="all") <= 0.0).any().any():
+        raise ValueError("Non-positive split-adjusted Close prices detected in yfinance actions frame.")
+    if (div_df < 0.0).any().any():
+        raise ValueError("Negative cash distribution values detected in yfinance Dividends.")
+    if (split_df < 0.0).any().any():
+        raise ValueError("Negative stock split ratios detected in yfinance Stock Splits.")
+
+    div_counts = {t: int((div_df[t] > 0.0).sum()) for t in canonical}
+    split_counts = {t: int((split_df[t] > 0.0).sum()) for t in canonical}
+
+    if require_dividend_events:
+        zero_div_tickers = [
+            t for t in canonical if t in DISTRIBUTION_BEARING_TICKERS and div_counts.get(t, 0) == 0
+        ]
+        if zero_div_tickers:
+            raise DataUnavailableError(
+                f"Distribution-bearing ETFs {zero_div_tickers} reported 0 positive dividends; "
+                "refusing to treat an empty or failed dividend fetch as zero distributions."
+            )
+
+    max_ex_div_factor_diff: dict[str, float] = {}
+    for t in canonical:
+        ex_mask = (div_df[t] > 0.0) & (split_df[t] == 0.0)
+        ex_dates = div_df.index[ex_mask]
+        prev_close = close_df[t].shift(1).loc[ex_dates]
+        prev_adj = adj_close_df[t].shift(1).loc[ex_dates]
+        valid = prev_close.notna() & prev_adj.notna() & (prev_close > div_df[t].loc[ex_dates])
+        ex_dates = ex_dates[valid]
+        if len(ex_dates) == 0:
+            max_ex_div_factor_diff[t] = 0.0
+            continue
+        r_adj = adj_close_df[t].loc[ex_dates] / adj_close_df[t].shift(1).loc[ex_dates]
+        r_split = close_df[t].loc[ex_dates] / (
+            close_df[t].shift(1).loc[ex_dates] - div_df[t].loc[ex_dates]
+        )
+        max_diff = float((r_adj - r_split).abs().max())
+        if not np.isfinite(max_diff) or max_diff > ex_div_factor_tol:
+            raise ValueError(
+                f"Share/split basis mismatch on {t}: max |AdjClose_t/AdjClose_{{t-1}} - "
+                f"Close_t/(Close_{{t-1}} - Div_t)| = {max_diff:.6g} > {ex_div_factor_tol:.6g}."
+            )
+        max_ex_div_factor_diff[t] = max_diff
+
+    split_events: list[dict[str, Any]] = []
+    for dt, row in split_df[split_df.gt(0.0).any(axis=1)].iterrows():
+        for t in canonical:
+            if float(row[t]) > 0.0:
+                split_events.append(
+                    {
+                        "date": pd.Timestamp(dt).strftime("%Y-%m-%d"),
+                        "ticker": t,
+                        "split_ratio_new_per_old": float(row[t]),
+                    }
+                )
+
+    verification = {
+        "price_denominator_basis": "yfinance_auto_adjust_false_split_adjusted_Close",
+        "distribution_numerator_basis": "yfinance_actions_true_split_adjusted_Dividends_on_ex_date",
+        "identity_checked": "AdjClose_t / AdjClose_{t-1} == Close_t / (Close_{t-1} - Dividend_t)",
+        "ex_div_factor_tolerance": float(ex_div_factor_tol),
+        "max_ex_div_factor_abs_diff_by_ticker": max_ex_div_factor_diff,
+        "positive_distribution_event_counts": div_counts,
+        "stock_split_event_counts": split_counts,
+        "stock_split_events": split_events,
+        "non_distribution_tickers_note": (
+            "GLD is a physical gold bullion grantor trust with 0 cash distributions; "
+            "all six other ETFs (SPY, EFA, EEM, AGG, XLE, XLK) pay periodic cash dividends."
+        ),
+    }
+    return close_df, div_df, split_df, verification
+
+
+def compute_trailing_12m_distribution_series(
+    split_adjusted_closes: pd.DataFrame,
+    distributions: pd.DataFrame,
+    *,
+    window_calendar_days: int = 365,
+    min_coverage_calendar_days: int = 365,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Compute rolling 365-calendar-day cash distributions per share and distribution yields.
+
+    For each session ``t`` with ``t >= t_0 + Timedelta(days=min_coverage_calendar_days)``:
+    - ``TTM_dist[t, i] = sum_{s in (t - window_calendar_days, t]} distributions[s, i]``
+    - ``TTM_yield[t, i] = TTM_dist[t, i] / split_adjusted_closes[t, i]``
+    Earlier sessions without full trailing coverage are set to ``NaN``.
+    """
+    if window_calendar_days <= 0 or min_coverage_calendar_days < 0:
+        raise ValueError("window_calendar_days must be > 0 and min_coverage_calendar_days >= 0.")
+    if not split_adjusted_closes.index.equals(distributions.index):
+        raise ValueError("split_adjusted_closes and distributions must share an identical DatetimeIndex.")
+    if list(split_adjusted_closes.columns) != list(distributions.columns):
+        raise ValueError("split_adjusted_closes and distributions must have identical ticker columns.")
+    if (split_adjusted_closes <= 0.0).any().any():
+        raise ValueError("split_adjusted_closes must be strictly positive.")
+    if (distributions < 0.0).any().any():
+        raise ValueError("distributions must be non-negative.")
+
+    idx = pd.DatetimeIndex(split_adjusted_closes.index)
+    if not idx.is_monotonic_increasing or not idx.is_unique:
+        raise ValueError("Session index must be strictly ascending and unique.")
+
+    # Exclude exact 1-year-prior date (t - 365d, t] via closed='right' so annual/quarterly
+    # distributions on the same calendar date are not double-counted.
+    ttm_dist = distributions.rolling(f"{int(window_calendar_days)}D", closed="right").sum()
+    coverage_cutoff = idx[0] + pd.Timedelta(days=int(min_coverage_calendar_days))
+    insufficient_mask = idx < coverage_cutoff
+    if insufficient_mask.any():
+        ttm_dist.loc[idx[insufficient_mask], :] = np.nan
+
+    ttm_yield = ttm_dist / split_adjusted_closes
+    return ttm_dist.astype(float), ttm_yield.astype(float)
+
+
+def parse_fred_cpi_csv(
+    csv_text: str,
+    *,
+    series_id: str = FRED_CPIAUCSL_SERIES,
+) -> pd.DataFrame:
+    """Parse FRED ``CPIAUCSL`` CSV text into a validated monthly inflation table.
+
+    Preserves missing markers (``.``) by dropping unquoted rows rather than interpolating
+    or extrapolating missing final months.
+    """
+    if not csv_text or not csv_text.strip():
+        raise DataUnavailableError(f"Empty FRED {series_id} CSV payload.")
+
+    raw = pd.read_csv(io.StringIO(csv_text), dtype=str)
+    if raw.empty or len(raw.columns) < 2:
+        raise DataUnavailableError(f"Malformed FRED {series_id} CSV payload.")
+
+    date_col = "observation_date" if "observation_date" in raw.columns else raw.columns[0]
+    val_col = series_id if series_id in raw.columns else raw.columns[1]
+
+    obs_dates = pd.to_datetime(raw[date_col], errors="coerce")
+    values = pd.to_numeric(raw[val_col].replace(".", np.nan), errors="coerce")
+
+    df = pd.DataFrame(
+        {
+            "obs_date": obs_dates,
+            "cpi_index": values,
+        }
+    ).dropna(subset=["obs_date", "cpi_index"])
+
+    if df.empty:
+        raise DataUnavailableError(f"FRED {series_id} CSV contained no valid numeric observations.")
+    if (df["cpi_index"] <= 0.0).any():
+        raise ValueError(f"FRED {series_id} contains non-positive CPI index values.")
+
+    df = df.sort_values("obs_date").drop_duplicates(subset=["obs_date"], keep="last").reset_index(drop=True)
+    df["month_period"] = df["obs_date"].dt.strftime("%Y-%m")
+    if not df["month_period"].is_unique:
+        raise ValueError(f"Duplicate calendar months detected in FRED {series_id}.")
+
+    period_idx = pd.PeriodIndex(df["month_period"], freq="M")
+    cpi_by_period = pd.Series(df["cpi_index"].to_numpy(dtype=float), index=period_idx)
+    full_periods = pd.period_range(period_idx.min(), period_idx.max(), freq="M")
+    cpi_full = cpi_by_period.reindex(full_periods)
+    mom_full = cpi_full.pct_change(1, fill_method=None)
+    yoy_full = cpi_full.pct_change(12, fill_method=None)
+
+    df["mom_inflation"] = mom_full.reindex(period_idx).to_numpy(dtype=float)
+    df["yoy_inflation"] = yoy_full.reindex(period_idx).to_numpy(dtype=float)
+    df.index = pd.DatetimeIndex(df["obs_date"], name="obs_date")
+    return df[["obs_date", "month_period", "cpi_index", "mom_inflation", "yoy_inflation"]]
+
+
+REQUIRED_CONTEXT_PAYLOAD_FILES: tuple[str, ...] = (
+    "etf_split_adjusted_closes.parquet",
+    "etf_distributions.parquet",
+    "etf_stock_splits.parquet",
+    "etf_trailing_12m_distributions.parquet",
+    "etf_trailing_12m_yields.parquet",
+    "fred_cpiaucsl_monthly.parquet",
+    "fred_cpiaucsl_raw.csv",
+)
+
+
+def _resolve_context_payload_path(context_dir_resolved: Path, rel_path: str) -> Path:
+    """Resolve a manifest entry strictly inside ``context_dir_resolved`` (never falling back to ``base_dir``)."""
+    rel_norm = str(rel_path).replace("\\", "/").strip("/")
+    prefix = f"{DEFAULT_CONTEXT_SUBDIR.strip('/')}/"
+    if rel_norm.startswith(prefix):
+        sub_rel = Path(rel_norm[len(prefix) :])
+    else:
+        sub_rel = Path(rel_norm)
+
+    candidate = (context_dir_resolved / sub_rel).resolve()
+    if not candidate.exists() and len(sub_rel.parts) > 1:
+        candidate = (context_dir_resolved / Path(rel_norm).name).resolve()
+
+    if not candidate.is_relative_to(context_dir_resolved):
+        raise DataUnavailableError(
+            f"Context manifest path {rel_path!r} resolves outside context_dir {context_dir_resolved}."
+        )
+    if not candidate.exists():
+        raise DataUnavailableError(
+            f"Context snapshot file {rel_path!r} does not exist inside {context_dir_resolved}."
+        )
+    return candidate
+
+
+def _try_load_verified_context_cache(
+    context_dir: Path,
+    base_dir: Path,
+    cfg: AppConfig | None = None,
+    *,
+    slice_to_config: bool = False,
+) -> ContextSnapshotBundle | None:
+    """Load, SHA-256-verify, and config/provenance-validate a bounded ``A1b`` context snapshot.
+
+    Guarantees (SOLO STEP 4 / R3 review hardening):
+    1. Resolves every manifest payload file strictly inside ``context_dir`` once, verifies
+       its SHA-256 digest, and reads that exact resolved file (never hashing ``base_dir``
+       originals while reading an altered copy in ``context_dir``).
+    2. Validates ``schema_version``, canonical ``tickers``, ETF parent dataset provenance
+       (``parent_price_dataset_id`` against ``processed_dir``), and NYSE session coverage
+       (``requested_start`` through ``frozen_end_date``) when ``cfg`` is supplied.
+    3. Rejects config/coverage mismatches by default with ``DataUnavailableError`` so a
+       frozen-2016 call never silently receives an unrestricted 2026 context as matching;
+       when ``slice_to_config=True`` is explicitly requested and the requested NYSE window is a
+       contiguous sub-slice of the verified cache, returns an explicitly bounded view with
+       truthful ``context_id`` and ``bounded_view`` metadata.
+    """
+    context_dir_resolved = context_dir.resolve()
+    manifest_path = context_dir_resolved / "context_manifest.json"
+    if not manifest_path.exists():
+        return None
+
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8-sig"))
+    file_hashes = manifest.get("file_sha256", {})
+    if not file_hashes:
+        raise DataUnavailableError(f"Context manifest at {manifest_path} is missing file_sha256 entries.")
+
+    resolved_files: dict[str, Path] = {}
+    for rel_path, expected_sha in file_hashes.items():
+        target = _resolve_context_payload_path(context_dir_resolved, str(rel_path))
+        actual_sha = _sha256_file(target)
+        if actual_sha != expected_sha:
+            raise DataUnavailableError(
+                f"SHA-256 integrity mismatch on context file {target} (manifest entry {rel_path}): "
+                f"expected {expected_sha}, got {actual_sha}."
+            )
+        resolved_files[target.name] = target
+
+    missing_required = [name for name in REQUIRED_CONTEXT_PAYLOAD_FILES if name not in resolved_files]
+    if missing_required:
+        raise DataUnavailableError(
+            f"Context manifest at {manifest_path} is missing required payload entries: {missing_required}."
+        )
+
+    # Read from the exact resolved & SHA-256-verified Path objects
+    split_closes = pd.read_parquet(resolved_files["etf_split_adjusted_closes.parquet"])
+    distributions = pd.read_parquet(resolved_files["etf_distributions.parquet"])
+    stock_splits = pd.read_parquet(resolved_files["etf_stock_splits.parquet"])
+    ttm_dist = pd.read_parquet(resolved_files["etf_trailing_12m_distributions.parquet"])
+    ttm_yields = pd.read_parquet(resolved_files["etf_trailing_12m_yields.parquet"])
+    cpi_monthly = pd.read_parquet(resolved_files["fred_cpiaucsl_monthly.parquet"])
+
+    for frame in (split_closes, distributions, stock_splits, ttm_dist, ttm_yields):
+        frame.index = _normalize_session_index(frame.index)
+    cpi_monthly.index = pd.DatetimeIndex(pd.to_datetime(cpi_monthly["obs_date"]), name="obs_date")
+
+    context_id = str(manifest.get("context_id", ""))
+    if not context_id:
+        raise DataUnavailableError(f"Context manifest at {manifest_path} is missing context_id.")
+
+    if manifest.get("schema_version") != CONTRACT_SCHEMA_VERSION:
+        raise DataUnavailableError(
+            f"Context snapshot {context_id} schema_version {manifest.get('schema_version')!r} "
+            f"does not match required {CONTRACT_SCHEMA_VERSION!r}."
+        )
+
+    if (
+        not split_closes.index.equals(distributions.index)
+        or not split_closes.index.equals(stock_splits.index)
+        or not split_closes.index.equals(ttm_dist.index)
+        or not split_closes.index.equals(ttm_yields.index)
+    ):
+        raise DataUnavailableError(
+            f"Context snapshot {context_id} has misaligned session indices across ETF context tables."
+        )
+
+    if cfg is not None:
+        canonical_cols = tuple(cfg.mandate.canonical_tickers)
+        manifest_tickers = tuple(manifest.get("tickers", ()))
+        if manifest_tickers != canonical_cols:
+            raise DataUnavailableError(
+                f"Context snapshot {context_id} tickers {manifest_tickers} do not match "
+                f"configured canonical_tickers {canonical_cols}."
+            )
+        for tbl_name, frame in (
+            ("split_adjusted_closes", split_closes),
+            ("distributions", distributions),
+            ("stock_splits", stock_splits),
+            ("trailing_12m_distributions", ttm_dist),
+            ("trailing_12m_yields", ttm_yields),
+        ):
+            if tuple(frame.columns) != canonical_cols:
+                raise DataUnavailableError(
+                    f"Context snapshot {context_id} table {tbl_name} columns {tuple(frame.columns)} "
+                    f"do not match configured canonical_tickers {canonical_cols}."
+                )
+
+        # Verify ETF parent dataset provenance compatibility
+        parent_id = str(manifest.get("parent_price_dataset_id", "")).strip()
+        if not parent_id:
+            raise DataUnavailableError(
+                f"Context snapshot {context_id} is missing parent_price_dataset_id provenance."
+            )
+        processed_dir = _resolve_dir(cfg.data.processed_dir, base_dir)
+        parent_manifest_path = processed_dir / parent_id / "manifest.json"
+        if not parent_manifest_path.exists():
+            raise DataUnavailableError(
+                f"Context snapshot {context_id} references unknown or missing parent_price_dataset_id "
+                f"{parent_id!r} (expected manifest at {parent_manifest_path})."
+            )
+        parent_manifest = json.loads(parent_manifest_path.read_text(encoding="utf-8-sig"))
+        if tuple(parent_manifest.get("tickers", ())) != canonical_cols:
+            raise DataUnavailableError(
+                f"Context snapshot {context_id} parent dataset {parent_id} has incompatible tickers "
+                f"{parent_manifest.get('tickers')}."
+            )
+        parent_start = str(parent_manifest.get("actual_start", ""))
+        parent_end = str(parent_manifest.get("actual_end", ""))
+        ctx_start = str(split_closes.index[0].date())
+        ctx_end = str(split_closes.index[-1].date())
+        if parent_start != ctx_start or parent_end != ctx_end:
+            raise DataUnavailableError(
+                f"Context snapshot {context_id} ETF session bounds [{ctx_start}..{ctx_end}] "
+                f"disagree with parent dataset {parent_id} bounds [{parent_start}..{parent_end}]."
+            )
+
+        # Verify requested_start and frozen_end_date coverage compatibility
+        expected_end_bound = (
+            cfg.data.frozen_end_date
+            if cfg.data.frozen_end_date is not None
+            else ctx_end
+        )
+        expected_sessions = expected_nyse_sessions(cfg.data.requested_start, expected_end_bound)
+        if len(expected_sessions) == 0:
+            raise DataUnavailableError(
+                f"Requested config window [{cfg.data.requested_start}, {expected_end_bound}] "
+                "contains zero expected NYSE sessions."
+            )
+
+        if not split_closes.index.equals(expected_sessions):
+            req_start_str = str(expected_sessions[0].date())
+            req_end_str = str(expected_sessions[-1].date())
+            if not slice_to_config:
+                raise DataUnavailableError(
+                    f"Context snapshot {context_id} coverage [{ctx_start}..{ctx_end}] "
+                    f"(n={len(split_closes)}) does not match requested config NYSE coverage "
+                    f"[{req_start_str}..{req_end_str}] (n={len(expected_sessions)}, "
+                    f"requested_start={cfg.data.requested_start!r}, "
+                    f"frozen_end_date={cfg.data.frozen_end_date!r}). "
+                    "Pass slice_to_config=True to request an explicitly bounded compatible sub-view."
+                )
+            # Verify expected_sessions is a contiguous sub-slice of split_closes.index
+            pos_indexer = split_closes.index.get_indexer(expected_sessions)
+            if (pos_indexer < 0).any():
+                raise DataUnavailableError(
+                    f"Context snapshot {context_id} [{ctx_start}..{ctx_end}] does not cover "
+                    f"requested config NYSE sessions [{req_start_str}..{req_end_str}]."
+                )
+            split_closes = split_closes.reindex(expected_sessions).copy()
+            distributions = distributions.reindex(expected_sessions).copy()
+            stock_splits = stock_splits.reindex(expected_sessions).copy()
+            ttm_dist = ttm_dist.reindex(expected_sessions).copy()
+            ttm_yields = ttm_yields.reindex(expected_sessions).copy()
+            cpi_monthly = cpi_monthly.loc[
+                cpi_monthly["obs_date"] <= expected_sessions[-1]
+            ].copy()
+
+            start_compact = req_start_str.replace("-", "")
+            end_compact = req_end_str.replace("-", "")
+            bounded_context_id = f"{context_id}__bounded_{start_compact}_{end_compact}"
+            bounded_manifest = dict(manifest)
+            bounded_manifest["context_id"] = bounded_context_id
+            bounded_manifest["source_context_id"] = context_id
+            bounded_manifest["is_bounded_view"] = True
+            bounded_manifest["bounded_view"] = {
+                "source_context_id": context_id,
+                "requested_start": cfg.data.requested_start,
+                "frozen_end_date": cfg.data.frozen_end_date,
+                "etf_session_start": req_start_str,
+                "etf_session_end": req_end_str,
+                "n_etf_sessions": int(len(split_closes)),
+                "cpi_month_end": (
+                    str(cpi_monthly["month_period"].iloc[-1]) if not cpi_monthly.empty else None
+                ),
+                "n_cpi_months": int(len(cpi_monthly)),
+            }
+            return ContextSnapshotBundle(
+                context_id=bounded_context_id,
+                split_adjusted_closes=split_closes,
+                distributions=distributions,
+                stock_splits=stock_splits,
+                trailing_12m_distributions=ttm_dist,
+                trailing_12m_yields=ttm_yields,
+                cpi_monthly=cpi_monthly,
+                manifest=bounded_manifest,
+            )
+
+    return ContextSnapshotBundle(
+        context_id=context_id,
+        split_adjusted_closes=split_closes,
+        distributions=distributions,
+        stock_splits=stock_splits,
+        trailing_12m_distributions=ttm_dist,
+        trailing_12m_yields=ttm_yields,
+        cpi_monthly=cpi_monthly,
+        manifest=manifest,
+    )
+
+
+def build_context_snapshot(
+    config: AppConfig | str | Path = DEFAULT_CONFIG_PATH,
+    *,
+    repo_root: Path | None = None,
+    context_dir: Path | None = None,
+    refresh: bool = False,
+) -> ContextSnapshotBundle:
+    """Build or load the bounded ``A1b`` income/inflation context snapshot in ``data/reference/context/``.
+
+    Leaves ``r3``, ``r2``, ``v1``, ETF return panels, and ``active_snapshot.json`` completely untouched.
+    """
+    cfg, base_dir = _resolve_config_and_base_dir(config, repo_root)
+    target_dir = (
+        context_dir.resolve()
+        if context_dir is not None
+        else _resolve_dir(DEFAULT_CONTEXT_SUBDIR, base_dir)
+    )
+
+    if not refresh:
+        cached = _try_load_verified_context_cache(target_dir, base_dir, cfg)
+        if cached is not None:
+            return cached
+
+    bundle = load_data(cfg, offline=True, repo_root=base_dir)
+    expected_index = bundle.prices.index
+    start_str = cfg.data.requested_start
+    end_inclusive = pd.Timestamp(cfg.data.frozen_end_date)
+    end_exclusive_str = (end_inclusive + pd.Timedelta(days=1)).strftime("%Y-%m-%d")
+
+    now_utc = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    raw_yf = yf.download(
+        list(cfg.mandate.canonical_tickers),
+        start=start_str,
+        end=end_exclusive_str,
+        auto_adjust=False,
+        actions=True,
+        progress=False,
+        threads=False,
+    )
+    split_closes_raw, div_raw, splits_raw, basis_check = extract_split_adjusted_closes_and_distributions(
+        raw_yf,
+        tickers=cfg.mandate.canonical_tickers,
+        require_dividend_events=True,
+    )
+
+    missing_sessions = expected_index.difference(split_closes_raw.index)
+    if len(missing_sessions) > 0:
+        raise DataUnavailableError(
+            f"yfinance split-adjusted Close is missing {len(missing_sessions)} expected NYSE sessions."
+        )
+    split_closes = split_closes_raw.reindex(expected_index)
+    distributions = div_raw.reindex(expected_index).fillna(0.0)
+    stock_splits = splits_raw.reindex(expected_index).fillna(0.0)
+
+    ttm_dist, ttm_yields = compute_trailing_12m_distribution_series(
+        split_closes,
+        distributions,
+        window_calendar_days=365,
+        min_coverage_calendar_days=365,
+    )
+
+    resp = requests.get(FRED_CPIAUCSL_CSV_URL, timeout=30)
+    resp.raise_for_status()
+    cpi_csv_text = resp.text
+    cpi_all = parse_fred_cpi_csv(cpi_csv_text, series_id=FRED_CPIAUCSL_SERIES)
+    cpi_monthly = cpi_all.loc[
+        (cpi_all["obs_date"] >= pd.Timestamp("2004-01-01"))
+        & (cpi_all["obs_date"] <= end_inclusive)
+    ].copy()
+    if cpi_monthly.empty:
+        raise DataUnavailableError("Filtered CPIAUCSL monthly series is empty.")
+
+    target_dir.mkdir(parents=True, exist_ok=True)
+    files_written: dict[str, Path] = {
+        "split_adjusted_closes": target_dir / "etf_split_adjusted_closes.parquet",
+        "distributions": target_dir / "etf_distributions.parquet",
+        "stock_splits": target_dir / "etf_stock_splits.parquet",
+        "trailing_12m_distributions": target_dir / "etf_trailing_12m_distributions.parquet",
+        "trailing_12m_yields": target_dir / "etf_trailing_12m_yields.parquet",
+        "fred_cpiaucsl_raw_csv": target_dir / "fred_cpiaucsl_raw.csv",
+        "fred_cpiaucsl_monthly": target_dir / "fred_cpiaucsl_monthly.parquet",
+    }
+
+    split_closes.to_parquet(files_written["split_adjusted_closes"])
+    distributions.to_parquet(files_written["distributions"])
+    stock_splits.to_parquet(files_written["stock_splits"])
+    ttm_dist.to_parquet(files_written["trailing_12m_distributions"])
+    ttm_yields.to_parquet(files_written["trailing_12m_yields"])
+    files_written["fred_cpiaucsl_raw_csv"].write_text(cpi_csv_text, encoding="utf-8", newline="\n")
+    cpi_monthly.to_parquet(files_written["fred_cpiaucsl_monthly"])
+
+    file_sha256: dict[str, str] = {}
+    digest_builder = hashlib.sha256()
+    for p in sorted(files_written.values(), key=lambda x: x.name):
+        try:
+            rel_key = p.relative_to(base_dir).as_posix()
+        except ValueError:
+            rel_key = p.name
+        h = _sha256_file(p)
+        file_sha256[rel_key] = h
+        digest_builder.update(f"{rel_key}:{h}\n".encode("utf-8"))
+
+    short_hash = digest_builder.hexdigest()[:10]
+    start_compact = start_str.replace("-", "")
+    end_compact = str(cfg.data.frozen_end_date).replace("-", "")
+    context_id = f"qe1_context_{start_compact}_{end_compact}_a1b_{short_hash}"
+
+    manifest: dict[str, Any] = {
+        "context_id": context_id,
+        "schema_version": CONTRACT_SCHEMA_VERSION,
+        "retrieved_at_utc": now_utc,
+        "parent_price_dataset_id": bundle.manifest.dataset_id,
+        "tickers": list(cfg.mandate.canonical_tickers),
+        "source_urls": {
+            "yfinance_split_adjusted_closes_and_actions": (
+                "https://query2.finance.yahoo.com/v8/finance/chart/{ticker}"
+                " (via yfinance.download auto_adjust=False, actions=True)"
+            ),
+            "fred_cpiaucsl_csv": FRED_CPIAUCSL_CSV_URL,
+        },
+        "units": {
+            "etf_split_adjusted_closes": "USD_per_split_adjusted_share (auto_adjust=False Close; not dividend-adjusted)",
+            "etf_distributions": "USD_cash_distribution_per_split_adjusted_share_on_ex_date (actions=True Dividends)",
+            "etf_stock_splits": "split_ratio_new_shares_per_old_share_0_if_none",
+            "etf_trailing_12m_distributions": "USD_per_split_adjusted_share_rolling_365_calendar_days",
+            "etf_trailing_12m_yields": "annual_fraction_trailing_365d_dividends_divided_by_split_adjusted_close",
+            "fred_cpiaucsl": "Index_1982_1984_eq_100_seasonally_adjusted_monthly",
+            "cpi_mom_and_yoy_inflation": "fraction_change",
+        },
+        "coverage": {
+            "etf_session_start": str(split_closes.index[0].date()),
+            "etf_session_end": str(split_closes.index[-1].date()),
+            "n_etf_sessions": int(len(split_closes)),
+            "ttm_yield_valid_start": str(ttm_yields.dropna(how="all").index[0].date()),
+            "ttm_yield_valid_end": str(ttm_yields.dropna(how="all").index[-1].date()),
+            "n_ttm_yield_valid_sessions": int(len(ttm_yields.dropna(how="all"))),
+            "cpi_month_start": str(cpi_monthly["month_period"].iloc[0]),
+            "cpi_month_end": str(cpi_monthly["month_period"].iloc[-1]),
+            "n_cpi_months": int(len(cpi_monthly)),
+            "missing_or_unreleased_cpi_months_in_etf_window": [
+                m
+                for m in sorted(split_closes.index.strftime("%Y-%m").unique())
+                if m not in set(cpi_monthly["month_period"])
+            ],
+            "unreleased_final_cpi_months_in_etf_window": [
+                m
+                for m in sorted(split_closes.index.strftime("%Y-%m").unique())
+                if m > str(cpi_monthly["month_period"].iloc[-1])
+            ],
+        },
+        "share_basis_verification": basis_check,
+        "use_classification": (
+            "ex_post_mandate_income_and_purchasing_power_context_only; "
+            "never added to auto_adjust=True total returns; never used as an unlagged optimizer signal"
+        ),
+        "limitations": [
+            "ETF total returns in DataBundle.simple_returns already include reinvested distributions via auto_adjust=True; distribution yields here decompose cash income vs price appreciation and must NEVER be added to portfolio returns.",
+            "Distributions are recorded on ex-dividend dates (not payable dates) and exclude investor-level withholding taxes.",
+            "GLD is a physical gold bullion trust paying 0 cash distributions; endowment spending from GLD requires unit sales.",
+            "FRED CPIAUCSL is monthly, seasonally adjusted, and subject to BLS seasonal-factor revisions; latest-vintage CPIAUCSL is used strictly for ex-post completed-month purchasing-power analysis and is not a point-in-time release series or forward inflation forecast.",
+            "FRED CPIAUCSL has no published observation for 2025-10 ('.') and October 2026 CPIAUCSL had not been released by the 2026-10-30 snapshot freeze date (latest published month: 2026-09); missing or unreleased months are never interpolated or extrapolated.",
+        ],
+        "file_sha256": file_sha256,
+    }
+
+    manifest_path = target_dir / "context_manifest.json"
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
+    return _try_load_verified_context_cache(target_dir, base_dir, cfg)  # type: ignore[return-value]
+
+
+def load_context_data(
+    config: AppConfig | str | Path = DEFAULT_CONFIG_PATH,
+    *,
+    offline: bool = False,
+    repo_root: Path | None = None,
+    context_dir: Path | None = None,
+    slice_to_config: bool = False,
+) -> ContextSnapshotBundle:
+    """Load the SHA-256-verified ``A1b`` income/inflation context snapshot from ``data/reference/context/``."""
+    cfg, base_dir = _resolve_config_and_base_dir(config, repo_root)
+    target_dir = (
+        context_dir.resolve()
+        if context_dir is not None
+        else _resolve_dir(DEFAULT_CONTEXT_SUBDIR, base_dir)
+    )
+    cached = _try_load_verified_context_cache(
+        target_dir,
+        base_dir,
+        cfg,
+        slice_to_config=slice_to_config,
+    )
+    if cached is not None:
+        return cached
+    if offline:
+        raise DataUnavailableError(
+            f"Offline context load requested, but no verified context snapshot exists in {target_dir}."
+        )
+    return build_context_snapshot(cfg, repo_root=base_dir, context_dir=target_dir, refresh=False)

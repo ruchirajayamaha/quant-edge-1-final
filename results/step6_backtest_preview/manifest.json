@@ -1,0 +1,78 @@
+{
+  "generated_at_utc": "2026-10-31T15:29:30.094900+00:00",
+  "metadata": {
+    "scope": "DEVELOPMENT OOS RESEARCH; NOT FINAL HOLDOUT VALIDATION",
+    "computed_at_utc": "2026-10-31T15:21:00.650959+00:00",
+    "dataset_id": "qe1_20050101_20261030_r3_6c4633a7ba",
+    "config_hash": "587ddbe363589fb6956c23c5fe8b2b544bac81d9224a0b4bb59f60f5fbc0a017",
+    "code_version": "d7ccafe7a2cb7f1c4794ac4a5ee221278068dce6-working-tree",
+    "source_sha256": {
+      "src/quantedge/backtest.py": "7ca8bc9c237d7667c2215a39c9e04c87792cdb306f616c2d0fcbc96c3ad12010",
+      "src/quantedge/_backtest_diagnostics.py": "c9f21f0119d1eab29c0b35ac6052d1051685400b4a7cdc469b2c77cb56ab5ac9",
+      "src/quantedge/var.py": "c56f5652fe031654d4d629ac659ee26d269b66ff2f7fb5f14cb33c592175bd7d",
+      "src/quantedge/es.py": "9f4c5797a3671360273055badab8fcdcef49e63600f8f543400e200d3b730529",
+      "src/quantedge/portfolio.py": "8e5b93b6fed3869446eabaf60a096a347380cc6c2e8ec7262ea76ba568ee2940",
+      "scripts/record_step6_backtest_results.py": "8372878448fde309211be5093e9aa2d4ec9167731f6003dc65964fddcff524be"
+    },
+    "development_end": "2016-12-30",
+    "portfolio_id": "min_variance",
+    "window": 500,
+    "nav_usd": 10000000.0,
+    "seed": 202603,
+    "sample_start": "2007-01-05",
+    "sample_end": "2016-12-30",
+    "n_target_sessions": 2516,
+    "primary_model": "historical",
+    "comparison_model": "parametric_normal",
+    "confidences": [
+      0.95,
+      0.99
+    ],
+    "runtime_seconds": 22.398187899998447,
+    "loss_convention": "1-day gross market loss = -(weights_before[t] @ asset_returns[t]); before costs",
+    "exposure_convention": "known pre-return weights; natural drift and accepted monthly rebalance targets",
+    "approval": "PROVISIONAL; independent human validation and committee decision PENDING",
+    "holdout_outcomes_inspected": false,
+    "integrity": {
+      "protected_files_unchanged": 50,
+      "source_data_hashes_matching": 53
+    }
+  },
+  "numerical_authority_json": "results/step6_backtest_preview/backtest_results.json",
+  "numerical_authority_sha256": "cc540646ff72d4ba19ec440411052866b7d6bd5b47ff6f9be36fd34b940ab9d4",
+  "rendering_versions": {
+    "matplotlib": "3.11.2",
+    "contourpy": "1.3.3",
+    "cycler": "0.12.1",
+    "fonttools": "4.68.0",
+    "kiwisolver": "1.5.1",
+    "pyparsing": "3.3.3"
+  },
+  "source_sha256": {
+    "config.yaml": "60f55a1b7172220153ed2c9692faca98771b9c6a2cb2b18f815c7f280a2fbce1",
+    "src/quantedge/contracts.py": "7aa3a84b9951f959913a8310d1ea1fc8ff74c7ca115629bd77fa673635f76caa",
+    "src/quantedge/returns.py": "2ead8513c6c5758df5ffc7d15de113a01345912d7e4f70b4832af622db11e0e0",
+    "src/quantedge/backtest.py": "7ca8bc9c237d7667c2215a39c9e04c87792cdb306f616c2d0fcbc96c3ad12010",
+    "src/quantedge/_backtest_diagnostics.py": "c9f21f0119d1eab29c0b35ac6052d1051685400b4a7cdc469b2c77cb56ab5ac9",
+    "src/quantedge/portfolio.py": "8e5b93b6fed3869446eabaf60a096a347380cc6c2e8ec7262ea76ba568ee2940",
+    "src/quantedge/var.py": "c56f5652fe031654d4d629ac659ee26d269b66ff2f7fb5f14cb33c592175bd7d",
+    "src/quantedge/es.py": "9f4c5797a3671360273055badab8fcdcef49e63600f8f543400e200d3b730529",
+    "scripts/record_step6_backtest_results.py": "8372878448fde309211be5093e9aa2d4ec9167731f6003dc65964fddcff524be",
+    "scripts/export_step6_backtest_preview.py": "c32241b4dafa8595c86cc14059aff7ad282e8a4e974056606d47e82f471f4052"
+  },
+  "artifacts_sha256": {
+    "01_daily_backtest_rows.csv": "079f18a8afb62270e14c2c2cc71768340d58f7fcd579e97fb29f905d6513b718",
+    "02_coverage_summary.csv": "69f7fea256ef1bb13c6ae9f221a8803525239265828c57dc7c845655b0c12ca1",
+    "03_transition_and_basel_diagnostics.json": "5a76cac341c5b4eaaf08758e2f95204731a6abb039e4cf25bdb8bfc3615a3198",
+    "04_pre_return_weights.csv": "ebf874ee892d21b41150ebc69beb8600cb2518bc72bd0d357eaa5db19c52554c",
+    "annual_exception_display_summary.csv": "d096a0b67ed272740b13277cb45afa9448d748281663b08acec4a16e986a14a4",
+    "backtest_results.json": "cc540646ff72d4ba19ec440411052866b7d6bd5b47ff6f9be36fd34b940ab9d4",
+    "figure_01_rolling_var_exceptions.png": "8e60357635accaee09976659915280a11e70a8178bed523ea9ebb397f23f945a",
+    "figure_01_rolling_var_exceptions.svg": "3e6a51278ac5d2963f3662f6bb1841104dc4b8480d810b034574328bceaa047a",
+    "figure_02_annual_exception_calibration.png": "41eb4d3cf52eec1da0f8a1749c6f451cad0ab2784bb82f4330bb8a04f5d8171d",
+    "figure_02_annual_exception_calibration.svg": "bc6a4e27ece89f9b05defb730c82b8b1714c81c0ea8a148441ce918d1a75dfac",
+    "index.html": "d88e93dfba4d8f40f4417614fbf8e562c1896d3f6f94883dc4b60756558365b3",
+    "README.md": "2d8fc07ab710642f41a4b22c7d3a60e0f54311c3f641b3637e7a85e41a09d956",
+    "rendering-requirements.txt": "55df4c75690a975421e881792f230fb2db2e1d9df79c874fe53cd48cd428f8f5"
+  }
+}

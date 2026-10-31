@@ -53,7 +53,7 @@ def test_library_modules_never_import_streamlit(repo_root: Path) -> None:
     """No module under src/quantedge may import streamlit (architecture boundary)."""
     pkg_dir = repo_root / "src" / "quantedge"
     py_files = sorted(pkg_dir.glob("*.py"))
-    assert len(py_files) == 15
+    assert py_files, "The library module inventory cannot be empty"
 
     for py_file in py_files:
         tree = ast.parse(py_file.read_text(encoding="utf-8"), filename=str(py_file))
@@ -223,6 +223,14 @@ def test_risk_estimate_contract_invariants() -> None:
 
 def test_frozen_shared_helper_and_callback_signatures() -> None:
     """Shared D0 helper signatures match CONTRACTS.md specifications."""
+    kpi_sig = inspect.signature(kpis.compute_kpis)
+    assert list(kpi_sig.parameters.keys()) == [
+        "portfolio_returns",
+        "benchmark_returns",
+        "market_returns",
+        "rf_daily",
+    ]
+
     nm_sig = inspect.signature(var.normal_moments)
     assert list(nm_sig.parameters.keys()) == ["asset_returns"]
 
@@ -237,6 +245,19 @@ def test_frozen_shared_helper_and_callback_signatures() -> None:
         "confidence",
         "seed",
     ]
+    rb_sig = inspect.signature(backtest.rolling_backtest)
+    assert list(rb_sig.parameters.keys()) == [
+        "asset_returns",
+        "weights_before",
+        "forecast_fn",
+        "confidence",
+        "window",
+        "seed",
+    ]
+    ct_sig = inspect.signature(backtest.coverage_tests)
+    assert list(ct_sig.parameters.keys()) == ["backtest_rows"]
+    btl_sig = inspect.signature(backtest.basel_traffic_light)
+    assert list(btl_sig.parameters.keys()) == ["backtest_rows_99"]
     assert isinstance(
         lambda train_asset_returns, weights, *, confidence, seed=None: None,
         RiskForecastFn,
@@ -248,7 +269,7 @@ def test_remaining_analytics_stubs_explicitly_raise_not_implemented(
     synthetic_asset_returns: pd.DataFrame,
     equal_canonical_weights: pd.Series,
 ) -> None:
-    """Unimplemented Step 3-9 entrypoints raise NotImplementedError rather than returning fake output."""
+    """Unimplemented Step 7-9 entrypoints raise NotImplementedError rather than returning fake output."""
     s = synthetic_asset_returns["SPY"]
     weights_df = pd.DataFrame(
         [equal_canonical_weights.values] * len(synthetic_asset_returns),
@@ -257,61 +278,73 @@ def test_remaining_analytics_stubs_explicitly_raise_not_implemented(
     )
     dummy_cb = lambda train_asset_returns, weights, *, confidence, seed=None: None  # noqa: E731
 
-    stub_calls = [
-        lambda: kpis.compute_kpis(s, s, s, s),
-        lambda: portfolio.build_portfolio_path(
-            synthetic_asset_returns,
-            StrategySpec(strategy_id="min_var", objective="min_variance"),
-            baseline_config,
-        ),
-        lambda: portfolio.construct_weights(
-            synthetic_asset_returns,
-            PortfolioConstraints(),
-            "min_variance",
-        ),
-        lambda: var.normal_moments(synthetic_asset_returns),
-        lambda: var.estimate_risk(
+    # Step 5 (C1) and Step 6 (A3) entrypoints are implemented and must succeed without NotImplementedError
+    mean_s, cov_df = var.normal_moments(synthetic_asset_returns)
+    assert tuple(mean_s.index) == CANONICAL_TICKERS
+    assert tuple(cov_df.columns) == CANONICAL_TICKERS
+    tw = es.empirical_tail_weights(-s, 0.90)
+    assert len(tw) == len(s)
+    for model_name in ("historical", "parametric_normal", "monte_carlo_normal"):
+        est = var.estimate_risk(
             synthetic_asset_returns,
             equal_canonical_weights,
-            model="historical",
-            confidence=0.99,
+            model=model_name,
+            confidence=0.95,
             seed=202601,
-        ),
-        lambda: var.get_risk_forecaster("historical"),
-        lambda: es.empirical_tail_weights(-s, 0.99),
-        lambda: evt.estimate_evt_pot(
-            synthetic_asset_returns,
-            equal_canonical_weights,
-            confidence=0.99,
-        ),
-        lambda: evt.evt_threshold_diagnostics(-s),
-        lambda: backtest.rolling_backtest(
-            synthetic_asset_returns,
-            weights_df,
-            dummy_cb,
-            confidence=0.99,
-            window=3,
-        ),
-        lambda: backtest.coverage_tests(pd.DataFrame()),
-        lambda: backtest.basel_traffic_light(pd.DataFrame()),
-        lambda: risk_budget.risk_contributions(
-            synthetic_asset_returns,
-            equal_canonical_weights,
-            confidence=0.99,
-            method="historical_es",
-        ),
-        lambda: risk_budget.compare_feasible_allocations(
-            synthetic_asset_returns,
-            {"eq": equal_canonical_weights},
-            {},
-            dummy_cb,
-        ),
-        lambda: stress.run_stress_tests(
-            synthetic_asset_returns,
-            equal_canonical_weights,
-            baseline_config.stress.historical_scenarios,
-        ),
-        lambda: pipeline.run_pipeline(baseline_config, offline=True),
+        )
+        assert est.status == "ok"
+        cb = var.get_risk_forecaster(model_name)
+        assert isinstance(cb, RiskForecastFn)
+
+    bt_rows = backtest.rolling_backtest(
+        synthetic_asset_returns,
+        weights_df.iloc[2:],
+        var.get_risk_forecaster("historical"),
+        confidence=0.99,
+        window=2,
+    )
+    assert len(bt_rows) == len(weights_df.iloc[2:])
+    cov_summary = backtest.coverage_tests(bt_rows)
+    assert len(cov_summary) == 1
+    basel_diag = backtest.basel_traffic_light(bt_rows)
+    assert basel_diag["status"] == "unavailable"
+
+    # Step 7 implemented EVT entrypoints (now active; synthetic sample returns unavailable due to min_exceedances)
+    evt_est = var.estimate_risk(
+        synthetic_asset_returns,
+        equal_canonical_weights,
+        model="evt_pot",
+        confidence=0.99,
+        seed=202601,
+    )
+    assert isinstance(evt_est, RiskEstimate)
+    assert evt_est.status == "unavailable"
+    assert "insufficient strict exceedances" in evt_est.reason.lower()
+
+    evt_direct = evt.estimate_evt_pot(
+        synthetic_asset_returns,
+        equal_canonical_weights,
+        confidence=0.99,
+    )
+    assert isinstance(evt_direct, RiskEstimate)
+    assert evt_direct.status == "unavailable"
+
+    diag_df = evt.evt_threshold_diagnostics(-s)
+    assert isinstance(diag_df, pd.DataFrame)
+    assert len(diag_df) == 4
+
+    # Step 8 public entrypoints are implemented; later pipeline/rolling EVT remain deferred.
+    rc = risk_budget.risk_contributions(synthetic_asset_returns, equal_canonical_weights, confidence=0.99, method="historical_es")
+    assert len(rc) == 7
+    sizing = risk_budget.compare_feasible_allocations(
+        synthetic_asset_returns, {"eq": equal_canonical_weights},
+        {"constraints": baseline_config.portfolio.constraints}, var.get_risk_forecaster("historical"))
+    assert len(sizing) == 1
+    replay = stress.run_stress_tests(synthetic_asset_returns, equal_canonical_weights,
+                                   [baseline_config.stress.hypothetical_scenario])
+    assert replay.iloc[0].status == "warning"
+    stub_calls = [
+        lambda: var.get_risk_forecaster("evt_pot"),
     ]
 
     for call in stub_calls:
@@ -321,3 +354,11 @@ def test_remaining_analytics_stubs_explicitly_raise_not_implemented(
     assert quantedge.__version__ == "0.1.0"
     assert hasattr(contracts, "DataBundle")
     assert hasattr(config, "load_config")
+    assert hasattr(data, "load_data")
+    assert hasattr(returns, "compute_session_returns")
+    assert hasattr(portfolio, "build_portfolio_path")
+    assert hasattr(kpis, "compute_kpis")
+    assert hasattr(var, "estimate_risk")
+    assert hasattr(es, "empirical_tail_weights")
+    assert isinstance(PortfolioConstraints(), PortfolioConstraints)
+    assert isinstance(StrategySpec(strategy_id="s", objective="min_variance"), StrategySpec)

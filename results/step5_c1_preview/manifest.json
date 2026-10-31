@@ -1,0 +1,44 @@
+{
+  "generated_at_utc": "2026-10-31T14:31:20.336030+00:00",
+  "scope": "development_only_through_2016_12_30",
+  "development_end": "2016-12-30",
+  "dataset_id": "qe1_20050101_20261030_r3_6c4633a7ba",
+  "config_hash": "587ddbe363589fb6956c23c5fe8b2b544bac81d9224a0b4bb59f60f5fbc0a017",
+  "monte_carlo_seed": 202601,
+  "monte_carlo_simulations": 25000,
+  "nav_usd": 10000000.0,
+  "rendering_versions": {
+    "matplotlib": "3.11.2",
+    "contourpy": "1.3.3",
+    "cycler": "0.12.1",
+    "fonttools": "4.68.0",
+    "kiwisolver": "1.5.1",
+    "pyparsing": "3.3.3"
+  },
+  "numerical_authority_json": "results/step5_development_c1_risk_tables.json",
+  "numerical_authority_sha256": "bc446edec0be66ba6626c2be72944209eb18b190e6cc9575625ff46d009ae33a",
+  "source_sha256": {
+    "src/quantedge/es.py": "9f4c5797a3671360273055badab8fcdcef49e63600f8f543400e200d3b730529",
+    "src/quantedge/var.py": "c56f5652fe031654d4d629ac659ee26d269b66ff2f7fb5f14cb33c592175bd7d",
+    "scripts/record_step5_c1_results.py": "b69788722354e67e86a418cfdd422351e5b70482d124f9cf61b8456d1098ff65",
+    "scripts/export_step5_c1_preview.py": "4d6ff5209ae064f771b030c6e1c816e4d672fccbf276cf85f7b182d4b92d9422"
+  },
+  "artifacts_sha256": {
+    "01_c1_risk_comparison_all_confidences.csv": "c62ecae1e2ca9a887089da8c8675dbdb210be57f9e0340e8f1bede92ecd992ad",
+    "02_c1_mandatory_95_99_comparison.csv": "b07788d3f2121682d118d3bebc12f2e476b76d90a4790b33606d230cfe4424ad",
+    "03_c1_fixed_exposures.csv": "0579bddb178cc9d4e85f22d5926ffeaf57abeac34ecbaf7872d18825c3d2da03",
+    "04_c1_loss_moments_and_stationarity.csv": "ab99079bb92ef8e45e084e728ee1f7d5cf878f5c4fc754f156e261c90e6f8d4a",
+    "05_c1_mc_uncertainty_64seeds.csv": "99bca7733c8e02642d5441148d424db84b3c7fff676b7b6fe8cd6fc4f8ae3fc1",
+    "06_c1_fixed_exposure_daily_losses.csv": "99aab5b79565d059d0ae1756d20a300dbb1a8d264bbea6c446dca445c7b439a8",
+    "figure_01_c1_var_es_95_99_comparison.png": "626ff92e21b2d81a1eeb39c38b821b486f8633388fab01fcbe9d224a8bca64d2",
+    "figure_01_c1_var_es_95_99_comparison.svg": "9f257b16a1f564704eed3afc8475ca3f7b547ee1942a46f95ad99b08cf4c8897",
+    "figure_02_c1_fixed_exposure_loss_distribution.png": "15b075e376ff4569de77b4fae09c118a827795ab5db9f5d75d04747d50ace039",
+    "figure_02_c1_fixed_exposure_loss_distribution.svg": "f3d7267935505d371d3ea53c4563fc19047855deae0d1325051e421e6a1f6599",
+    "figure_03_c1_mc_sampling_uncertainty.png": "010b7a946d4cac5a3a62abab9e555c19282931dc911064e8c6eae74984901e55",
+    "figure_03_c1_mc_sampling_uncertainty.svg": "c800c8f5cfbb7ddf9fd156c2f93bd966f13cb78af842b5469763d5d4c3187d02",
+    "index.html": "34bc3edbaa1dd08a3f78a22df154d7f5b9b89ac6bf304efa697c6ce0c6920335",
+    "README.md": "f9d3bb8c3ac53b82f0ecb18e825a498ce822266ff41c6df6a5ada8f09ad1abe9",
+    "rendering-requirements.txt": "55df4c75690a975421e881792f230fb2db2e1d9df79c874fe53cd48cd428f8f5",
+    "step5_development_c1_risk_tables.json": "bc446edec0be66ba6626c2be72944209eb18b190e6cc9575625ff46d009ae33a"
+  }
+}

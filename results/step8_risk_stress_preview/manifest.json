@@ -1,0 +1,36 @@
+{
+  "generated_at_utc": "2026-10-31T17:01:56.037546+00:00",
+  "dataset_id": "qe1_20050101_20261030_r3_6c4633a7ba",
+  "config_hash": "587ddbe363589fb6956c23c5fe8b2b544bac81d9224a0b4bb59f60f5fbc0a017",
+  "numerical_authority_json": "results/step8_risk_stress_preview/step8_results.json",
+  "numerical_authority_sha256": "354a8915aebf0e85934058abe06f0b929347b8b87ee7ce1625d64c4b1ae32b92",
+  "source_sha256": {
+    "config.yaml": "60f55a1b7172220153ed2c9692faca98771b9c6a2cb2b18f815c7f280a2fbce1",
+    "src/quantedge/contracts.py": "7aa3a84b9951f959913a8310d1ea1fc8ff74c7ca115629bd77fa673635f76caa",
+    "src/quantedge/risk_budget.py": "097c992b6837f47c599b1402160e8f9ec9155c43d126baab4284022c7c53f20f",
+    "src/quantedge/stress.py": "63a5832d028e03c9bacbc062e9e366965f4338f5870ae1475cb1a0a7beb793bc",
+    "src/quantedge/var.py": "c56f5652fe031654d4d629ac659ee26d269b66ff2f7fb5f14cb33c592175bd7d",
+    "src/quantedge/es.py": "9f4c5797a3671360273055badab8fcdcef49e63600f8f543400e200d3b730529",
+    "src/quantedge/portfolio.py": "8e5b93b6fed3869446eabaf60a096a347380cc6c2e8ec7262ea76ba568ee2940",
+    "src/quantedge/returns.py": "2ead8513c6c5758df5ffc7d15de113a01345912d7e4f70b4832af622db11e0e0",
+    "scripts/record_step8_results.py": "5fff6d2fbad0638ffe1a7b7b2e41ed1acee9d5590c4f2094643f83c84049ca0e",
+    "scripts/export_step8_preview.py": "8597f231bdeb3a7a35b05266f23ec4ff5ceeeb84d574ae14098bcec483cc4f15",
+    "docs/sections/b_risk_budget_and_stress.md": "b2029172645c41620f32606898419273aa5127d0a2e1f53b09bd6ac578ebc77c"
+  },
+  "artifacts_sha256": {
+    "01_risk_contributions.csv": "cfbe41aee081b633c9d7a16433561d0c3e72620bd0161325c73009ff1a934ae5",
+    "02_allocation_comparisons.csv": "249236632e8835d5479649cfeeaaa0e66eaaed1a6fe235c7bd67c17237f77570",
+    "03_stress_comparison.csv": "29fc22a9e8c10977fbdd0a1132edba9e32c9cb44e5ae5a270ee636abbf7a0861",
+    "04_stress_asset_attribution.csv": "013bf84b5e366a0c7b6203dd18cb172c0b7eac8709df660120ed6198eef9241d",
+    "05_hypothetical_scale_context.csv": "4c5b7981aaef536798ca337506fc41db1f717e551a90eea17b36e2d7d969b3b3",
+    "figure_01_risk_components.png": "71a0d21e1c84f50178899a68958a92101e961dc9d1cfa66800141e4906f9db5e",
+    "figure_01_risk_components.svg": "1a469569c681458618bc5c1d1288d5fb71813078d8dcf8f93186738ed4c4e288",
+    "figure_02_stress_comparison.png": "d952f35172f23472cb27e11adcaaa1bdf8c5139f28ed5358de04dc0f9e5dd830",
+    "figure_02_stress_comparison.svg": "d9ac08718ace26efd467158d3abdc7fe8c9e1ffb7f746c73a6bcef9eb670f1db",
+    "figure_03_feasible_sizing.png": "ae915159be0ad884649b4598ae246f69a857071205ff79d20c13692d2af79b4c",
+    "figure_03_feasible_sizing.svg": "4466e6f141f3782280f1f21632cea67d411d7c4a5553cce51dfbc77cf53d8f5d",
+    "index.html": "240cf74ddae068d9550429119a3080ae98a80370a7151e7bd19327a64a7ed10e",
+    "README.md": "1d9103a69ace305435944ecd97c64d3479d53d2e594f7a38dfb205ce75429e39",
+    "step8_results.json": "354a8915aebf0e85934058abe06f0b929347b8b87ee7ce1625d64c4b1ae32b92"
+  }
+}

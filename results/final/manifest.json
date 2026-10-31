@@ -1,0 +1,25 @@
+{
+  "bundle_id": "1c7bd6007fe22b014b25",
+  "file_sha256": {
+    "allocation_comparisons.csv": "4d5e867a9d58749ec8a3159441051a009b63fbba7945ab313c9c3d2dd33409f0",
+    "backtest_historical_0.90.csv": "43c0042e0c7549c5dd44c909862b3378a420c90b35258fcec08d982a91f9551f",
+    "backtest_historical_0.95.csv": "42b182b5fa2478e144616bb94a2c0b3f48fcedc9424b3d42bb4e5d379d35c60e",
+    "backtest_historical_0.99.csv": "3959eee780a3a8c73029e72996627912980942eeded16b293a333022e7f5be44",
+    "backtest_parametric_normal_0.90.csv": "36e4d3524814e4b5b230a14076c16adf62369f783cd22da3f1c18df81ab62a5f",
+    "backtest_parametric_normal_0.95.csv": "326ff73a2d08992749348a4a83902f66ac121c2a4bff77bbaed375b087f7afec",
+    "backtest_parametric_normal_0.99.csv": "cd8ca8d46dd50297cadf8cf30d6f0479db48a66fe2dab60b1792e94228e037c6",
+    "coverage_summary.csv": "2656555fcb156b10ab84ad980a7404f78c3d32d367264c4f963c792a932cb7cf",
+    "daily_performance.csv": "c600250994bd72f0686d69e3befa7c080a3909375de7d86284027770914e8d3f",
+    "evt_diagnostics.csv": "66f1491e06d3f29c6d52ee3c12fd95e5e349fba500038d0729419d4c0d534a44",
+    "period_kpis.csv": "553f77bf9afae59b73cb6770cee5f22a74e05c75489c3ae39a151dab9880ad5e",
+    "rebalances_benchmark_60_40.csv": "29d11b4fdf908c5488dc7405d0b599fed09a99fe99daf2775ea98d6c45cd2d55",
+    "rebalances_equal_weight.csv": "8f25b658623edad42e58966bdef4c2c30ba8315211db066c5c1276dfd0e77e62",
+    "rebalances_min_variance.csv": "523e3766b4e0de84fc366e707dca67c8a97fcc7c400f0d1a267e3b7a72ebd477",
+    "reference.json": "4cd1f197e0aa4a6f9111f6de4312c23e6e844eb077db3ee122dde0ea14a36872",
+    "risk_table.csv": "efa6f0eea08920b253ea2c7fdfe7ea8d6ed8ab084330a194bc40697e18b1e0b6",
+    "stress_results.csv": "b2224503eeb00d88fd33e289ff90a1d01a24f0c17c958b330310a62032efad39",
+    "weights_before_benchmark_60_40.csv": "9960544a714e3533f1d0370686e05fa540fd859427fbf09e066cd41ab6d043de",
+    "weights_before_equal_weight.csv": "44a3adf16e2dff8e839f161b78a458c427ef146423b02c70cac222e818171ec6",
+    "weights_before_min_variance.csv": "7aad184862680af5edcd809418c66b4b2ea534f720542eaa022f14b1e677404d"
+  }
+}

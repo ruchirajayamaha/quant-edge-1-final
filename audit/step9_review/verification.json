@@ -1,0 +1,74 @@
+{
+  "bundle_id": "1c7bd6007fe22b014b25",
+  "source_data_hashes": 53,
+  "protected_files_unchanged": 102,
+  "independent_values": {
+    "evaluation_cagr": 0.07633604517748402,
+    "evaluation_max_drawdown": -0.16782839219930012,
+    "recent_normal_var99": 0.012923551409315144,
+    "recent_historical_es99": 0.020316886479385343,
+    "gfc_terminal_usd_loss": 892991.3353511393
+  },
+  "persisted_values": {
+    "evaluation_cagr": 0.07633604517748528,
+    "evaluation_max_drawdown": -0.16782839219930523,
+    "recent_normal_var99": 0.012923551409315144,
+    "recent_historical_es99": 0.020316886479385343,
+    "gfc_terminal_usd_loss": 892991.3353511387
+  },
+  "absolute_errors": {
+    "evaluation_cagr": 1.2628786905111156e-15,
+    "evaluation_max_drawdown": 5.10702591327572e-15,
+    "recent_normal_var99": 0.0,
+    "recent_historical_es99": 0.0,
+    "gfc_terminal_usd_loss": 5.820766091346741e-10
+  },
+  "euler_absolute_error": 3.469446951953614e-18,
+  "rolling_checks": [
+    {
+      "model": "historical",
+      "confidence": 0.9,
+      "sessions": 4987,
+      "exceptions": 519,
+      "max_uc_lr_error": 4.547473508864641e-13
+    },
+    {
+      "model": "historical",
+      "confidence": 0.95,
+      "sessions": 4987,
+      "exceptions": 288,
+      "max_uc_lr_error": 4.547473508864641e-13
+    },
+    {
+      "model": "historical",
+      "confidence": 0.99,
+      "sessions": 4987,
+      "exceptions": 65,
+      "max_uc_lr_error": 4.547473508864641e-13
+    },
+    {
+      "model": "parametric_normal",
+      "confidence": 0.9,
+      "sessions": 4987,
+      "exceptions": 436,
+      "max_uc_lr_error": 4.547473508864641e-13
+    },
+    {
+      "model": "parametric_normal",
+      "confidence": 0.95,
+      "sessions": 4987,
+      "exceptions": 263,
+      "max_uc_lr_error": 4.547473508864641e-13
+    },
+    {
+      "model": "parametric_normal",
+      "confidence": 0.99,
+      "sessions": 4987,
+      "exceptions": 105,
+      "max_uc_lr_error": 4.547473508864641e-13
+    }
+  ],
+  "human_validation": "PENDING",
+  "protocol_commit": "782ec20",
+  "all_checks_passed": true
+}

@@ -1,0 +1,29 @@
+{
+  "checked_at_utc": "2026-10-31T16:52:26.538795+00:00",
+  "disposition": "Step7 R1/R2/provenance closed; Step8 not started",
+  "pytest": {
+    "passed": 109,
+    "elapsed_seconds": 18.61,
+    "command": ".venv/Scripts/python.exe -m pytest -q --basetemp tmp/pytest_step7_report_fixed_all_28c6b1"
+  },
+  "focused_checks": 4,
+  "pip_check": "No broken requirements found",
+  "source_data_hashes": 53,
+  "original_protected_files": 75,
+  "fix_protected_files": 78,
+  "sections_1_6_bytes_unchanged": true,
+  "authority_sha256": "ab086183bb07c92cf5b882501e6463bc96039dfa9dd37c265188bb75f41b8560",
+  "manifest_sha256": "b9c4ad95eee1d33c793be82a3020f8cd9eac60b0ea25b34a43ed035d519e05f4",
+  "source_hashes_checked": 9,
+  "artifact_hashes_checked": 17,
+  "figures_visually_inspected": 3,
+  "holdout_outcomes_inspected": false,
+  "sha256": {
+    "scripts/generate_step7_methodology.py": "d4308cbbf358dd41fe47eedbc2ec943487f7d4640cee388bd02ea2bc3527a331",
+    "scripts/export_step7_evt_preview.py": "857dade11d8b7d4e6a2f0ecfdf993536c1936f139dd75f99ce561603891d4c33",
+    "scripts/update_handoff_and_docs.py": "74ff42e3e537e2a4948e4882f4b2b13e928295a3cd8ad398588ca68ed5df88fb",
+    "tests/test_step7_report_consistency.py": "6b0256d3a2305c47b2ef9ef3544d45e85d5417d63d49253706141f184cdd190d",
+    "docs/sections/c_var_es_and_evt.md": "a628fa0b8d6fd25b60dae6a153cabe8385fb3f2639c01e2385cc8c133ca6ebf2",
+    "src/quantedge/evt.py": "245c4981a4ecc709184b8d821d2f6346a9217fa476fa516ea22d694560242ab1"
+  }
+}

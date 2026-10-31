@@ -1,0 +1,4 @@
+# Optional document/figure authoring only; not required to run the dashboard.
+matplotlib==3.11.2
+reportlab==4.4.9
+pypdf==6.10.0

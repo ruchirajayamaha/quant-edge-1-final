@@ -1,5 +1,7 @@
 # Review of supplied Quant Edge materials
 
+Historical initial review. The current r3 status and later strategy qualifications are in handoff/SOLO.md and audit/final_strategy_review/PROMPT_INTEGRATION_DECISIONS.md. Do not treat this earlier pre-implementation review as the live completion status.
+
 Reviewed: the official 10-page `Quant edge 1.0 Final Challenge 1.pdf`, the 13-page Claude `Quant Edge 1.0 Winning Study Flow and Antigravity Prompt Pack.pdf`, and `initial prompt.txt`. Page references below refer to those supplied PDFs. Originals are unchanged; this directory contains a revised implementation plan and prompts, not the implemented application.
 
 **Assessment:** the original materials capture the mandate and grading well. The main weaknesses are excessive core scope, a sequential plan being reused for four parallel developers, several tail-risk implementation traps, and premature investment conclusions. The corrected pack preserves mandatory requirements while deferring optional extensions.

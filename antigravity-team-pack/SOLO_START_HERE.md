@@ -1,96 +1,59 @@
-# එක්කෙනෙක් Antigravity එකෙන් කරන පිළිවෙළ
+CURRENT CHECKPOINT: Steps1-8 are implemented and technically checked. Step8 outputs: results/step8_risk_stress_preview/index.html; 127 tests pass. STOP before Step9 integration. Human validation/mandate choices remain PENDING. This checkpoint supersedes older next-task text below.
 
-**එක්කෙනෙක් code කරනවා නම් එක project folder එකක, එක Antigravity chat එකක පියවරෙන් පියවර කරගෙන යන්න.** කලින් දුන්න A/B/C/D කියන්නේ වැඩ කොටස්. එක්කෙනෙක් ඒ කොටස් ඔක්කොම මේ පහළ පිළිවෙළට කරනවා. Clones හතරක් හෝ agents හතරක් අවශ්‍ය නැහැ.
+# එක්කෙනෙක් Antigravity එකෙන් කරන current workflow එක
 
-මුළු project එක එකවර හදන්න කියන්නේ නැතුව එක පියවරක් හදලා, අදාළ checks run කරලා, ඊළඟ එකට යන්න. මෙහි තවම project implementation එක කරලා නැහැ; මේක ඒ සඳහා guide එක සහ prompts.
+**Setup, market-data work සහ RF-only r3 upgrade එක ඉවරයි. ඒවා නැවත පටන් ගන්න එපා.** Current active baseline: `qe1_20050101_20261030_r3_6c4633a7ba`, runtime schema `1.1.0`. Live `handoff/SOLO.md` සහ runtime contracts බලන්න; පරණ design file එකකින් working code downgrade කරන්න එපා.
+
+එක developer කෙනෙක්, එක checkout එකක් සහ `handoff/SOLO.md` checkpoint එකක් භාවිත කරන්න. A/B/C/D files කියන්නේ වැඩ කොටස්වල specifications. Solo mode එකේ වෙන වෙනම clone/owner restrictions අදාළ නැහැ.
+
+## දැන් ඉන්න තැන සහ ඊළඟ වැඩේ
+
+Steps 1-5 සහ corrections review කරලා ඉවරයි. දැන් **Step 6 / A3 rolling backtesting සහ coverage tests පටන්ගන්න.** `audit/decision_register/REGISTER.md` inherited settings provisional ලෙස තබාගෙන code/tests කරන්න; human inputs සහ independent validation තවම PENDING.
+
+[Step 6 prompt එක](NEXT_TASK_STEP6.txt) agent එකට දෙන්න. Real-data checks development period එකට සීමා කරන්න. Step 6 ඉවර වුණාම report එක දීලා Step 7ට කලින් Codex review සඳහා නවත්වන්න. Accepted results සඳහා Step 4/5 audit closures සහ actual artifacts භාවිත කරන්න; chat එකක වෙනස් numbers තිබුණොත් ඒවාට code retune කරන්න එපා.
 
 ## පිළිවෙළ
 
-| පියවර | කරන දේ | ඉවර වුණාම තියෙන්න ඕන දේ |
+| පියවර | වැඩේ | දැන් තත්ත්වය / prerequisite |
 |---|---|---|
-| 1 | Project setup | Folders, config, dependencies සහ function interfaces |
-| 2 | Data + data-quality checks | Download කරපු, සකස් කරපු prices/returns සහ quality report |
-| 3 | Portfolio construction | ETF weights, benchmark සහ කාලයත් එක්ක portfolio return path |
-| 4 | KPIs / CAPM | Return, Sharpe, drawdown ඇතුළු performance metrics |
-| 5 | VaR + ES | Historical, parametric, Monte Carlo risk estimates |
-| 6 | Backtesting | Model forecasts පරණ දවස්වල සැබෑ losses එක්ක පරීක්ෂා කළ results |
-| 7 | EVT | Extreme losses සඳහා tail model සහ threshold diagnostics |
-| 8 | Risk budgeting + stress | එක් ETF එකෙන් එන risk, weight alternatives සහ crisis losses |
-| 9 | Streamlit app | ඉහත computed results පෙන්වන usable app එක |
-| 10 | Docs + final audit | README, disclosure, memo/tear sheet drafts සහ final checks |
+| 1 | Project setup | Complete; නැවත නොකරන්න |
+| 2 | ETF data, cleaning, r3 RF evidence | Complete; snapshot preserve කරන්න |
+| B0 | Decision register / team defence roles | Factual draft exists; human choices continue alongside implementation |
+| 3 | Portfolio rules and return paths | Complete and reviewed; B1 |
+| A1b | Bounded income/inflation context | Complete; original context preserved |
+| 4 | KPIs, CAPM, income/real-growth interpretation | Complete; R1-R3 closed by review |
+| 5 | Historical/normal/MC VaR and ES | Start now; C1, then stop for review |
+| 6 | Registered primary-model backtesting | A3; past-only callback and weights |
+| 7 | EVT and empirical-body/GPD-tail support | C2/C3; threshold safeguards තියාගන්න |
+| 8 | Risk budgeting, sizing, stress and decision evidence | B2/B3; human-owned outcome |
+| 8b | Mandate Feasibility Frontier | Preferred post-core B4; candidate-table fallback |
+| 8c | EWMA-FHS challenger | Optional C4 after core; drop/defer if not defensible |
+| 9 | Streamlit / shared result bundle | D1/D2; Recommendation-first; all required panels |
+| 10 | Memo, tear sheet and final audit | D3 + final audit; actual page/render/install checks |
+| Human work | Checks, reasoning and viva practice | Throughout; actual humans only |
 
-**Data-quality checks කියන්නේ step 2. Model validation/backtesting කියන්නේ step 6. ඒ දෙක වෙනස්.**
+## Step specifications and safeguards
 
-## දැන් මුලින්ම කරන්න ඕන දේ
+- **B0/B1:** `02_B_PORTFOLIO_DECISIONS.txt`. Register constraints/rules before selecting/evaluating performance. Log existing full-history asset-data exposure honestly. Test rules, not hindsight weights. Use current sample covariance primary; shrinkage is optional.
+- **A1b/A2:** `01_A_DATA_VALIDATION.txt`. Separate context snapshot; income share/price basis and no dividend double counting; CPI is ex-post monthly context unless a proper publication-aware decision policy is separately defined. Derive objectives from a declared cash-flow convention.
+- **C1/A3:** `03_C_RISK_EVT.txt`, then A3. Respect single config draw count, simulation uncertainty, actual sample dates, and the registered primary model. Target HS/normal/MC rolling coverage, but only expose supported backtest choices; genuine failures remain visible.
+- **C2/C3:** Recent current-risk view plus full-history crisis sensitivity, with identical methods per window. Recent data includes 2022 but not GFC/COVID. Do not force a low EVT threshold to populate 90%; use a labelled body/tail construction with valid ES integration and boundary tests.
+- **B2/B3:** Contributions, feasible changes, historical paths and a justified seven-ETF hypothetical. Humans define ACCEPT/ADJUST/REJECT relative to proposed assumptions and monitoring actions. Scenario constraints are not automatically reverse stress.
+- **B4/C4:** Optional standard-method integrations, not novel inventions or official requirements. Cache and measure real runtime. Bootstrap output is not a guaranteed probability of funding the endowment.
+- **D1-D3:** `04_D_LEAD_APP.txt`. A first screen with decision/downside/confidence evidence; frozen reference bundle; same computed values in app and documents. Pending human decisions remain pending.
+- **Final:** `05_INTEGRATE_AND_AUDIT.txt`. Corrected rule matrix, fresh clone/new venv, offline bundle, representative controls/error cases, page checks, actual judge access and human validation. One-page recommendation/tear-sheet reuse is a stated interpretation, not a confirmed organiser waiver.
 
-1. Antigravity එකෙන් project folder එක open කරන්න. ඒක ඇතුළේ මේ `antigravity-team-pack/` folder එක තියෙන්න ඕන.
-2. පහළ starter prompt එක එක chat එකකට paste කරන්න.
-3. Step 1 ඉවර වුණාම continuation prompt එකෙන් step 2 කරන්න. එක වරකට එක step එකක්.
-
-### මුලින් paste කරන prompt එක
-
-```text
-I am the single developer implementing this Quant Edge project.
-Read antigravity-team-pack/SOLO_START_HERE.md and follow its solo workflow.
-Read COMMON_CONTEXT.md and CONTRACTS.md from that same directory for the
-project requirements and numerical interfaces.
-
-SOLO OVERRIDE: I own all project modules. Ignore the four-person file-ownership,
-separate-clone, parallel-branch and A/B/C/D handoff restrictions. Keep all the
-data, numerical, no-look-ahead, testing and disclosure requirements unchanged.
-Use one working checkout and one checkpoint file: handoff/SOLO.md.
-The old initial prompt's instruction to restate the entire project and ask five
-general questions is superseded by this bounded task.
-
-Implement SOLO STEP 1 ONLY: project setup.
-Use milestone D0 from 04_D_LEAD_APP.txt as the setup specification, subject
-to the solo override. Do not implement data downloads or analytics yet.
-Set up the folders, typed shared contracts, config, minimal installable package,
-verified compatible dependencies and Windows run instructions.
-Keep stubs explicitly unimplemented; never return fake portfolio results.
-Do not overwrite the original PDFs or prompt files, publish, or deploy.
-
-Run relevant setup/import/config checks that are possible. Record actual outcomes
-and any environment limits. In handoff/SOLO.md record the completed work,
-contract version, decisions still provisional, and STEP 2 as the next task.
-Report briefly: files changed, checks actually run, real blockers, next step.
-Do not start later steps in this request.
-```
-
-### එක් step එකක් ඉවර වුණාම paste කරන prompt එක
+## එක milestone එකක් ඉවර වුණාම
 
 ```text
 Continue the existing solo Quant Edge project.
-Read antigravity-team-pack/SOLO_START_HERE.md and handoff/SOLO.md.
-Inspect the existing code and implement ONLY the next incomplete solo step.
-Use the step-to-specification mapping below; read only the relevant milestone
-and its named dependencies rather than replanning or regenerating the project.
-The solo ownership override remains active.
-Preserve completed work and the same data snapshot. Run relevant checks,
-fix issues within this step, and update handoff/SOLO.md with actual results,
-remaining limitations and the next step. Report a concise checkpoint.
-Do not begin a later step in this request or claim human validation was done.
+Read antigravity-team-pack/SOLO_START_HERE.md, COMMON_CONTEXT.md,
+CONTRACTS.md and handoff/SOLO.md.
+Implement ONLY the next registered, incomplete milestone.
+Preserve r3 and completed work. Inspect existing code before editing.
+Do not invent human choices or call exploratory work preregistered evaluation.
+Run relevant checks and update the handoff with actual outcomes and limitations.
+Do not start another milestone in this request.
 ```
 
-## Agent සඳහා step-to-specification mapping
-
-The role prompt files are technical specifications, not separate people in this workflow. Read only the selected milestone and relevant interface definitions. The solo override takes precedence over their ownership/delegation instructions.
-
-1. **Setup:** `04_D_LEAD_APP.txt` D0, without parallel branches/clones/owners. Keep one `handoff/SOLO.md`.
-2. **Data:** `01_A_DATA_VALIDATION.txt` A1. Create one snapshot/manifest, session-aware simple/log returns, flags, ADF/quality outputs and offline states. Do not erase flagged observations or silently bridge missing sessions.
-3. **Portfolio:** `02_B_PORTFOLIO_DECISIONS.txt` B1. Implement construction, feasibility, weight drift, costs and canonical benchmark paths. Metrics/model comparison calls depending on steps 4/5 are deferred to step 8, not duplicated or fabricated. Freeze selection/evaluation chronology before assessing performance.
-4. **KPIs:** `01_A_DATA_VALIDATION.txt` A2, using the paths from step 3. Include stationarity diagnostics on actual modelled portfolio series as specified. Keep unavailable RF-dependent KPIs explicit.
-5. **VaR/ES:** `03_C_RISK_EVT.txt` C1. Provide the shared moment and empirical-tail helpers. Compare the three required methods at95/99 with identical portfolio/sample conventions.
-6. **Validation:** `01_A_DATA_VALIDATION.txt` A3. Use the existing weights/forecast APIs. Rolling selected-primary-model validation, no-look-ahead tests, Kupiec, Christoffersen and eligible Basel diagnostic. Distinguish unavailable selected-model backtests from primary historical validation. This step needs the selected VaR callback, not a completed EVT extension, so validate the basic model early.
-7. **EVT:** `03_C_RISK_EVT.txt` C2/C3. Keep sufficient sample size, domain/support checks, threshold justification and uncertainty. Reuse conventional estimates on the same window for comparisons. Conditional EVT/GARCH remains deferred.
-8. **Decision evidence:** `02_B_PORTFOLIO_DECISIONS.txt` B2/B3 plus deferred B1 comparisons, now using real functions/results from steps 4-7. Risk contributions, feasible position-sizing alternatives, historical crises and one hypothetical scenario. Complete return/risk trade-off tables. Team judgement and final recommendation remain pending until actually evaluated by humans.
-9. **App:** `04_D_LEAD_APP.txt` D1/D2. Build the pipeline and six views using actual computed outputs. Cache expensive work; sidebar changes do not silently change the risk definition. Handle no cache, offline cache, unsupported methods/confidence and incomplete backtests honestly. No need for a synthetic UI-first implementation now that analytics exist.
-10. **Docs/audit:** `04_D_LEAD_APP.txt` D3, then `05_INTEGRATE_AND_AUDIT.txt`. Replace cross-owner review requests with independent recomputations and actual human-review tasks. Check reproducibility, limitations and all deliverables. Report drafts/placeholders/unverified pagination as incomplete; do not manufacture reasoning or human sign-off. Add at most one optional extension only after the core and required outputs are complete.
-
-At every step update documentation/disclosure incrementally, not just at step 10. Record snapshot/config/seed IDs, actual check commands/outcomes, unresolved assumptions and next task in `handoff/SOLO.md`. The public numerical/data interfaces remain the same as the four-person design; changes can be made consistently across callers by the single developer.
-
-## Usage හෝ chat එක මාරු කරන්න වුණොත්
-
-වැඩේ මුල ඉඳන් නැවත පටන් ගන්න එපා. Existing project folder එකෙන් අලුත් session එක open කරලා ඉහත continuation prompt එක දෙන්න. Checkpoint file එකෙන් නවත්තපු තැනින් ඉදිරියට යන්න. එකම files වෙනස් කරන sessions දෙකක් එකවර run කරන්න එපා.
-
-Coding එක එක්කෙනෙක් කළත් අවසාන investment judgement, human checks සහ competition submission requirements වෙනස් වෙන්නේ නැහැ. Final recommendation එක AI එකෙන් තනිව තීරණය කරලා human-reviewed ලෙස දක්වන්න එපා.
+Inputs නැත්නම් ඒ dependency එක record කරලා independent code/tests/docs කරන්න. Session/usage මාරු වුණාම current checkout සහ handoff එකෙන් resume කරන්න; project එක නැවත generate කරන්න එපා. Current rule interpretations and review dispositions are in `audit/final_strategy_review/PROMPT_INTEGRATION_DECISIONS.md`.

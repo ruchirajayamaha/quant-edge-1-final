@@ -1,0 +1,214 @@
+{
+  "scope": "post-fix Step 3 verification (R1-R3); synthetic probes and development-only (<= 2016-12-30) path checks",
+  "r1_conflicting_specification_checks": {
+    "all_conflicting_cases_rejected": true,
+    "cases": {
+      "audit_probe_minvar_unsupported_cov_cap_violating": {
+        "rejected": true,
+        "error": "Conflicting StrategySpec: fixed_weights must be None when objective='min_variance'; use objective='fixed_weights' for custom fixed allocations."
+      },
+      "minvar_with_feasible_override": {
+        "rejected": true,
+        "error": "Conflicting StrategySpec: fixed_weights must be None when objective='min_variance'; use objective='fixed_weights' for custom fixed allocations."
+      },
+      "minvar_with_cap_violating_override": {
+        "rejected": true,
+        "error": "Conflicting StrategySpec: fixed_weights must be None when objective='min_variance'; use objective='fixed_weights' for custom fixed allocations."
+      },
+      "minvar_unsupported_covariance_without_override": {
+        "rejected": true,
+        "error": "Unsupported covariance_estimator 'unsupported_probe'; Step 3 configured primary estimator is 'sample_ddof1'."
+      },
+      "equal_weight_with_feasible_override": {
+        "rejected": true,
+        "error": "Conflicting StrategySpec: fixed_weights must be None when objective='equal_weight'; use objective='fixed_weights' for custom fixed allocations."
+      },
+      "equal_weight_with_cap_violating_override": {
+        "rejected": true,
+        "error": "Conflicting StrategySpec: fixed_weights must be None when objective='equal_weight'; use objective='fixed_weights' for custom fixed allocations."
+      },
+      "benchmark_60_40_with_non_60_40_override": {
+        "rejected": true,
+        "error": "Conflicting StrategySpec: fixed_weights on objective='benchmark_60_40' must match config.mandate.benchmark_60_40_weights (60% SPY / 40% AGG) or be None; use objective='fixed_weights' for custom allocations."
+      },
+      "fixed_weights_missing_dictionary": {
+        "rejected": true,
+        "error": "strategy_spec.fixed_weights is required when objective='fixed_weights'."
+      }
+    },
+    "explicit_fixed_weights_supported": true,
+    "matching_benchmark_60_40_supported": true
+  },
+  "r2_synthetic_compliance_scope": {
+    "drift_breach_probe": {
+      "constraint_enforcement_scope": "rebalance_targets_only",
+      "mandate_feasible_all_rebalances": true,
+      "rebalance_target_compliance_status": "rebalance_targets_within_provisional_caps",
+      "mandate_feasible_all_pre_return_sessions": false,
+      "mandate_compliance_status": "rebalance_targets_feasible_with_post_trade_drift_cap_breaches_provisional",
+      "next_session_equity_weight": 0.3689320388349514,
+      "equity_cap": 0.35,
+      "breach_dates": [
+        "2010-01-05",
+        "2010-01-06"
+      ],
+      "violated_constraints": [
+        "max_equity_weight"
+      ]
+    },
+    "no_breach_control": {
+      "mandate_feasible_all_rebalances": true,
+      "mandate_feasible_all_pre_return_sessions": true,
+      "mandate_compliance_status": "rebalance_targets_and_pre_return_holdings_within_provisional_caps",
+      "n_breach_sessions": 0
+    }
+  },
+  "independent_units_ledger": {
+    "sessions": 48,
+    "max_absolute_wealth_difference": 4.440892098500626e-16
+  },
+  "truncated_prefix_invariance": "passed, exact weights and wealth",
+  "development_path_array_invariance": {
+    "strategies_checked": [
+      "min_variance",
+      "equal_weight",
+      "benchmark_60_40"
+    ],
+    "arrays_verified_bit_identical": 21,
+    "sha256_by_strategy": {
+      "min_variance": {
+        "weights_before": "1362e3ce3cb636bb50149a03c8bdafc8d249df3f56f8a37497a989a8e348cdbb",
+        "gross_returns": "284ab78bccf6a1ad5b111157056aee9a2613c33370824013e8cc243b48da30e9",
+        "net_returns": "1fb28442c39d073a78ab101db35f63f61a7054ce07ee5de4a60a3ad18d727987",
+        "turnover": "6164bd1c53bb72b4899de0d58c17e163a002de89f4fb2248876c83718727811e",
+        "costs": "3dddc50f7ba58b9afba154b320af43a9b5c1415000e1927fb8c86a583eb1a192",
+        "wealth": "a210f36945a935c53eb1572e0bbc28dc25268dc2501e47dba707c37a7b009870",
+        "drawdown": "4bc4e8f183f55cb215288da8763b1076edd868d28ef89436509a36d143647f43"
+      },
+      "equal_weight": {
+        "weights_before": "6543ba09d9b30e3a613bb99bc3ca764385f91d56c754ff02f06bd4ff361b6d73",
+        "gross_returns": "f4aa591b4ecc2ea3179a08abf41b3902dd53f10e8d3ca7ad254418fafa161878",
+        "net_returns": "b0f10c75a22d49c816cf57ee2a746262c676955ec47f2f5bcfa43e00668c997d",
+        "turnover": "d68ffc964725f159dca92f71797cd0581671d10c0532e0b774bae4af72736a87",
+        "costs": "ba3d6455befd13b159b93ff474f8adc2588c99c4ca5fe393379828768c190e77",
+        "wealth": "325e5340a77cf765151a02edcfd9039670f0df74e94d6713605ec9f00bb177a6",
+        "drawdown": "a4aa0845f8cad6768400d9cb0ed61c2856fa70501a77ce4828d15bccaaca988b"
+      },
+      "benchmark_60_40": {
+        "weights_before": "d7155044641abe588cffb871c91edf46121ef96efb0d28e9ad1733362289fa41",
+        "gross_returns": "82f7b7cdacf5a0d14049e09078c7402429f4d21c2a61f50cdec70d717bcd5ce7",
+        "net_returns": "610cc5efcfc52ee248709fa7d38f38b71553ab29fb82c02557f171820d976c2c",
+        "turnover": "1acc3bf663f5e8f89c505d39d77574b0ce3345c7ecfa6676a30bd034a2be9c03",
+        "costs": "01b41bb1aed1bd139e5bfd2ec77a29b43be4edea8bf0048352e169b9121f569d",
+        "wealth": "c5c05200de2c8c898c9a0cd2dafb9c85d84e7f020f2a1d47349228e7fe3af2d3",
+        "drawdown": "a17396712c42c2460514ba6baf52eb8485dce643fba95cb32187b4518ece8c32"
+      }
+    }
+  },
+  "development_min_variance_target_vs_drift": {
+    "active_start": "2007-01-05",
+    "active_end": "2016-12-30",
+    "constraint_enforcement_scope": "rebalance_targets_only",
+    "n_rebalances": 120,
+    "feasible_rebalance_targets": 120,
+    "mandate_feasible_all_rebalances": true,
+    "rebalance_target_compliance_status": "rebalance_targets_within_provisional_caps",
+    "n_active_sessions": 2516,
+    "n_compliant_pre_return_sessions": 1077,
+    "n_breach_pre_return_sessions": 1439,
+    "breach_session_fraction": 0.571939586645469,
+    "mandate_feasible_all_pre_return_sessions": false,
+    "mandate_compliance_status": "rebalance_targets_feasible_with_post_trade_drift_cap_breaches_provisional",
+    "first_breach_date": "2007-01-08",
+    "last_breach_date": "2016-12-28",
+    "first_5_breach_dates": [
+      "2007-01-08",
+      "2007-01-09",
+      "2007-01-10",
+      "2007-01-11",
+      "2007-01-12"
+    ],
+    "last_5_breach_dates": [
+      "2016-12-21",
+      "2016-12-22",
+      "2016-12-23",
+      "2016-12-27",
+      "2016-12-28"
+    ],
+    "violated_constraints": [
+      "max_weight_per_etf",
+      "max_equity_weight"
+    ],
+    "breach_counts_by_constraint": {
+      "fully_invested": 0,
+      "min_weight_per_etf": 0,
+      "max_weight_per_etf": 1010,
+      "max_equity_weight": 617,
+      "min_defensive_weight": 0
+    },
+    "breach_counts_by_ticker_upper_cap": {
+      "AGG": 994,
+      "GLD": 17
+    },
+    "max_exposures": {
+      "max_single_etf_weight": 0.4513928828216966,
+      "max_single_etf_ticker": "AGG",
+      "max_single_etf_date": "2008-10-23",
+      "min_single_etf_weight": 0.0,
+      "min_single_etf_ticker": "EEM",
+      "min_single_etf_date": "2007-01-05",
+      "max_weight_by_ticker": {
+        "SPY": 0.369343626705108,
+        "EFA": 0.010860697997574598,
+        "EEM": 1.6220165353597481e-16,
+        "AGG": 0.4513928828216966,
+        "GLD": 0.41044104869190395,
+        "XLE": 5.317781626147354e-16,
+        "XLK": 0.26528663816678505
+      },
+      "max_equity_group_weight": 0.37298300491046316,
+      "max_equity_group_date": "2015-02-23",
+      "min_equity_group_weight": 0.19836490815396407,
+      "max_defensive_group_weight": 0.8016350918460363,
+      "min_defensive_group_weight": 0.6270169950895368,
+      "min_defensive_group_date": "2015-02-23"
+    }
+  },
+  "r3_documentation_certificate": {
+    "corrected_inequality_present": true,
+    "erroneous_factor_two_removed": true,
+    "counterexample_x2_on_1_2_at_2": {
+      "primal_error": 3.0,
+      "fw_gap": 4.0,
+      "twice_primal_error": 6.0,
+      "primal_error_le_fw_gap": true
+    }
+  },
+  "snapshot_hashes": {
+    "verified": 46,
+    "by_dataset": {
+      "qe1_20050101_20261030_afb9ce5694": 13,
+      "qe1_20050101_20261030_r2_cd2904443b": 15,
+      "qe1_20050101_20261030_r3_6c4633a7ba": 18
+    }
+  },
+  "baseline_runtime_changes": [
+    "src\\quantedge\\portfolio.py",
+    "tests\\test_d_setup.py"
+  ],
+  "config_hash": "587ddbe363589fb6956c23c5fe8b2b544bac81d9224a0b4bb59f60f5fbc0a017",
+  "preserved_original_audit_files_sha256": {
+    "audit/step3_review/STEP3_REVIEW.md": "f20823ed9fe6d983e39baa17aae056d59909e932a26ec193438325a41ad440c7",
+    "audit/step3_review/ANTIGRAVITY_STEP3_FIX_PROMPT.txt": "d37ef713f590f10936cc0a5fbc5911482d61d5c45e81ef81964392df1d54847b",
+    "audit/step3_review/verify_step3.py": "f1847e01dd2b8686c6c1b73db1a1921524de5f1c3e39bd6441072da85c912298",
+    "audit/step3_review/verification.json": "c0777ccb4b6b1ef486b7c2e3a43c7ef7744418c8c80721e85c6e44b59096ae50"
+  },
+  "post_fix_source_sha256": {
+    "src/quantedge/portfolio.py": "8e5b93b6fed3869446eabaf60a096a347380cc6c2e8ec7262ea76ba568ee2940",
+    "tests/test_b_portfolio.py": "53bc75b04618e6808afff53c84bd0a06a3c381647f5e69bb985ba015148970cb",
+    "tests/test_d_setup.py": "7fd8e9f3937e4e1946a0e2e0fed73fcbcb08752210ccf7492d3b48196a3ad75f",
+    "docs/sections/b_portfolio_construction.md": "2b58a49aa6fce3509999bddf49b76affca4f9262bb860771b921443cf691e1f5"
+  },
+  "protected_git_content": "config, requirements, contracts and active pointer unchanged",
+  "holdout_strategy_outcomes": "not computed; source load only, paths restricted to development (<= 2016-12-30)"
+}

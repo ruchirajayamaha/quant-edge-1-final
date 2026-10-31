@@ -1,0 +1,32 @@
+{
+  "verification_timestamp_utc": "2026-10-31T16:51:18.411032+00:00",
+  "overall_status": "PASS",
+  "authority_file": "results/step7_evt_preview/step7_recorded_results.json",
+  "authority_sha256": "ab086183bb07c92cf5b882501e6463bc96039dfa9dd37c265188bb75f41b8560",
+  "manifest_sha256": "b9c4ad95eee1d33c793be82a3020f8cd9eac60b0ea25b34a43ed035d519e05f4",
+  "protected_files_check": {
+    "status": "PASS",
+    "protected_files_checked": 75,
+    "mismatches": 0
+  },
+  "source_data_hashes_check": {
+    "status": "PASS",
+    "source_data_hashes_verified": 53,
+    "mismatches": 0
+  },
+  "manifest_artifacts_check": {
+    "status": "PASS",
+    "artifacts_checked": 17,
+    "mismatches": 0
+  },
+  "independent_gpd_oracle_check": {
+    "status": "PASS",
+    "checks_performed": 12,
+    "max_errors": {
+      "var_difference": 6.938893903907228e-18,
+      "es_difference": 1.0408340855860843e-17,
+      "threshold_difference": 0.0,
+      "mean_excess_difference": 0.0
+    }
+  }
+}

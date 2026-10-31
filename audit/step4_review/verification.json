@@ -1,0 +1,84 @@
+{
+  "scope": "runtime read-only; synthetic repros; development-only strategy checks",
+  "r1_positive_returns_below_rf": {
+    "crashes": true,
+    "type": "TypeError",
+    "message": "unsupported format string passed to NoneType.__format__"
+  },
+  "r2_interior_cpi_gap": {
+    "declared_start": "2010-01",
+    "declared_end": "2010-05",
+    "months_used": 3,
+    "calendar_months_in_span": 5,
+    "computed_cpi_multiplier": 1.026694214876033,
+    "declared_endpoint_cpi_multiplier": 1.23,
+    "reported_excluded_cpi_months": [
+      "2010-02"
+    ],
+    "all_statuses": [
+      "ok",
+      "ok",
+      "ok",
+      "ok"
+    ],
+    "real_annual_return": -0.10001444205592114
+  },
+  "r2_month_coverage_count_only": {
+    "missing_nyse_date": "2010-01-05",
+    "unexpected_saturday": "2010-01-09",
+    "observed_rows": 19,
+    "expected_nyse_rows": 19,
+    "falsely_counted_complete_months": 1
+  },
+  "r3_custom_context_hash_bypass": {
+    "tampered_copy_rejected": false,
+    "original_first_spy_price": 120.30000305175781,
+    "loaded_first_spy_price": 132.33000335693362,
+    "manifest_hash_unchanged": true
+  },
+  "r3_cache_identity": {
+    "requested_frozen_end": "2016-12-30",
+    "loaded_context_end": "2026-10-30"
+  },
+  "independent_development_kpi_oracle": {
+    "start": "2007-01-05",
+    "end": "2016-12-30",
+    "n_obs": 2516,
+    "metrics_checked": 13,
+    "max_absolute_difference": 2.220446049250313e-16,
+    "alpha_t_difference_vs_statsmodels": 2.6645352591003757e-15,
+    "absolute_differences": {
+      "geometric_annual_return": 2.7755575615628914e-17,
+      "arithmetic_annual_return": 0.0,
+      "annualized_volatility": 0.0,
+      "sharpe_ratio": 0.0,
+      "downside_deviation": 6.938893903907228e-18,
+      "sortino_ratio": 2.220446049250313e-16,
+      "capm_beta": 1.6653345369377348e-16,
+      "jensen_alpha": 4.85722573273506e-17,
+      "treynor_ratio": 1.942890293094024e-16,
+      "tracking_error": 0.0,
+      "information_ratio": 3.469446951953614e-18,
+      "max_drawdown": 0.0,
+      "calmar_ratio": 1.1102230246251565e-16
+    }
+  },
+  "hashes": {
+    "market_snapshots": 46,
+    "context_files": 7,
+    "all_match": true
+  },
+  "context_numeric_checks": {
+    "all_closes_finite_positive": true,
+    "all_distributions_finite_nonnegative": true
+  },
+  "protected_files": "config, dependencies, contracts, active pointer and pre-context data adapter unchanged",
+  "reviewed_sha256": {
+    "src/quantedge/kpis.py": "9a94ba4f8fa524f1688705b5d74e20a1335f282c04a8b14bf417e8689d3afc55",
+    "src/quantedge/data.py": "21b37162e5ec5fb92871362a8e593c4ac46992844b155413faec5354d06000ff",
+    "tests/test_a_kpis.py": "288a2135c7acca6cf000d27f85e255a96958d7ce7f91a0673a0ca4068419e85f",
+    "docs/sections/a_kpis_and_capm.md": "6371d1823f1af11b27035fd48a302cf3706aaa9ac0cfe308d4f469db9e6c5973",
+    "data/reference/context/context_manifest.json": "13502c02ccb435072cee2cd85e9dd2b6fafeb6b9a12a6ff59ec6ea507f765af3"
+  },
+  "holdout_strategy_results": "not computed; only development paths and synthetic probes"
+}

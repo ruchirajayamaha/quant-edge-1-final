@@ -1,115 +1,160 @@
-# Quant Edge 1.0 — Endowment Allocation & Tail-Risk Analytics
+# Quant Edge 1.0 | Endowment Decision Room
 
-Quantitative portfolio construction, tail-risk modelling (VaR, Expected Shortfall, POT-GPD Extreme Value Theory), out-of-sample rolling validation, stress testing, and Streamlit decision support for a conservative **USD 10,000,000** university endowment.
+An offline-reproducible Python and Streamlit decision tool for Serendib University's
+USD10 million endowment. The eligible universe is **SPY, EFA, EEM, AGG, GLD, XLE, XLK**.
 
-- **Private GitHub repository:** [ruchirajayamaha/quant-edge-1-final](https://github.com/ruchirajayamaha/quant-edge-1-final)
-- **Authoritative specification:** `Quant edge 1.0 Final Challenge 1.pdf`
-- **Canonical 7-ETF allocation universe:** `SPY, EFA, EEM, AGG, GLD, XLE, XLK`
-- **Contract / config schema version:** `1.1.0`
-- **Current workflow status:** **SOLO STEP 1 (D0 Project Setup) and SOLO STEP 2 (A1 Data Snapshot, Quality Diagnostics & Bounded `r2` Hardening Pass) complete.** Active verified snapshot: `qe1_20050101_20261030_r3_6c4633a7ba` (RF-only `r3_release_evidence`, derived from preserved `qe1_20050101_20261030_r2_cd2904443b`, itself derived from preserved audited snapshot `qe1_20050101_20261030_afb9ce5694`). Analytics (Steps 3–8), full six-view Streamlit dashboard (Step 9), and final report audit (Step 10) are not yet executed; remaining Step 3–9 analytical functions explicitly raise `NotImplementedError` rather than returning fabricated numbers.
+**Proposed decision: CONDITIONAL ADJUST.** The unchanged constrained minimum-variance
+rule is a candidate, not an approved trade instruction. The proposed funding hurdle,
+tail-loss budgets, concentration and monthly drift policy require human approval.
+Independent human validation is **PENDING**; automated tests do not satisfy that requirement.
 
----
+[Repository](https://github.com/ruchirajayamaha/quant-edge-1-final) ·
+[Investment memo](submission/investment_memo.pdf) ·
+[One-page tear sheet](submission/tear_sheet.pdf) ·
+[Plain-English recommendation](submission/recommendation.pdf) ·
+[Requirement trace](submission/COMPLIANCE_MATRIX.md) ·
+[AI disclosure](AI_DISCLOSURE.md)
 
-## Repository Structure
+## Install and launch
 
-```text
-.
-├── antigravity-team-pack/   # Workflow specifications, contracts, and review notes (preserved)
-├── app/
-│   └── Home.py              # Streamlit entrypoint (D0 baseline status; full 6-view UI in Step 9)
-├── config.yaml              # Canonical universe, conventions, seeds, and provisional governance fields
-├── data/
-│   ├── raw/                 # Raw market/FRED snapshots and provenance manifests (Step 2)
-│   ├── processed/           # Session-aligned prices, simple/log returns, and quality flags (Step 2)
-│   └── reference/           # Versioned DTB3 release evidence pinned by config.yaml (r3)
-├── docs/
-│   └── sections/            # Incremental methodology, limitations, and report sections
-├── handoff/
-│   └── SOLO.md              # Single-developer checkpoint and audit log across Steps 1–10
-├── results/                 # Versioned, config-hashed pipeline result bundles
-├── scripts/                 # CLI helpers for reproducible snapshot/pipeline runs
-├── src/
-│   └── quantedge/           # Installable analytical library (never imports Streamlit)
-│       ├── __init__.py
-│       ├── contracts.py     # Frozen dataclasses, constants, column schemas, RiskForecastFn
-│       ├── config.py        # Offline YAML validator, provisional-item inspector, SHA-256 hasher
-│       ├── data.py          # Market-data snapshot, boundary/quarantine guards & SHA-256 cache loader (Step 2)
-│       ├── returns.py       # NYSE/Fed calendars, session returns, cutoff-valid RF & ADF diagnostics (Step 2)
-│       ├── portfolio.py     # Weight optimization & drifting return-path stubs (Step 3)
-│       ├── kpis.py          # Performance KPIs & CAPM regression stub (Step 4)
-│       ├── var.py           # Normal moments (ddof=1), VaR estimator & callback registry stubs (Step 5)
-│       ├── es.py            # Shared empirical ES tail-weight helper stub (Step 5)
-│       ├── backtest.py      # Out-of-sample rolling backtest, Kupiec/Christoffersen & Basel stubs (Step 6)
-│       ├── evt.py           # Unconditional POT-GPD EVT & threshold diagnostic stubs (Step 7)
-│       ├── risk_budget.py   # Euler VaR/ES contributions & feasible sizing stubs (Step 8)
-│       ├── stress.py        # Historical crisis replays & 7-ETF hypothetical scenario stub (Step 8)
-│       └── pipeline.py      # Single analytical orchestrator stub (Step 9)
-├── tests/
-│   ├── conftest.py          # Shared offline fixtures
-│   └── test_d_setup.py      # Step 1 import, boundary, config, contract, and stub checks
-├── AI_DISCLOSURE.md         # Incremental AI assistance log and PENDING human-validation tracker
-├── CHANGELOG.md             # Incremental milestone changelog
-├── pyproject.toml           # PEP 621 installable src-layout package metadata
-└── requirements.txt         # Verified pinned Python 3.11+ dependencies
-```
+Use **Python3.11**. Setup needs package installation; normal app launch needs no
+market-data downloads, API key or paid service. Frozen inputs and results are included.
+The official challenge permits a local one-command launch instead of hosted deployment.
 
----
-
-## Windows PowerShell Setup & Launch
-
-Setup and data acquisition (Step 2) are explicit prerequisites prior to launching the interactive dashboard.
-
-### 1. Create and activate a Python 3.11 virtual environment
-
-Using `uv` (recommended on Windows when `py -3.11` is not pre-installed globally):
+Windows PowerShell:
 
 ```powershell
-uv venv --python 3.11 .venv
-.\.venv\Scripts\Activate.ps1
-```
-
-Or using standard `py` / `python` (Python 3.11+):
-
-```powershell
+git clone https://github.com/ruchirajayamaha/quant-edge-1-final.git
+cd quant-edge-1-final
 py -3.11 -m venv .venv
-.\.venv\Scripts\Activate.ps1
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install --no-deps -e .
+.\.venv\Scripts\python.exe scripts/launch.py
 ```
 
-### 2. Install pinned dependencies and editable `quantedge` package
+If Python3.11 is installed via `uv`, replace the venv command with
+`uv venv --python 3.11 --seed .venv`. Global Python3.13 is not the verified environment.
 
-With `pip` inside the activated `.venv`:
+macOS/Linux:
+
+```bash
+python3.11 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m pip install --no-deps -e .
+.venv/bin/python scripts/launch.py
+```
+
+Equivalent direct command after activation: `streamlit run app/Home.py`.
+Open the local URL printed by Streamlit, normally http://localhost:8501.
+No public hosted-app URL is claimed. For headless verification:
+`python scripts/launch.py --server.headless=true --server.port=8501`.
+
+## What the app shows
+
+The decision page connects funding needs to loss budgets. Other views cover
+matched-period wealth/drawdown and CAPM KPIs; Historical, Normal, Monte Carlo Normal,
+POT-GPD and separately labelled body/tail risk; rolling exceptions and coverage
+tests; signed Euler risk contributions, feasible-allocation diagnostics and crisis
+replays; assumptions, provenance and limitations.
+
+Controls select portfolio, confidence90/95/99, risk methodology, estimation sample,
+and performance/backtest target dates. Date selection preserves prior training
+history. Current risk/stress exposures are prospective targets estimated at the
+frozen final close, clearly distinguished from historical pre-return holdings.
+Rolling validation is implemented for **Historical and Normal only**, using its
+own selector. Risk-only MC/EVT estimates are not presented as backtested models.
+
+## Frozen reference and headline evidence
+
+- Dataset: `qe1_20050101_20261030_r3_6c4633a7ba`, schema1.1.0.
+- Price bounds:3 Jan2005-30 Oct2026;5,491 one-session returns from4 Jan2005.
+- Portfolio paths:5 Jan2007-30 Oct2026 after504-session warmup.
+- Evaluation:4 Jan2021-30 Oct2026. Primary CAGR7.63%, annual volatility8.80%,
+  maximum drawdown-16.78%, before spending and additional mandate fee, net of trading costs.
+- Current recent HS99 VaR1.54%, ES2.03%; full-history HS99 ES2.50%.
+- Final250 sessions:HS99 four exceptions (educational green), Normal99 nine (yellow).
+  Longer-span calibration and clustering limitations remain material.
+
+These are historical/fitted estimates, not forecasts or guaranteed loss bounds.
+The proposed6.75% hurdle comprises4% spending,2.5% assumed inflation and a separate
+0.25% additional fee under the explicit cash-flow convention. ETF fund expenses
+are already embedded. The proposal is in `submission/mandate_proposal.json`, not
+silently substituted for signed limits in the preserved config.
+
+The rule and proposal were committed before post-2016 strategy outcomes in
+`782ec20`. Earlier whole-history asset EDA, RF research and fixed-exposure stress
+inspection were already available. We report registered-rule evaluation and do
+not claim a pristine blind experiment or tune a winner on evaluation results.
+
+## Reproduce and verify
 
 ```powershell
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-python -m pip install --no-build-isolation --no-deps -e .
+.\.venv\Scripts\python.exe scripts/build_final_results.py
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m pip check
 ```
 
-Or equivalently with `uv`:
+The pipeline takes approximately one minute on the development machine; cache-free
+runtime depends on hardware. All app/reference tables use the shared analytical
+library. `results/final/reference.json` and its manifest bind dataset/config/source
+identity; no executable pickle is loaded. Tampering or stale analytical code/config
+is rejected. Reference hashes are checked on app load; sidebar changes cache only
+affected risk computations. Original Steps3-8 outputs remain available unchanged.
+
+Figures and PDFs have optional rendering dependencies, separate from the app:
 
 ```powershell
-uv pip install -r requirements.txt
-uv pip install --no-build-isolation --no-deps -e .
+.\.venv\Scripts\python.exe -m pip install -r requirements-render.txt
+.\.venv\Scripts\python.exe scripts/export_final_figures.py
+.\.venv\Scripts\python.exe scripts/build_submission_pdfs.py
 ```
 
-### 3. Run offline baseline verification checks
+PDF output: `output/pdf/`, copied to `submission/`; figures: PNG300dpi + vectorSVG
+in `results/final/figures/`. Rendering uses DejaVu Sans, available through Matplotlib
+or system fonts. PDF generation requires a render/visual check after edits.
 
-```powershell
-pytest -q
-```
+## Method and limitations
 
-### 4. Launch the Streamlit application
+Monthly minimum variance uses504 prior sessions and sample covariance (ddof1).
+Long-only targets have ETF≤40%, equity≤35%, AGG+GLD≥40%; the first two imply
+AGG and GLD each25%-40%. Targets are controlled; natural daily drift is not clipped.
+Transaction cost is5bps times sum of absolute traded weights, with no factor-half.
+Performance compounds simple returns; log returns support statistical diagnostics.
+Dollar risk uses one-day simple loss before costs on USD10M.
 
-Once setup (and, starting from Step 2/9, data snapshot creation) is complete, launch with the single command:
+Historical ES uses exact fractional/tied tail mass. Normal MC uses25,000 deterministic
+scenarios and is not a fat-tail extension. POT requires50 strict excesses; pure tail
+inference below the empirical boundary is unavailable. Hybrid body VaR is explicitly
+empirical. Divergent ES, failed fits and sparse tests remain unavailable/warnings.
+Kupiec uses all eligible observations; Christoffersen CC uses a transition-conditioned
+likelihood and is withheld across disconnected runs. Basel is educational99%/250 days.
 
-```powershell
-streamlit run app/Home.py
-```
+RF r3 uses eligible historical versions and day-level release evidence, not verified
+intraday timestamps. Inferred dates, sparse-era fallbacks and two unresolved cases
+remain. DTB3/252 is an approximate quote proxy, not realised bill return. Distribution
+income is not added twice to adjusted returns. CPI is ex-post revised context with
+missing/unreleased months; endpoint real-growth intervals are disclosed. Stress
+replays use the current target ex-post, not the historical investable strategy.
 
----
+## Submission and defence
 
-## Core Conventions & Governance Status
+Start with `submission/SUBMIT_README.md`. The12-page memo,1-page tear sheet and
+1-page recommendation are the required documents. `submission/DEFENCE_NOTES.md`
+supports human review and a conditional final-five10-12 minute pitch. A slide deck
+is not claimed to have been submitted or rehearsed. Exact organiser deadline,
+upload route and team member details must come from the team/organiser.
 
-- **Units & sign orientation:** Returns, weights, and risk estimates are expressed as fractions (not percentages). Loss is negative simple portfolio return (`L_t = -R_{p,t}`), so positive VaR/ES values represent losses before transaction costs (`USD loss = loss_fraction * 10,000,000`).
-- **No look-ahead:** Portfolio return on session `t` uses weights known strictly before session `t` (`weights_before.loc[t]`), drifting between scheduled rebalances. Rolling risk forecasts for session `t` inspect strictly prior sessions (`train_end < t`).
-- **Provisional governance items:** Investment horizon, return target, portfolio constraints, risk limits, illustrative weights, hypothetical stress rationale, and final investment recommendation remain explicitly marked `PROVISIONAL_*` / `PENDING_HUMAN_DECISION` in `config.yaml` until evaluated and signed off by the human team.
+Before certification, complete `submission/VALIDATION_CHECKLIST.md` with real names,
+dates and calculations. AI generated/materially changed code, analysis and prose;
+the team must independently evaluate and defend them under the official AI rules.
+
+## Repository map
+
+`src/quantedge/`: UI-independent analytics; `app/`: Streamlit; `data/`: verified
+snapshots/evidence; `results/final/`: frozen integrated results; `tests/`: numerical,
+causality and real-app checks; `audit/`: independent recomputations and review trail;
+`docs/sections/`: detailed method; `scripts/`: reproducible builders;
+`antigravity-team-pack/`: preserved historical workflow instructions. The current
+README and final closure supersede stale milestone stop notes, without rewriting
+their historical evidence. No secrets, virtual environment or temporary runtime
+cache belongs in the published repository.
