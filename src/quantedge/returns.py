@@ -1,14 +1,193 @@
-"""Session-aware simple/log return construction, RF alignment, and stationarity checks.
+"""Session-aware simple/log return construction, NYSE calendar, RF alignment, and ADF diagnostics.
 
-Interfaces declared in D0 for SOLO STEP 2 (A1) and SOLO STEP 4 (A2):
-- ``compute_session_returns(prices) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]``
-- ``align_risk_free_rate(raw_dtb3_annual_pct, return_dates, ...) -> pd.Series``
-- ``run_stationarity_diagnostics(series_map) -> pd.DataFrame``
+Implemented in SOLO STEP 2 (milestone A1).
+
+Mathematical & Data-Hygiene Conventions:
+- Portfolio cross-sectional aggregation at horizon ``t`` is exact in simple returns
+  (``R_{p,t} = sum_i w_{i,t-} R_{i,t}``), and committee loss risk uses simple portfolio
+  losses (``L_t = -R_{p,t}``). Weighted asset log returns must NEVER be summed as the
+  portfolio log return because ``log`` is strictly concave (Jensen's inequality).
+- Multi-period compounding is additive in log returns ``r_{i,t} = log(1 + R_{i,t})``,
+  so statistical time-series diagnostics (ADF unit-root tests, correlation tables) run
+  on ``log_returns``.
+- Returns are computed on the uncollapsed trading-session price grid with ZERO implicit
+  forward-fill. Any missing price at session ``t`` invalidates both ``t-1 -> t`` and
+  ``t -> t+1`` one-session returns; incomplete rows are excluded and counted only AFTER
+  return calculation so multi-session moves are never mislabelled as one-day returns.
+- FRED ``DTB3`` quotes (annual percent, discount basis) are converted via the documented
+  daily proxy ``(rate_pct / 100.0) / trading_days_per_year`` and aligned strictly from
+  past available observations using ``availability_lag_sessions`` (never backfilled).
 """
 
 from __future__ import annotations
 
+from datetime import date, timedelta
+import inspect
+from typing import Literal
+
+import numpy as np
 import pandas as pd
+from statsmodels.tsa.stattools import adfuller
+
+_ADFULLER_SUPPORTS_RESULT_OBJECT: bool = "result_object" in inspect.signature(adfuller).parameters
+
+EXCLUDED_RETURN_COLUMNS: tuple[str, ...] = (
+    "date",
+    "session_position",
+    "missing_price_tickers_t",
+    "missing_price_tickers_t_minus_1",
+    "invalid_return_tickers",
+    "n_invalid_tickers",
+    "reason",
+)
+
+ADF_DIAGNOSTIC_COLUMNS: tuple[str, ...] = (
+    "series",
+    "n_obs",
+    "adf_stat",
+    "p_value",
+    "used_lag",
+    "crit_1pct",
+    "crit_5pct",
+    "crit_10pct",
+    "reject_unit_root_5pct",
+    "status",
+    "note",
+)
+
+# Documented NYSE unplanned / special full-day closures since 2005-01-01:
+# - 2007-01-02: National Day of Mourning for President Gerald R. Ford
+# - 2012-10-29 & 2012-10-30: Hurricane Sandy
+# - 2018-12-05: National Day of Mourning for President George H.W. Bush
+# - 2025-01-09: National Day of Mourning for President Jimmy Carter
+NYSE_SPECIAL_CLOSURES: frozenset[date] = frozenset(
+    {
+        date(2007, 1, 2),
+        date(2012, 10, 29),
+        date(2012, 10, 30),
+        date(2018, 12, 5),
+        date(2025, 1, 9),
+    }
+)
+
+
+def _easter_sunday(year: int) -> date:
+    """Compute Gregorian Easter Sunday using the anonymous Meeus/Jones/Butcher algorithm."""
+    a = year % 19
+    b = year // 100
+    c = year % 100
+    d = b // 4
+    e = b % 4
+    f = (b + 8) // 25
+    g = (b - f + 1) // 3
+    h = (19 * a + b - d - g + 15) % 30
+    i = c // 4
+    k = c % 4
+    ell = (32 + 2 * e + 2 * i - h - k) % 7
+    m = (a + 11 * h + 22 * ell) // 451
+    month = (h + ell - 7 * m + 114) // 31
+    day = ((h + ell - 7 * m + 114) % 31) + 1
+    return date(year, month, day)
+
+
+def _nth_weekday_of_month(year: int, month: int, weekday: int, nth: int) -> date:
+    """Return the ``nth`` (1-based) occurrence of ``weekday`` (0=Mon..6=Sun) in ``month``."""
+    first = date(year, month, 1)
+    offset = (weekday - first.weekday()) % 7
+    return first + timedelta(days=offset + 7 * (nth - 1))
+
+
+def _last_weekday_of_month(year: int, month: int, weekday: int) -> date:
+    """Return the final occurrence of ``weekday`` (0=Mon..6=Sun) in ``month``."""
+    if month == 12:
+        last = date(year, 12, 31)
+    else:
+        last = date(year, month + 1, 1) - timedelta(days=1)
+    offset = (last.weekday() - weekday) % 7
+    return last - timedelta(days=offset)
+
+
+def _observe_fixed_holiday(holiday: date, *, allow_prior_year_friday: bool = True) -> date | None:
+    """Apply NYSE Rule 7.2 weekend observance for fixed-date holidays."""
+    if holiday.weekday() == 5:  # Saturday -> preceding Friday (except Dec 31 accounting year-end)
+        observed = holiday - timedelta(days=1)
+        if not allow_prior_year_friday and observed.year < holiday.year:
+            return None
+        return observed
+    if holiday.weekday() == 6:  # Sunday -> following Monday
+        return holiday + timedelta(days=1)
+    return holiday
+
+
+def _nyse_holidays_for_year(year: int) -> set[date]:
+    """Return full-day NYSE holidays and documented special closures for ``year``."""
+    holidays: set[date] = set()
+
+    # 1. New Year's Day (NYSE Rule 7.2: Saturday Jan 1 is NOT observed on Dec 31)
+    nyd = _observe_fixed_holiday(date(year, 1, 1), allow_prior_year_friday=False)
+    if nyd is not None:
+        holidays.add(nyd)
+
+    # 2. Martin Luther King, Jr. Day (3rd Monday in January)
+    holidays.add(_nth_weekday_of_month(year, 1, 0, 3))
+
+    # 3. Washington's Birthday / Presidents' Day (3rd Monday in February)
+    holidays.add(_nth_weekday_of_month(year, 2, 0, 3))
+
+    # 4. Good Friday (2 days before Easter Sunday)
+    holidays.add(_easter_sunday(year) - timedelta(days=2))
+
+    # 5. Memorial Day (last Monday in May)
+    holidays.add(_last_weekday_of_month(year, 5, 0))
+
+    # 6. Juneteenth National Independence Day (observed by NYSE starting in 2022)
+    if year >= 2022:
+        juneteenth = _observe_fixed_holiday(date(year, 6, 19))
+        if juneteenth is not None:
+            holidays.add(juneteenth)
+
+    # 7. Independence Day (July 4)
+    july4 = _observe_fixed_holiday(date(year, 7, 4))
+    if july4 is not None:
+        holidays.add(july4)
+
+    # 8. Labor Day (1st Monday in September)
+    holidays.add(_nth_weekday_of_month(year, 9, 0, 1))
+
+    # 9. Thanksgiving Day (4th Thursday in November)
+    holidays.add(_nth_weekday_of_month(year, 11, 3, 4))
+
+    # 10. Christmas Day (December 25)
+    xmas = _observe_fixed_holiday(date(year, 12, 25))
+    if xmas is not None:
+        holidays.add(xmas)
+
+    for closure in NYSE_SPECIAL_CLOSURES:
+        if closure.year == year:
+            holidays.add(closure)
+
+    return holidays
+
+
+def expected_nyse_sessions(
+    start_date: str | pd.Timestamp,
+    end_date: str | pd.Timestamp,
+) -> pd.DatetimeIndex:
+    """Construct the expected NYSE regular trading-session ``DatetimeIndex`` over ``[start_date, end_date]``."""
+    start_ts = pd.Timestamp(start_date).normalize()
+    end_ts = pd.Timestamp(end_date).normalize()
+    if end_ts < start_ts:
+        raise ValueError(f"end_date ({end_ts}) must be >= start_date ({start_ts}).")
+
+    weekdays = pd.bdate_range(start=start_ts, end=end_ts, freq="B")
+    holidays: set[pd.Timestamp] = set()
+    for yr in range(start_ts.year, end_ts.year + 1):
+        for h in _nyse_holidays_for_year(yr):
+            holidays.add(pd.Timestamp(h))
+
+    sessions = weekdays[~weekdays.isin(holidays)]
+    sessions.name = "date"
+    return sessions
 
 
 def compute_session_returns(
@@ -16,18 +195,99 @@ def compute_session_returns(
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Compute one-session simple and log returns without implicit price fill.
 
-    Specification (SOLO STEP 2 / A1):
-    - Calculate ``simple_returns = P_t / P_{t-1} - 1`` on the uncollapsed session grid
-      with no artificial first-day zero and no implicit forward fill.
-    - Any missing price invalidates adjacent one-session returns requiring it; exclude
-      and record affected return rows only AFTER calculating returns so multi-session
-      moves are never mislabelled as one-day returns.
-    - Calculate ``log_returns = log1p(simple_returns)`` on the exact same index/columns.
-    - Return ``(simple_returns, log_returns, excluded_return_rows)``.
+    Args:
+        prices: Adjusted close ``DataFrame`` on an uncollapsed trading-session grid
+            with a unique, strictly ascending ``DatetimeIndex`` and strictly positive
+            observed prices.
+
+    Returns:
+        Tuple ``(simple_returns, log_returns, excluded_return_rows)`` where:
+        - ``simple_returns``: Complete one-session ``P_t / P_{t-1} - 1`` rows only.
+        - ``log_returns``: ``log1p(simple_returns)`` with identical index and columns.
+        - ``excluded_return_rows``: Tidy audit table of post-anchor sessions excluded
+          due to missing endpoint prices at ``t`` or ``t-1`` (exposing continuity gaps).
     """
-    raise NotImplementedError(
-        "compute_session_returns is a D0 interface stub scheduled for SOLO STEP 2 (A1)."
+    if not isinstance(prices, pd.DataFrame) or prices.empty:
+        raise ValueError("prices must be a non-empty pandas DataFrame.")
+    if not isinstance(prices.index, pd.DatetimeIndex):
+        raise ValueError("prices.index must be a pandas DatetimeIndex.")
+    if not prices.index.is_monotonic_increasing or not prices.index.is_unique:
+        raise ValueError("prices.index must be strictly ascending and unique.")
+    if prices.columns.duplicated().any() or len(prices.columns) == 0:
+        raise ValueError("prices must have non-empty unique ticker columns.")
+    if len(prices) < 2:
+        raise ValueError("prices must contain at least 2 trading sessions to compute returns.")
+
+    numeric_prices = prices.astype(float)
+    observed_vals = numeric_prices.to_numpy()[~np.isnan(numeric_prices.to_numpy())]
+    if observed_vals.size == 0:
+        raise ValueError("prices contains zero finite observed values.")
+    if np.any(~np.isfinite(observed_vals)) or np.any(observed_vals <= 0.0):
+        raise ValueError("All observed (non-NaN) prices must be finite and strictly positive (> 0).")
+
+    # Uncollapsed one-session return calculation with ZERO implicit fill:
+    # A missing price at session t invalidates both t-1 -> t and t -> t+1 returns.
+    prev_prices = numeric_prices.shift(1)
+    raw_simple = numeric_prices.div(prev_prices) - 1.0
+
+    # Row 0 is the initial price anchor (never turned into an artificial 0.0 return).
+    post_anchor_simple = raw_simple.iloc[1:]
+    post_anchor_prices_t = numeric_prices.iloc[1:]
+    post_anchor_prices_prev = prev_prices.iloc[1:]
+
+    incomplete_mask = post_anchor_simple.isna().any(axis=1)
+    excluded_records: list[dict[str, object]] = []
+    tickers = list(numeric_prices.columns)
+
+    for pos_offset, (dt, is_incomplete) in enumerate(incomplete_mask.items(), start=1):
+        if not is_incomplete:
+            continue
+        miss_t = [t for t in tickers if pd.isna(post_anchor_prices_t.at[dt, t])]
+        miss_prev = [t for t in tickers if pd.isna(post_anchor_prices_prev.at[dt, t])]
+        inv_ret = [t for t in tickers if pd.isna(post_anchor_simple.at[dt, t])]
+        if miss_t and miss_prev:
+            reason = "missing_price_at_both_endpoints"
+        elif miss_t:
+            reason = "missing_price_at_t"
+        else:
+            reason = "missing_price_at_t_minus_1"
+
+        excluded_records.append(
+            {
+                "date": dt,
+                "session_position": int(pos_offset),
+                "missing_price_tickers_t": ",".join(miss_t),
+                "missing_price_tickers_t_minus_1": ",".join(miss_prev),
+                "invalid_return_tickers": ",".join(inv_ret),
+                "n_invalid_tickers": len(inv_ret),
+                "reason": reason,
+            }
+        )
+
+    if excluded_records:
+        excluded_return_rows = pd.DataFrame(excluded_records, columns=list(EXCLUDED_RETURN_COLUMNS))
+    else:
+        excluded_return_rows = pd.DataFrame(columns=list(EXCLUDED_RETURN_COLUMNS))
+
+    simple_returns = post_anchor_simple.loc[~incomplete_mask].copy()
+    simple_returns.index.name = "date"
+
+    if not simple_returns.empty and bool((simple_returns <= -1.0).any().any()):
+        raise ValueError("Observed simple return <= -1.0 encountered; cannot compute finite log1p.")
+
+    log_returns = pd.DataFrame(
+        np.log1p(simple_returns.to_numpy(dtype=float)),
+        index=simple_returns.index.copy(),
+        columns=simple_returns.columns.copy(),
     )
+
+    uninterrupted = bool(excluded_return_rows.empty)
+    simple_returns.attrs["uninterrupted_sessions"] = uninterrupted
+    simple_returns.attrs["n_excluded_return_rows"] = int(len(excluded_return_rows))
+    log_returns.attrs["uninterrupted_sessions"] = uninterrupted
+    log_returns.attrs["n_excluded_return_rows"] = int(len(excluded_return_rows))
+
+    return simple_returns, log_returns, excluded_return_rows
 
 
 def align_risk_free_rate(
@@ -39,26 +299,206 @@ def align_risk_free_rate(
 ) -> pd.Series:
     """Align raw annual-percent DTB3 quotes to return dates using past-only values.
 
-    Specification (SOLO STEP 2 / A1):
-    - Convert annual-percent discount-basis quote via ``(rate_pct / 100.0) / trading_days_per_year``
-      as an explicitly documented trading-day risk-free proxy.
-    - Apply ``availability_lag_sessions`` and forward-align from past available observations only;
-      never backfill initial missing values from future quotes.
+    Formula & Lag Convention:
+    - Daily fractional approximation: ``rf_daily = (rate_annual_pct / 100.0) / trading_days_per_year``.
+      ``DTB3`` is quoted in annual percent on a 360-day bank-discount basis; dividing by
+      ``252`` is an explicitly disclosed trading-day risk-free proxy, not an exact realized
+      Treasury-bill holding-period return.
+    - Each valid observation dated ``d`` becomes usable at ``available_date = d + L * BDay``
+      where ``L = availability_lag_sessions`` (``available_date = d`` when ``L == 0``).
+    - Return date ``t`` receives the most recent valid observation with ``available_date <= t``.
+      Initial return dates prior to the earliest ``available_date`` remain ``NaN`` (never backfilled).
     """
-    raise NotImplementedError(
-        "align_risk_free_rate is a D0 interface stub scheduled for SOLO STEP 2 (A1)."
+    if not isinstance(return_dates, pd.DatetimeIndex):
+        raise ValueError("return_dates must be a pandas DatetimeIndex.")
+    if not return_dates.is_monotonic_increasing or not return_dates.is_unique:
+        raise ValueError("return_dates must be strictly ascending and unique.")
+    if availability_lag_sessions < 0:
+        raise ValueError(f"availability_lag_sessions must be >= 0; got {availability_lag_sessions}")
+    if trading_days_per_year <= 0:
+        raise ValueError(f"trading_days_per_year must be > 0; got {trading_days_per_year}")
+
+    normalized_targets = return_dates.tz_localize(None) if return_dates.tz is not None else return_dates
+    normalized_targets = normalized_targets.normalize()
+
+    if raw_dtb3_annual_pct is None or raw_dtb3_annual_pct.empty or len(normalized_targets) == 0:
+        return pd.Series(np.nan, index=return_dates, name="rf_daily", dtype=float)
+
+    raw_series = pd.to_numeric(raw_dtb3_annual_pct, errors="coerce")
+    obs_idx = pd.to_datetime(raw_series.index)
+    if obs_idx.tz is not None:
+        obs_idx = obs_idx.tz_convert("America/New_York").tz_localize(None)
+    obs_idx = obs_idx.normalize()
+
+    obs_df = pd.DataFrame(
+        {
+            "obs_date": obs_idx,
+            "rate_pct": raw_series.to_numpy(dtype=float),
+        }
+    ).dropna(subset=["rate_pct"])
+
+    if obs_df.empty:
+        return pd.Series(np.nan, index=return_dates, name="rf_daily", dtype=float)
+
+    obs_df = obs_df.sort_values("obs_date", kind="mergesort")
+    obs_df = obs_df.drop_duplicates(subset=["obs_date"], keep="last")
+    obs_df["rf_daily"] = (obs_df["rate_pct"] / 100.0) / float(trading_days_per_year)
+
+    if availability_lag_sessions == 0:
+        obs_df["available_date"] = obs_df["obs_date"]
+    else:
+        obs_df["available_date"] = obs_df["obs_date"] + pd.offsets.BDay(availability_lag_sessions)
+
+    obs_df = obs_df.sort_values(["available_date", "obs_date"], kind="mergesort")
+    obs_df = obs_df.drop_duplicates(subset=["available_date"], keep="last")
+
+    target_df = pd.DataFrame({"target_date": normalized_targets})
+    merged = pd.merge_asof(
+        target_df,
+        obs_df[["available_date", "rf_daily"]],
+        left_on="target_date",
+        right_on="available_date",
+        direction="backward",
+        allow_exact_matches=True,
     )
+
+    aligned = pd.Series(
+        merged["rf_daily"].to_numpy(dtype=float),
+        index=return_dates.copy(),
+        name="rf_daily",
+        dtype=float,
+    )
+    return aligned
 
 
 def run_stationarity_diagnostics(
     series_map: dict[str, pd.Series],
 ) -> pd.DataFrame:
-    """Run Augmented Dickey-Fuller (ADF) stationarity diagnostics on named return series.
+    """Run Augmented Dickey-Fuller (ADF) unit-root diagnostics on named time series.
 
-    Specification (SOLO STEP 2 / A1 and SOLO STEP 4 / A2):
-    - Report ADF test statistic, p-value, used lags, observation count, and plain-language
-      interpretation without claiming stationarity implies iid or constant volatility.
+    Note: Rejecting a unit root indicates mean/level stationarity compatible with ``I(0)``
+    behaviour; it does NOT imply i.i.d. observations, normality, or constant conditional
+    volatility (GARCH/volatility clustering remains present in daily financial returns).
     """
-    raise NotImplementedError(
-        "run_stationarity_diagnostics is a D0 interface stub scheduled for SOLO STEP 2 (A1)."
-    )
+    rows: list[dict[str, object]] = []
+    for name, series in series_map.items():
+        clean = pd.to_numeric(series, errors="coerce").dropna().astype(float)
+        n_obs = int(len(clean))
+        if n_obs < 20:
+            rows.append(
+                {
+                    "series": name,
+                    "n_obs": n_obs,
+                    "adf_stat": np.nan,
+                    "p_value": np.nan,
+                    "used_lag": np.nan,
+                    "crit_1pct": np.nan,
+                    "crit_5pct": np.nan,
+                    "crit_10pct": np.nan,
+                    "reject_unit_root_5pct": None,
+                    "status": "unavailable",
+                    "note": f"Insufficient valid observations ({n_obs} < 20) for ADF test.",
+                }
+            )
+            continue
+
+        if float(clean.std(ddof=1)) <= 1e-15:
+            rows.append(
+                {
+                    "series": name,
+                    "n_obs": n_obs,
+                    "adf_stat": np.nan,
+                    "p_value": np.nan,
+                    "used_lag": np.nan,
+                    "crit_1pct": np.nan,
+                    "crit_5pct": np.nan,
+                    "crit_10pct": np.nan,
+                    "reject_unit_root_5pct": None,
+                    "status": "unavailable",
+                    "note": "Constant / zero-variance series; ADF regression is degenerate.",
+                }
+            )
+            continue
+
+        adf_kwargs: dict[str, object] = {"regression": "c", "autolag": "AIC"}
+        if _ADFULLER_SUPPORTS_RESULT_OBJECT:
+            adf_kwargs["result_object"] = False
+        adf_stat, p_val, used_lag, n_used, crit_vals, _ = adfuller(
+            clean.to_numpy(dtype=float),
+            **adf_kwargs,
+        )
+        reject_5pct = bool(float(p_val) < 0.05)
+        if reject_5pct:
+            note = (
+                "Unit-root null rejected at 5% (level compatible with I(0)); "
+                "does NOT imply i.i.d. returns or constant conditional volatility."
+            )
+        else:
+            note = "Failed to reject unit-root null at 5%; inspect trend/non-stationarity."
+
+        rows.append(
+            {
+                "series": name,
+                "n_obs": int(n_used),
+                "adf_stat": float(adf_stat),
+                "p_value": float(p_val),
+                "used_lag": int(used_lag),
+                "crit_1pct": float(crit_vals["1%"]),
+                "crit_5pct": float(crit_vals["5%"]),
+                "crit_10pct": float(crit_vals["10%"]),
+                "reject_unit_root_5pct": reject_5pct,
+                "status": "ok",
+                "note": note,
+            }
+        )
+
+    return pd.DataFrame(rows, columns=list(ADF_DIAGNOSTIC_COLUMNS))
+
+
+def compute_return_descriptive_stats(
+    returns_df: pd.DataFrame,
+    *,
+    return_kind: Literal["simple", "log"] = "simple",
+    annualization_days: int = 252,
+) -> pd.DataFrame:
+    """Compute per-ticker descriptive return statistics (fractions, ddof=1)."""
+    rows: list[dict[str, object]] = []
+    for ticker in returns_df.columns:
+        s = pd.to_numeric(returns_df[ticker], errors="coerce").dropna().astype(float)
+        n = int(len(s))
+        if n == 0:
+            continue
+        mean_d = float(s.mean())
+        std_d = float(s.std(ddof=1)) if n > 1 else np.nan
+        ann_arith = mean_d * float(annualization_days)
+        if return_kind == "simple":
+            ann_geom = float(np.expm1(np.log1p(s).mean() * float(annualization_days)))
+        else:
+            ann_geom = float(np.expm1(mean_d * float(annualization_days)))
+        ann_vol = std_d * float(np.sqrt(annualization_days)) if np.isfinite(std_d) else np.nan
+
+        rows.append(
+            {
+                "ticker": str(ticker),
+                "return_kind": return_kind,
+                "n_obs": n,
+                "start_date": s.index[0].strftime("%Y-%m-%d"),
+                "end_date": s.index[-1].strftime("%Y-%m-%d"),
+                "daily_mean": mean_d,
+                "daily_std": std_d,
+                "ann_arithmetic_return": ann_arith,
+                "ann_geometric_return": ann_geom,
+                "ann_volatility": ann_vol,
+                "skewness": float(s.skew()) if n > 2 else np.nan,
+                "excess_kurtosis": float(s.kurt()) if n > 3 else np.nan,
+                "min": float(s.min()),
+                "q01": float(s.quantile(0.01)),
+                "q05": float(s.quantile(0.05)),
+                "median": float(s.median()),
+                "q95": float(s.quantile(0.95)),
+                "q99": float(s.quantile(0.99)),
+                "max": float(s.max()),
+            }
+        )
+
+    return pd.DataFrame(rows)

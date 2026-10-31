@@ -48,7 +48,7 @@ mandate:
 data:
   requested_start: "2005-01-01"
   end_date_policy: "freeze_on_first_snapshot"
-  frozen_end_date: null
+  frozen_end_date: "2026-10-30"
   price_source: "yfinance"
   price_adjustment: "auto_adjust_true_close"
   no_implicit_forward_fill: true
@@ -70,7 +70,7 @@ chronology:
   selection_start: "2017-01-03"
   selection_end: "2020-12-31"
   evaluation_start: "2021-01-04"
-  evaluation_end: null
+  evaluation_end: "2026-10-30"
   execution_assumption: "Close-to-close: weights decided using data through session t-1 apply to session t simple return; weights drift between scheduled rebalances."
 
 portfolio:

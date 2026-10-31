@@ -2,6 +2,14 @@
 
 All notable milestone checkpoints for the Quant Edge 1.0 solo implementation are recorded incrementally in this file.
 
+## [0.2.0] - 2026-10-31 — SOLO STEP 2 (A1 Data Snapshot, Returns & Quality Diagnostics)
+
+### Added
+- Implemented `src/quantedge/returns.py`: deterministic NYSE session calendar (`expected_nyse_sessions`), uncollapsed 1-session simple/log return builder (`compute_session_returns`) with post-return incomplete-row exclusion audit (`excluded_return_rows`), past-only lagged FRED `DTB3` aligner (`align_risk_free_rate`, zero backfill), ADF stationarity diagnostics (`run_stationarity_diagnostics`), and descriptive return statistics (`compute_return_descriptive_stats`).
+- Implemented `src/quantedge/data.py` and `scripts/build_data_snapshot.py`: `yfinance` `auto_adjust=True` close extractor (`extract_adjusted_closes` rejecting ambiguous raw/adjusted frames), FRED `DTB3` CSV parser preserving missing markers, reproducible quality flagger (`flag_data_quality` with safe `MAD=0` fallback and retained outliers), SHA-256-verified snapshot persistence & offline/network-failure fallback (`load_data`), and Markdown report generator.
+- Built and verified frozen snapshot `qe1_20050101_20261030_afb9ce5694` (`2005-01-03` to `2026-10-30`, `5,492` price sessions, `5,491` complete return sessions across all 7 canonical ETFs and aligned `DTB3`) and froze `frozen_end_date: "2026-10-30"` in `config.yaml`.
+- Added Step 2 synthetic and snapshot-integrity unit tests (`tests/test_a_data.py`, 9 tests; total suite 17/17 passing) and methodology/limitations section `docs/sections/a_data_quality.md`.
+
 ## [0.1.0] - 2026-10-31 — SOLO STEP 1 (D0 Baseline & Project Setup)
 
 ### Added

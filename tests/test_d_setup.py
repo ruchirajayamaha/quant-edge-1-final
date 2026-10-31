@@ -232,12 +232,12 @@ def test_frozen_shared_helper_and_callback_signatures() -> None:
     )
 
 
-def test_all_analytics_stubs_explicitly_raise_not_implemented(
+def test_remaining_analytics_stubs_explicitly_raise_not_implemented(
     baseline_config: AppConfig,
     synthetic_asset_returns: pd.DataFrame,
     equal_canonical_weights: pd.Series,
 ) -> None:
-    """Every analytics entrypoint raises NotImplementedError in Step 1 rather than returning fake output."""
+    """Unimplemented Step 3-9 entrypoints raise NotImplementedError rather than returning fake output."""
     s = synthetic_asset_returns["SPY"]
     weights_df = pd.DataFrame(
         [equal_canonical_weights.values] * len(synthetic_asset_returns),
@@ -247,10 +247,6 @@ def test_all_analytics_stubs_explicitly_raise_not_implemented(
     dummy_cb = lambda train_asset_returns, weights, *, confidence, seed=None: None  # noqa: E731
 
     stub_calls = [
-        lambda: data.load_data(baseline_config, offline=True),
-        lambda: returns.compute_session_returns(synthetic_asset_returns),
-        lambda: returns.align_risk_free_rate(s, synthetic_asset_returns.index),
-        lambda: returns.run_stationarity_diagnostics({"SPY": s}),
         lambda: kpis.compute_kpis(s, s, s, s),
         lambda: portfolio.build_portfolio_path(
             synthetic_asset_returns,
