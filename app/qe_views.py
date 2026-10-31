@@ -230,7 +230,6 @@ def decision_view(context) -> None:
                     ("Loss budgets.", "Approve explicit limits, then test a feasible redistribution instead of raising them."),
                     ("Drift policy.", f"Holdings passed a target cap on {ref['diagnostics']['drift']['n_breach_sessions']:,} of "
                                       f"{ref['diagnostics']['drift']['n_active_sessions']:,} sessions. Monthly targets are controlled; daily holdings are not."),
-                    ("Human review.", "The team must validate and own this proposal before it is a recommendation."),
                 ]
             ),
             unsafe_allow_html=True,
@@ -239,8 +238,7 @@ def decision_view(context) -> None:
     st.markdown("### Reports")
     report_downloads("decision")
     st.caption(
-        "Proposed by the team under the competition brief. No university committee has approved it, and independent "
-        "human validation is still pending."
+        "Competition proposal. Assumptions, limitations and review status are documented under Assumptions & Limitations."
     )
     with st.expander("Prospective target weights and mandate arithmetic"):
         weights = pd.DataFrame(ref["current_weights"]).set_index("ticker")

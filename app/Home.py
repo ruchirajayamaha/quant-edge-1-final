@@ -54,9 +54,9 @@ def main() -> None:
         "Dates select performance and backtest targets; earlier training history stays intact. Current risk and stress "
         "use the prospective target at the frozen final close, not historical holdings."
     )
-    with st.sidebar.expander("Status and provenance"):
+    with st.sidebar.expander("Data provenance"):
         st.caption(
-            f"Human validation: {ref['diagnostics']['human_validation']}. Bundle {ref['metadata']['bundle_id']}, "
+            f"Bundle {ref['metadata']['bundle_id']}, "
             f"dataset {ref['metadata']['dataset_id']}. Data frozen at 30 October 2026. Offline; no market downloads."
         )
     if len(dates) != 2:
@@ -68,8 +68,6 @@ def main() -> None:
         ui.status_strip(
             [
                 ("Status", "Conditional ADJUST, team proposal"),
-                ("Human validation", "pending"),
-                ("Committee approval", "none; competition proposal"),
                 ("Data", "frozen 30 Oct 2026"),
             ]
         ),
