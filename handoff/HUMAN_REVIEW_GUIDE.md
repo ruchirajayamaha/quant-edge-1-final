@@ -1,7 +1,7 @@
 # Human review: follow this guide and record what you actually checked
 
 Use the printable pack in `handoff/human_review_pack/` or
-`submission/human_review/human_review_pack.pdf` for the worksheet and form.
+`handoff/human_review_pack/human_review_pack.pdf` for the worksheet and form.
 
 This is an AI-prepared guide, not a completed human validation record. Reading the
 expected answers or rerunning the same AI script does not, by itself, independently
@@ -39,7 +39,7 @@ Try these specific controls:
 
 ## 2. Read and challenge the decision
 
-Read submission/recommendation.pdf, then the memo. In your own words, answer:
+Read FINAL_SUBMISSION/supporting/Recommendation.pdf, then the memo. In your own words, answer:
 
 1. Why is the proposed decision ADJUST rather than an unconditional ACCEPT?
 2. Why are historical growth and cash distribution income different?
@@ -166,7 +166,7 @@ Explain why a path can recover before its endpoint and still have a deep trough.
 
 ## 4. Record the real review
 
-Use submission/VALIDATION_CHECKLIST.md. For each item you actually reviewed, record:
+Use FINAL_SUBMISSION/supporting/Human_Review_Status.md. For each item you actually reviewed, record:
 
 ```text
 Reviewer: [your real name]

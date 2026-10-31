@@ -1,6 +1,6 @@
 {
  "scope": "AI-assisted numerical, editorial and technical verification. Not independent human validation.",
- "recorded_at_utc": "2026-10-31T19:17:51+00:00",
+ "recorded_at_utc": "2026-10-31T19:42:28+00:00",
  "bundle_id": "1c7bd6007fe22b014b25",
  "dataset_id": "qe1_20050101_20261030_r3_6c4633a7ba",
  "baseline_verify_exit_code": 0,
@@ -94,6 +94,16 @@
    "passed": true
   },
   {
+   "check": "Weighted own ES for diversification",
+   "inputs": "simple_returns last 1,260 sessions; reference target weights",
+   "method": "Sorted losses per ETF, fractional 12.6-session tail, weighted sum",
+   "computed": 0.03296430483302206,
+   "reference": 0.03296430483302206,
+   "absolute_difference": 0.0,
+   "tolerance": 1e-12,
+   "passed": true
+  },
+  {
    "check": "Final 250 Historical 99% exceptions",
    "inputs": "backtest_historical_0.99.csv",
    "method": "Count realized_loss > forecast_var directly",
@@ -115,7 +125,7 @@
   }
  ],
  "macros": {
-  "numeric_macros_checked": 142,
+  "numeric_macros_checked": 148,
   "failures": [],
   "prompt_regression_checkpoints": {
    "qeEvalCagr": true,

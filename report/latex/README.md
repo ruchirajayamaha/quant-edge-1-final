@@ -6,12 +6,12 @@ the documents come from generated macros and tables, so do not type a result int
 
 | Source | Output | Page rule |
 |---|---|---|
-| `main.tex` | `submission/investment_memo.pdf` | 7 to 15 pages |
-| `tear_sheet.tex` | `submission/tear_sheet.pdf` | exactly 1 |
-| `recommendation.tex` | `submission/recommendation.pdf` | exactly 1 |
-| `human_review_pack.tex` | `submission/human_review/human_review_pack.pdf` | 2 to 5, outside the memo budget |
+| `main.tex` | `FINAL_SUBMISSION/01_Investment_Memo.pdf` | 7 to 15 pages |
+| `tear_sheet.tex` | `FINAL_SUBMISSION/02_Executive_Tear_Sheet.pdf` | exactly 1 |
+| `recommendation.tex` | `FINAL_SUBMISSION/supporting/Recommendation.pdf` | exactly 1 |
+| `human_review_pack.tex` | `handoff/human_review_pack/human_review_pack.pdf` | 2 to 5, outside the memo budget |
 
-The first three are also copied to `output/pdf/`. Style is in `style/quantedge.sty`; references are
+Style is in `style/quantedge.sty`; references are
 in `references.bib`. Everything under `generated/` is rebuilt from the frozen results, so edit the
 generator and not the output.
 
@@ -48,6 +48,21 @@ python scripts/build_reports.py --tex-only
 The script finds TeX on `PATH`. Set `QE_TEX_BIN` to the folder holding `xelatex` if it is elsewhere.
 On the development machine that folder is `D:\QuantEdgeTools\miktex\miktex\bin\x64`.
 
+## Compile this folder on its own
+
+The generated inputs are included, so a copy of this folder compiles without the repository or Python:
+
+```bash
+xelatex main.tex
+```
+
+```bash
+bibtex main
+```
+
+Then run `xelatex main.tex` twice more. The tear sheet, recommendation and review pack need only XeLaTeX,
+run twice. `FINAL_SUBMISSION/latex_source/` is such a copy, written by `scripts/package_submission.py`.
+
 ## After a build
 
 ```bash
@@ -55,7 +70,7 @@ python audit/presentation_review/verify_presentation.py
 ```
 
 ```bash
-python scripts/render_pdf_pages.py submission/investment_memo.pdf tmp/pdf_review 1.6
+python scripts/render_pdf_pages.py FINAL_SUBMISSION/01_Investment_Memo.pdf tmp/pdf_review 1.6
 ```
 
 Passing the build does not prove the pages read well. Look at every rendered page.

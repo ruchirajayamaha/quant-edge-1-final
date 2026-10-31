@@ -96,6 +96,22 @@ def independent_recomputation() -> list[dict]:
     record("Return hurdle", "mandate_proposal.json", "(1+i)(1+g)-1+s+f", (1 + proposal["inflation_assumption_annual_fraction"]) * (1 + proposal["desired_real_growth_annual_fraction"]) - 1
            + proposal["spending_annual_fraction"] + proposal["additional_fee_assumption_annual_fraction"], proposal["required_nominal_return_fraction"], 1e-12)
 
+    def plain_es(losses: list[float]) -> float:
+        """Average the worst 1% of probability mass, including the fractional session."""
+        ordered, mass, total = sorted(losses, reverse=True), 0.01 * len(losses), 0.0
+        for index, loss in enumerate(ordered):
+            take = min(1.0, mass - index)
+            if take <= 0:
+                break
+            total += take * loss
+        return total / mass
+
+    last_rows = [rows[key] for key in sorted(rows)[-1260:]]
+    own_es = sum(target[t] * plain_es([-row[t] for row in last_rows]) for t in tickers)
+    manifest = json.loads((GENERATED / "metrics_manifest.json").read_text(encoding="utf-8"))
+    record("Weighted own ES for diversification", "simple_returns last 1,260 sessions; reference target weights",
+           "Sorted losses per ETF, fractional 12.6-session tail, weighted sum", own_es, manifest["qeDivWeighted"]["value"], 1e-12)
+
     exceptions = pd.read_csv(ROOT / "results/final/backtest_historical_0.99.csv")
     last = exceptions.tail(250)
     record("Final 250 Historical 99% exceptions", "backtest_historical_0.99.csv", "Count realized_loss > forecast_var directly",
@@ -174,6 +190,8 @@ def pdf_checks() -> dict:
     from pypdf import PdfReader
 
     limits = {"investment_memo.pdf": (7, 15), "tear_sheet.pdf": (1, 1), "recommendation.pdf": (1, 1)}
+    paths = {"investment_memo.pdf": "01_Investment_Memo.pdf", "tear_sheet.pdf": "02_Executive_Tear_Sheet.pdf",
+             "recommendation.pdf": "supporting/Recommendation.pdf"}
     headline = {
         "investment_memo.pdf": ["7.63%", "6.65%", "6.75%", "1.54%", "2.03%", "2.50%", "$3,950", "$3,169", "−8.93%", "−23.87%", "2,771", "45.14%", "2.19%"],
         "tear_sheet.pdf": ["7.63", "6.65", "$153,950", "$203,169", "$250,185", "−8.93%", "−23.87%", "2,771", "45.14%", "2.19%"],
@@ -181,7 +199,7 @@ def pdf_checks() -> dict:
     }
     result = {}
     for name, (low, high) in limits.items():
-        reader = PdfReader(ROOT / "submission" / name)
+        reader = PdfReader(ROOT / "FINAL_SUBMISSION" / paths[name])
         text = "".join(page.extract_text() for page in reader.pages)
         compact = re.sub(r"\s+", "", text)
         producer = str((reader.metadata or {}).get("/Producer", ""))

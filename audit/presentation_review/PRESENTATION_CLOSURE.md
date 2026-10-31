@@ -1,5 +1,7 @@
 # Presentation and LaTeX closure
 
+This records the presentation stage. Current results are in `FINAL_SUBMISSION/supporting/Verification_Summary.md`.
+
 Recorded 1 November 2026 by Claude Code (Claude Opus 5.5). This is AI-assisted numerical, editorial
 and technical verification. **It is not independent human validation, which remains PENDING.**
 

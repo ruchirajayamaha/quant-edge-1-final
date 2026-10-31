@@ -19,9 +19,9 @@ from qe_theme import INK, MUTED, RED, TEAL, pct, pill, pvalue, ratio, usd
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORTS = {
-    "investment_memo.pdf": "Investment memo",
-    "tear_sheet.pdf": "One-page tear sheet",
-    "recommendation.pdf": "Plain-English recommendation",
+    "FINAL_SUBMISSION/01_Investment_Memo.pdf": "Investment memo",
+    "FINAL_SUBMISSION/02_Executive_Tear_Sheet.pdf": "One-page tear sheet",
+    "FINAL_SUBMISSION/supporting/Recommendation.pdf": "Plain-English recommendation",
 }
 SCENARIOS = list(ui.SCENARIO_LABELS)
 
@@ -110,13 +110,13 @@ def report_downloads(key_prefix: str) -> None:
     """Offer the current documents from their single published location."""
     columns = st.columns(len(REPORTS))
     for column, (name, label) in zip(columns, REPORTS.items()):
-        path = ROOT / "submission" / name
+        path = ROOT / name
         with column:
             if path.exists():
-                st.download_button(label, path.read_bytes(), file_name=name, mime="application/pdf",
-                                   width="stretch", key=f"{key_prefix}-{name}")
+                st.download_button(label, path.read_bytes(), file_name=path.name, mime="application/pdf",
+                                   width="stretch", key=f"{key_prefix}-{path.name}")
             else:
-                st.caption(f"{label} is unavailable: {name} is missing from submission/.")
+                st.caption(f"{label} is unavailable: {name} is missing.")
 
 
 def decision_view(context) -> None:
@@ -584,7 +584,7 @@ def assumptions_view(context) -> None:
     st.download_button("Download source-of-truth JSON", (ROOT / "results/final/reference.json").read_bytes(),
                        file_name="reference.json", mime="application/json", key="evidence-json")
     report_downloads("evidence")
-    for name in ["AI_DISCLOSURE.md", "submission/COMPLIANCE_MATRIX.md", "submission/VALIDATION_CHECKLIST.md"]:
+    for name in ["AI_DISCLOSURE.md", "FINAL_SUBMISSION/COMPLIANCE_MATRIX.md", "FINAL_SUBMISSION/supporting/Human_Review_Status.md"]:
         path = ROOT / name
         if path.exists():
             with st.expander(path.name):

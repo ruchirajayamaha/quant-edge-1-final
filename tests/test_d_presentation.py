@@ -1,4 +1,5 @@
 """Redesigned decision room, LaTeX deliverables and the presentation build guards."""
+import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -9,6 +10,7 @@ import pandas as pd
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
+FINAL = ROOT / "FINAL_SUBMISSION"
 sys.path.insert(0, str(ROOT / "app"))
 (ROOT / "tmp").mkdir(exist_ok=True)
 
@@ -152,12 +154,11 @@ def test_macros_reproduce_the_reference():
 
 def test_published_pdfs_are_tex_compiled_and_within_page_limits():
     pypdf = pytest.importorskip("pypdf")
-    for name, low, high in (("investment_memo.pdf", 7, 15), ("tear_sheet.pdf", 1, 1), ("recommendation.pdf", 1, 1)):
-        reader = pypdf.PdfReader(ROOT / "submission" / name)
+    for name, low, high in (("01_Investment_Memo.pdf", 7, 15), ("02_Executive_Tear_Sheet.pdf", 1, 1), ("supporting/Recommendation.pdf", 1, 1)):
+        reader = pypdf.PdfReader(FINAL / name)
         assert low <= len(reader.pages) <= high, name
         producer = str(reader.metadata.get("/Producer", "")).lower()
         assert "dvipdfmx" in producer and "reportlab" not in producer, name
-        assert (ROOT / "submission" / name).read_bytes() == (ROOT / "output/pdf" / name).read_bytes(), name
 
 
 def test_human_review_pack_is_blank_and_status_is_pending():
@@ -170,10 +171,40 @@ def test_human_review_pack_is_blank_and_status_is_pending():
     assert "AI-PREPARED" in key and "not performing a calculation" in key
 
 
+def test_final_folder_is_complete_and_matches_its_checksums():
+    required = ["00_START_HERE.md", "01_Investment_Memo.pdf", "02_Executive_Tear_Sheet.pdf", "03_Links_and_Run_Instructions.md",
+                "AI_DISCLOSURE.md", "COMPLIANCE_MATRIX.md", "SHA256SUMS.txt", "supporting/Recommendation.pdf",
+                "supporting/Verification_Summary.md", "supporting/Human_Review_Status.md", "latex_source/main.tex",
+                "latex_source/README.md", "latex_source/generated/metrics.tex"]
+    assert not [name for name in required if not (FINAL / name).exists()]
+    lines = (FINAL / "SHA256SUMS.txt").read_text(encoding="utf-8").splitlines()
+    listed = dict(reversed(line.split("  ", 1)) for line in lines)
+    actual = {p.relative_to(FINAL).as_posix() for p in FINAL.rglob("*") if p.is_file() and p.name != "SHA256SUMS.txt"}
+    assert set(listed) == actual
+    assert all(hashlib.sha256((FINAL / name).read_bytes()).hexdigest() == digest for name, digest in listed.items())
+    assert (FINAL / "AI_DISCLOSURE.md").read_bytes() == (ROOT / "AI_DISCLOSURE.md").read_bytes()
+    for name in ("main.tex", "tear_sheet.tex", "recommendation.tex", "references.bib"):
+        assert (FINAL / "latex_source" / name).read_bytes() == (ROOT / "report/latex" / name).read_bytes(), name
+
+
+def test_app_downloads_only_the_canonical_pdfs_and_no_other_final_copy_exists():
+    import qe_views
+
+    assert all(name.startswith("FINAL_SUBMISSION/") and (ROOT / name).exists() for name in qe_views.REPORTS)
+    assert not list((ROOT / "submission").glob("*.pdf")) and not (ROOT / "output/pdf").exists()
+
+
+def test_status_records_no_invented_review_or_deployment():
+    status = (FINAL / "supporting/Human_Review_Status.md").read_text(encoding="utf-8")
+    assert "PENDING" in status and "PASSED" not in status
+    start = (FINAL / "00_START_HERE.md").read_text(encoding="utf-8")
+    assert "PENDING" in start and "localhost" not in start
+
+
 def test_legacy_reportlab_script_cannot_overwrite_latex_deliverables():
-    before = (ROOT / "submission/investment_memo.pdf").read_bytes()
+    before = (FINAL / "01_Investment_Memo.pdf").read_bytes()
     result = subprocess.run([sys.executable, str(ROOT / "scripts/build_submission_pdfs.py")], capture_output=True, text=True)
     assert result.returncode != 0 and "build_reports.py" in result.stderr
-    assert (ROOT / "submission/investment_memo.pdf").read_bytes() == before
+    assert (FINAL / "01_Investment_Memo.pdf").read_bytes() == before
     source = (ROOT / "scripts/build_submission_pdfs.py").read_text(encoding="utf-8")
     assert "ROOT/'submission'" not in source and "output/legacy_reportlab" in source

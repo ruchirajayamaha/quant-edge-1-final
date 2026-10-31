@@ -44,6 +44,10 @@ Official references:
 - https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/app-dependencies
 - https://docs.streamlit.io/deploy/streamlit-community-cloud/share-your-app
 
-Current preparation adds a cloud entrypoint and instructions. Hosting account
-creation, acceptance of service terms, actual deployment and public-URL verification
-are not represented as completed by this file.
+## Current status
+
+Not deployed. The repository is ready, but deployment needs the owner to sign in to Community Cloud with
+GitHub, accept its terms and authorise access. Those steps were not done for the owner. Once a URL exists,
+verify it as above, record the result in `FINAL_SUBMISSION/supporting/Verification_Summary.md`, add it to
+`FINAL_SUBMISSION/00_START_HERE.md` and `03_Links_and_Run_Instructions.md`, then run
+`python scripts/package_submission.py` and push.

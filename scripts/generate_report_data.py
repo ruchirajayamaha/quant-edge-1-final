@@ -13,6 +13,8 @@ import re
 
 import pandas as pd
 
+from quantedge.es import empirical_var_and_es
+
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "report/latex/generated"
 TABLES = OUT / "tables"
@@ -280,6 +282,15 @@ def main() -> None:
     for ticker, label in (("SPY", "Spy"), ("AGG", "Agg"), ("GLD", "Gld"), ("XLE", "Xle")):
         m.percent(f"qeWeight{label}", es_share[ticker]["weight"], f"current_weights.{ticker}", 1)
         m.percent(f"qeShare{label}", es_share[ticker]["pct_contribution"], f"risk_contributions.historical_es.{ticker}", 1)
+    recent = pd.read_parquet(ROOT / f"data/processed/{dataset}/simple_returns.parquet").tail(1260)
+    weighted = sum(row["weight"] * empirical_var_and_es(-recent[row["ticker"]], 0.99)[1] for row in es_share.values())
+    total_es = risk("recent", "historical", 0.99)["es_loss"]
+    m.percent("qeDivWeighted", weighted, "weights x each ETF's own recent 99% ES")
+    m.dollars("qeDivWeightedUsd", weighted * nav, "weights x each ETF's own recent 99% ES x NAV")
+    m.percent("qeDivBenefit", 1 - total_es / weighted, "1 - portfolio ES / weighted own ES", 0)
+    correlations = pd.read_csv(ROOT / f"data/processed/{dataset}/log_return_correlations.csv", index_col=0)
+    for ticker, label in (("AGG", "Agg"), ("GLD", "Gld"), ("XLE", "Xle")):
+        m.plain(f"qeCorrSpy{label}", float(correlations.loc["SPY", ticker]), f"log_return_correlations[SPY,{ticker}]")
     drift = ref["diagnostics"]["drift"]
     m.count("qeDriftSessions", drift["n_breach_sessions"], "diagnostics.drift.n_breach_sessions")
     m.count("qeActiveSessions", drift["n_active_sessions"], "diagnostics.drift.n_active_sessions")
@@ -301,6 +312,7 @@ def main() -> None:
     m.count("qeFlagNegative", int(counts["large_negative_return"]), "quality_flags")
     m.count("qeFlagJump", int(counts["robust_mad_jump"]), "quality_flags")
     m.count("qeFlagBreak", int(counts["candidate_structural_break"]), "quality_flags")
+    assert "stale_flat_return_run" not in counts, "Update the memo's statement about stale prices."
     m.count("qePriceSessions", manifest["row_exclusions"]["n_price_grid_sessions"], "manifest.row_exclusions")
     m.count("qeReturnSessions", manifest["row_exclusions"]["n_complete_return_rows"], "manifest.row_exclusions")
     m.count("qeMissingCells", manifest["row_exclusions"]["n_missing_price_cells"], "manifest.row_exclusions")

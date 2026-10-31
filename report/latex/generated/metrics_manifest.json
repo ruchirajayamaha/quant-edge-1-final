@@ -557,6 +557,42 @@
   "source": "risk_contributions.historical_es.XLE",
   "kind": "percent1"
  },
+ "qeDivWeighted": {
+  "tex": "3.30\\%",
+  "value": 0.03296430483302206,
+  "source": "weights x each ETF's own recent 99% ES",
+  "kind": "percent2"
+ },
+ "qeDivWeightedUsd": {
+  "tex": "\\$329,643",
+  "value": 329643.0483302206,
+  "source": "weights x each ETF's own recent 99% ES x NAV",
+  "kind": "usd"
+ },
+ "qeDivBenefit": {
+  "tex": "38\\%",
+  "value": 0.3836701067321505,
+  "source": "1 - portfolio ES / weighted own ES",
+  "kind": "percent0"
+ },
+ "qeCorrSpyAgg": {
+  "tex": "0.00",
+  "value": 0.0014047239873187,
+  "source": "log_return_correlations[SPY,AGG]",
+  "kind": "number2"
+ },
+ "qeCorrSpyGld": {
+  "tex": "0.07",
+  "value": 0.0695496454691765,
+  "source": "log_return_correlations[SPY,GLD]",
+  "kind": "number2"
+ },
+ "qeCorrSpyXle": {
+  "tex": "0.70",
+  "value": 0.7047525557279283,
+  "source": "log_return_correlations[SPY,XLE]",
+  "kind": "number2"
+ },
  "qeDriftSessions": {
   "tex": "2,771",
   "value": 2771,

@@ -2,6 +2,13 @@
 
 All notable milestone checkpoints for the Quant Edge 1.0 solo implementation are recorded incrementally in this file.
 
+## [1.0.1] - 2026-11-01 - Canonical final submission folder
+
+- Added `FINAL_SUBMISSION/` with the required PDFs, links, requirement trace, checksums and LaTeX
+  sources, and repointed the report build and app downloads to it.
+- Removed duplicate copies from `submission/` and `output/pdf/`. Earlier PDFs stay in the labelled archive.
+- Added diversification evidence and calendar handling to the memo after re-reading the brief.
+
 ## [1.0.0] - 2026-11-01 - Redesigned decision room and LaTeX reports
 
 - Redesigned the six-view Streamlit app around the decision, with an honest status strip,

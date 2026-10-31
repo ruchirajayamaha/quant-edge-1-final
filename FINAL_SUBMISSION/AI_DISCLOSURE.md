@@ -4,6 +4,13 @@ This document is updated incrementally at every project step in accordance with 
 
 ## Disclosure Table
 
+### Final release disclosure (1 November 2026)
+
+Claude Code (Claude Opus 5.5) assembled `FINAL_SUBMISSION/`, re-read the brief against the memo, added a
+diversification paragraph and calendar statement to the memo, and wrote the summary documents. The
+diversification figure is weighted arithmetic on frozen inputs with no change to any model or result. It was
+checked by a separate plain-Python route. Human validation remains **PENDING**.
+
 ### Presentation and LaTeX report disclosure (November 2026)
 
 Claude Code (Claude Opus 5.5) redesigned the Streamlit presentation, wrote the LaTeX memo, tear
@@ -36,7 +43,7 @@ causal rolling targets, actual real-data Streamlit controls and PDF rendering.
 Exact completed commands, counts and clean-install/publication outcomes are in
 audit/step9_review/STEP9_CLOSURE.md. No human names, review results or rehearsals
 have been invented. **Independent human validation remains PENDING.** Read and
-complete submission/VALIDATION_CHECKLIST.md before certifying this AI-assisted work.
+complete FINAL_SUBMISSION/supporting/Human_Review_Status.md before certifying this AI-assisted work.
 
 The conditional ADJUST text is AI-assisted committee research, not a claim that the
 team or a real investment committee already approved it. Rule/proposal commit782ec20

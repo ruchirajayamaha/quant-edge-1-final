@@ -1,7 +1,7 @@
 """Authoritative report build: figures, generated LaTeX, XeLaTeX compilation, checks, publish.
 
 Usage:
-    python scripts/build_reports.py            # full build, publish to submission/ and output/pdf/
+    python scripts/build_reports.py            # full build, publish to FINAL_SUBMISSION/
     python scripts/build_reports.py --no-publish
     python scripts/build_reports.py --tex-only  # skip figure export
 
@@ -23,7 +23,12 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "report/latex"
 BUILD = ROOT / "tmp/report_build"
 PAGE_LIMITS = {"main": (7, 15), "tear_sheet": (1, 1), "recommendation": (1, 1), "human_review_pack": (2, 5)}
-PUBLISHED = {"main": "investment_memo.pdf", "tear_sheet": "tear_sheet.pdf", "recommendation": "recommendation.pdf"}
+PUBLISHED = {
+    "main": "FINAL_SUBMISSION/01_Investment_Memo.pdf",
+    "tear_sheet": "FINAL_SUBMISSION/02_Executive_Tear_Sheet.pdf",
+    "recommendation": "FINAL_SUBMISSION/supporting/Recommendation.pdf",
+    "human_review_pack": "handoff/human_review_pack/human_review_pack.pdf",
+}
 FATAL_LOG = re.compile(r"^!|Missing character|There were undefined references|Citation .* undefined|Reference .* undefined|Label\(s\) may have changed")
 
 
@@ -97,14 +102,10 @@ def main() -> None:
         print(f"{name}: {pages} pages")
 
     if not args.no_publish:
-        (ROOT / "output/pdf").mkdir(parents=True, exist_ok=True)
         for name, target in PUBLISHED.items():
-            shutil.copy2(built[name], ROOT / "submission" / target)
-            shutil.copy2(built[name], ROOT / "output/pdf" / target)
-        review = ROOT / "submission/human_review"
-        review.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(built["human_review_pack"], review / "human_review_pack.pdf")
-        print("Published to submission/ and output/pdf/")
+            (ROOT / target).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(built[name], ROOT / target)
+        print("Published to FINAL_SUBMISSION/ and handoff/human_review_pack/")
 
 
 if __name__ == "__main__":

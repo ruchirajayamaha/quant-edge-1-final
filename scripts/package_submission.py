@@ -1,44 +1,34 @@
-"""Package reviewed documents, LaTeX sources, evidence and headline tables; no credentials."""
+"""Refresh FINAL_SUBMISSION, write its checksums, and archive it as the single ZIP."""
 import hashlib
-import json
 from pathlib import Path
 import shutil
 import zipfile
 
-ROOT=Path(__file__).resolve().parents[1];SUB=ROOT/'submission'
+ROOT=Path(__file__).resolve().parents[1];FINAL=ROOT/'FINAL_SUBMISSION'
+INTERMEDIATES=('*.aux','*.log','*.out','*.toc','*.bbl','*.blg','*.xdv','*.fls','*.fdb_latexmk')
+ARCHIVE='QuantEdge_Final_Submission.zip'
+
+def sha(data):return hashlib.sha256(data).hexdigest()
 
 def main():
-    shutil.copy2(ROOT/'AI_DISCLOSURE.md',SUB/'AI_DISCLOSURE.md')
-    shutil.copy2(ROOT/'README.md',SUB/'REPOSITORY_README.md')
-    for name in ['publication.json','clean_install.json','verification.json']:
-        path=ROOT/'audit/step9_review'/name
-        if path.exists():shutil.copy2(path,SUB/name)
-    for name,target in [('verification.json','presentation_verification.json'),('app_exercise.json','presentation_app_exercise.json'),
-                        ('clean_install.json','presentation_clean_install.json'),('PRESENTATION_CLOSURE.md','PRESENTATION_CLOSURE.md')]:
-        path=ROOT/'audit/presentation_review'/name
-        if path.exists():shutil.copy2(path,SUB/target)
-    review=SUB/'human_review';review.mkdir(exist_ok=True)
-    for path in (ROOT/'handoff/human_review_pack').glob('*.md'):shutil.copy2(path,review/path.name)
-    source=SUB/'latex_source'
+    shutil.copy2(ROOT/'AI_DISCLOSURE.md',FINAL/'AI_DISCLOSURE.md')
+    source=FINAL/'latex_source'
     if source.exists():shutil.rmtree(source)
-    shutil.copytree(ROOT/'report/latex',source,ignore=shutil.ignore_patterns('*.aux','*.log','*.out','*.toc','*.bbl','*.blg','*.xdv','*.fls','*.fdb_latexmk'))
-    tables=SUB/'tables';tables.mkdir(exist_ok=True)
-    for name in ['period_kpis.csv','risk_table.csv','coverage_summary.csv','stress_results.csv','evt_diagnostics.csv','reference.json']:
-        shutil.copy2(ROOT/'results/final'/name,tables/name)
-    files=sorted(p for p in SUB.rglob('*') if p.is_file() and p.name!='artifact_manifest.json')
-    ref=json.loads((ROOT/'results/final/reference.json').read_text())
-    manifest={'bundle_id':ref['metadata']['bundle_id'],'dataset_id':ref['metadata']['dataset_id'],
-       'human_validation':'PENDING','file_sha256':{p.relative_to(SUB).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in files}}
-    (SUB/'artifact_manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
-    output=ROOT/'QuantEdge_Final_Submission.zip'
+    shutil.copytree(ROOT/'report/latex',source,ignore=shutil.ignore_patterns(*INTERMEDIATES))
+    sums=FINAL/'SHA256SUMS.txt'
+    files=sorted(p for p in FINAL.rglob('*') if p.is_file() and p!=sums)
+    expected={p.relative_to(FINAL).as_posix():sha(p.read_bytes()) for p in files}
+    sums.write_bytes(''.join(f'{digest}  {name}\n' for name,digest in expected.items()).encode('utf-8'))
+    output=ROOT/ARCHIVE
     with zipfile.ZipFile(output,'w',compression=zipfile.ZIP_DEFLATED) as archive:
-        for path in sorted(SUB.rglob('*')):
-            if path.is_file():archive.write(path,arcname='QuantEdge_Final_Submission/'+path.relative_to(SUB).as_posix())
+        for path in sorted(FINAL.rglob('*')):
+            if path.is_file():archive.write(path,arcname='FINAL_SUBMISSION/'+path.relative_to(FINAL).as_posix())
     with zipfile.ZipFile(output) as archive:
         assert archive.testzip() is None
         assert all('..' not in Path(n).parts and not Path(n).is_absolute() for n in archive.namelist())
-        for name,digest in manifest['file_sha256'].items():
-            assert hashlib.sha256(archive.read('QuantEdge_Final_Submission/'+name)).hexdigest()==digest,name
-    print(output.name,output.stat().st_size,'bytes',hashlib.sha256(output.read_bytes()).hexdigest())
+        assert set(archive.namelist())=={'FINAL_SUBMISSION/SHA256SUMS.txt'}|{'FINAL_SUBMISSION/'+n for n in expected}
+        for name,digest in expected.items():
+            assert sha(archive.read('FINAL_SUBMISSION/'+name))==digest,name
+    print(output.name,output.stat().st_size,'bytes',sha(output.read_bytes()))
 
 if __name__=='__main__':main()

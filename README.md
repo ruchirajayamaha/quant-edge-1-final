@@ -8,11 +8,14 @@ rule is a candidate, not an approved trade instruction. The proposed funding hur
 tail-loss budgets, concentration and monthly drift policy require human approval.
 Independent human validation is **PENDING**; automated tests do not satisfy that requirement.
 
-[Repository](https://github.com/ruchirajayamaha/quant-edge-1-final) ·
-[Investment memo](submission/investment_memo.pdf) ·
-[One-page tear sheet](submission/tear_sheet.pdf) ·
-[Plain-English recommendation](submission/recommendation.pdf) ·
-[Requirement trace](submission/COMPLIANCE_MATRIX.md) ·
+**Judges: start at [FINAL_SUBMISSION/00_START_HERE.md](FINAL_SUBMISSION/00_START_HERE.md).**
+That folder is the one canonical submission, and
+[QuantEdge_Final_Submission.zip](QuantEdge_Final_Submission.zip) is an archive of it.
+
+[Investment memo](FINAL_SUBMISSION/01_Investment_Memo.pdf) ·
+[One-page tear sheet](FINAL_SUBMISSION/02_Executive_Tear_Sheet.pdf) ·
+[Plain-English recommendation](FINAL_SUBMISSION/supporting/Recommendation.pdf) ·
+[Requirement trace](FINAL_SUBMISSION/COMPLIANCE_MATRIX.md) ·
 [AI disclosure](AI_DISCLOSURE.md)
 
 Repository visibility is **public**, verified by anonymous GitHub API and webpage
@@ -115,7 +118,7 @@ Python packages, neither of which the app needs:
 
 `scripts/build_reports.py` is the one report entry point. It generates every number from
 the frozen results, compiles with XeLaTeX and BibTeX, checks page limits and publishes
-to `submission/` and `output/pdf/`. Sources, toolchain and exact options are in
+to `FINAL_SUBMISSION/`. Sources, toolchain and exact options are in
 [report/latex/README.md](report/latex/README.md). Render and read every page after an edit.
 The old ReportLab script only runs with `--legacy-reportlab`, and writes elsewhere.
 
@@ -144,13 +147,13 @@ replays use the current target ex-post, not the historical investable strategy.
 
 ## Submission and defence
 
-Start with `submission/SUBMIT_README.md`. The11-page memo,1-page tear sheet and
-1-page recommendation are the required documents. `submission/DEFENCE_NOTES.md`
+Start with `FINAL_SUBMISSION/00_START_HERE.md`. The memo and1-page tear sheet are the
+section7 documents, and the1-page recommendation answers section8.6. `submission/DEFENCE_NOTES.md`
 supports human review and a conditional final-five10-12 minute pitch. A slide deck
 is not claimed to have been submitted or rehearsed. Exact organiser deadline,
 upload route and team member details must come from the team/organiser.
 
-Before certification, complete `submission/VALIDATION_CHECKLIST.md` with real names,
+Before certification, complete `FINAL_SUBMISSION/supporting/Human_Review_Status.md` with real names,
 dates and calculations, using `handoff/human_review_pack/`. AI generated/materially changed code, analysis and prose;
 the team must independently evaluate and defend them under the official AI rules.
 
