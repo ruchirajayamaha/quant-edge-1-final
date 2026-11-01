@@ -57,6 +57,55 @@ def test_decision_screen_shows_decision_budgets_and_crisis_without_review_banner
     assert {button.label for button in app.get("download_button")} >= {"Investment memo", "One-page tear sheet", "Plain-English recommendation"}
 
 
+def test_landing_page_answers_the_decision_before_the_evidence():
+    app = _app()
+    text = _text(app)
+    for heading in ("What do we recommend?", "Why this decision?", "What could go wrong?", "How strong is the evidence?",
+                    "What should the committee do next?"):
+        assert heading in text, heading
+    assert "Prospective target for the next session" in text and "not historical holdings" in text.replace("These are ", "")
+    assert "Most important issue: spending." in text and "$180,617" in text
+    assert "Historical, per year, 4 Jan 2021 to 30 Oct 2026" in text and "Current estimate at today's target" in text
+    chart = next(c for c in app.get("plotly_chart"))
+    figure = json.loads(chart.proto.spec) if hasattr(chart.proto, "spec") else None
+    if figure:
+        bars = figure["data"][0]
+        assert bars["y"] == [ui.ASSET_LABELS[t] for t in ("AGG", "GLD", "SPY", "XLE")]
+
+
+def test_routes_open_the_matching_view_and_sidebar_explains_each_view():
+    app = _app()
+    assert app.sidebar.radio[0].options[-1] == "Assumptions & Limitations"
+    labels = {button.label for button in app.button}
+    assert {"Performance evidence", "Tail risk evidence", "Model validation", "Crisis and risk budget", "Assumptions & limitations"} <= labels
+    next(b for b in app.button if b.label == "Model validation").click().run(timeout=60)
+    assert not app.exception and app.sidebar.radio[0].value == "Backtesting"
+    assert any("## Backtesting" == m.value for m in app.markdown)
+
+
+def test_every_analytical_view_leads_with_a_conclusion_from_the_selected_data():
+    app = _app()
+    for view, expected in (("Performance", "grew 7.63% a year"), ("Tail risk", "$203,169 on USD 10 million"),
+                           ("Backtesting", "18 of 1,464 days"), ("Risk budget & stress", "31.8% of Historical ES"),
+                           ("Assumptions & Limitations", "no model here guarantees protection")):
+        app.sidebar.radio[0].set_value(view).run(timeout=60)
+        assert not app.exception and not app.error, view
+        assert expected in _text(app), view
+    app.sidebar.radio[0].set_value("Tail risk").run(timeout=60)
+    app.sidebar.select_slider[0].set_value(0.90).run(timeout=60)
+    app.sidebar.selectbox[1].set_value("evt_pot").run(timeout=60)
+    assert "cannot estimate this confidence level" in _text(app)
+
+
+def test_colours_keep_one_meaning_and_residual_weights_are_not_positions():
+    import qe_views
+
+    assert len({ui.VAR_COLOR, *ui.PORTFOLIO_COLORS.values()}) == 4
+    assert ui.ES_COLOR not in ui.PORTFOLIO_COLORS.values()
+    assert set(ui.ASSET_LABELS) == set(ui.ASSET_SHORT) == {"SPY", "EFA", "EEM", "AGG", "GLD", "XLE", "XLK"}
+    assert qe_views.HELD_FLOOR == 0.0005
+
+
 def test_limitations_page_uses_the_official_label_and_keeps_review_status():
     app = _app()
     app.sidebar.radio[0].set_value("Assumptions & Limitations").run(timeout=60)
@@ -196,7 +245,9 @@ def test_app_downloads_only_the_canonical_pdfs_and_no_other_final_copy_exists():
     import qe_views
 
     assert all(name.startswith("FINAL_SUBMISSION/") and (ROOT / name).exists() for name in qe_views.REPORTS)
-    assert not list((ROOT / "submission").glob("*.pdf")) and not (ROOT / "output/pdf").exists()
+    assert not list((ROOT / "submission").glob("*.pdf"))
+    tracked = subprocess.run(["git", "ls-files", "output/pdf"], cwd=ROOT, capture_output=True, text=True).stdout
+    assert not tracked.strip()
 
 
 def test_status_records_no_invented_review_or_deployment():

@@ -15,10 +15,17 @@ import qe_theme as ui
 import qe_views as views
 
 ROOT = Path(__file__).resolve().parents[1]
-VIEWS = ["Decision", "Performance", "Tail risk", "Backtesting", "Risk budget & stress", "Assumptions & Limitations"]
+VIEWS = {
+    "Decision": "What do we recommend, and why?",
+    "Performance": "How has it performed?",
+    "Tail risk": "What could go wrong on a bad day?",
+    "Backtesting": "How strong is the evidence?",
+    "Risk budget & stress": "Where does risk come from in a crisis?",
+    "Assumptions & Limitations": "What does this not capture?",
+}
 
 
-@st.cache_resource(show_spinner=False)
+@st.cache_resource(show_spinner="Loading the verified results...")
 def source_data():
     """Load the frozen snapshot and verified reference once per server."""
     cfg = load_config()
@@ -39,7 +46,9 @@ def main() -> None:
 
     st.sidebar.markdown("## Decision room")
     st.sidebar.caption("Serendib University Endowment · USD 10 million")
-    view = st.sidebar.radio("View", VIEWS)
+    view = st.sidebar.radio("View", list(VIEWS), captions=list(VIEWS.values()), key="view")
+    st.sidebar.markdown("### Evidence settings")
+    st.sidebar.caption("These change the evidence views. The Decision page always shows the proposed portfolio.")
     portfolio = st.sidebar.selectbox("Portfolio", list(ui.PORTFOLIO_LABELS), format_func=lambda key: ui.PORTFOLIO_LABELS[key])
     confidence = st.sidebar.select_slider("Confidence", options=[0.90, 0.95, 0.99], value=0.99, format_func=lambda x: f"{x:.0%}")
     model = st.sidebar.selectbox("Risk method", list(ui.MODEL_LABELS), format_func=lambda key: ui.MODEL_LABELS[key])
@@ -49,10 +58,8 @@ def main() -> None:
         value=(pd.Timestamp("2021-01-04").date(), limits[1]),
         min_value=limits[0],
         max_value=limits[1],
-    )
-    st.sidebar.caption(
-        "Dates select performance and backtest targets; earlier training history stays intact. Current risk and stress "
-        "use the prospective target at the frozen final close, not historical holdings."
+        help="Selects which dates are reported. Earlier training history stays intact. Tail risk and stress use today's "
+             "prospective target, so these dates do not change them.",
     )
     with st.sidebar.expander("Data provenance"):
         st.caption(
@@ -60,7 +67,7 @@ def main() -> None:
             f"dataset {ref['metadata']['dataset_id']}. Data frozen at 30 October 2026. Offline; no market downloads."
         )
     if len(dates) != 2:
-        st.info("Select both a start and an end date.")
+        st.info("Select both a start and an end date to update the evidence views.")
         st.stop()
     start, end = map(pd.Timestamp, dates)
 

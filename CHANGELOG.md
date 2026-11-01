@@ -2,6 +2,14 @@
 
 All notable milestone checkpoints for the Quant Edge 1.0 solo implementation are recorded incrementally in this file.
 
+## [1.0.4] - 2026-11-01 - Audience-focused interface
+
+- Rebuilt the Decision page around five questions, with the proposed allocation, reasons and main issue first.
+- Added question-led navigation, a basis note on each headline metric, routes to evidence and a plain-English glossary.
+- Each evidence view now opens with a conclusion calculated from the selected data.
+- Gave colours one meaning, added readable fund names, and added searchable and downloadable tables.
+- No calculation, dataset, result, rule or recommendation changed.
+
 ## [1.0.3] - 2026-11-01 - History rewrite
 
 - Removed one planning PDF from all Git history at the owner's request. Every commit hash changed.

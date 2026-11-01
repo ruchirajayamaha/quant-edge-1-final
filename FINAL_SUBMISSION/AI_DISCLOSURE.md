@@ -17,6 +17,13 @@ This document is updated incrementally at every project step in accordance with 
 
 ## Disclosure Table
 
+### Interface improvement disclosure (1 November 2026)
+
+Claude Code (Claude Opus 5.5) reworked the Streamlit presentation: landing page, navigation, conclusions, chart
+titles, captions, colours, labels, glossary and table downloads. It changed no calculation, dataset, result, rule or
+recommendation. The conclusions on each view are written from the verified results. Human validation remains
+**PENDING**.
+
 ### History rewrite disclosure (1 November 2026)
 
 At the owner's request, Claude Code (Claude Opus 5.5) removed one planning PDF from the whole Git history, which

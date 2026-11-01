@@ -21,6 +21,13 @@ AMBER = "#a86a12"
 RED = "#a8322a"
 SLATE = "#8b93a0"
 SAND = "#c9b48a"
+STEEL = "#4f7196"
+
+# One meaning per colour: portfolios, loss measures and capital against risk never share a hue.
+VAR_COLOR = STEEL
+ES_COLOR = AMBER
+WEIGHT_COLOR = INK
+RISK_SHARE_COLOR = AMBER
 
 SERIF = "'Iowan Old Style','Palatino Linotype','Book Antiqua',Palatino,Georgia,serif"
 SANS = "'Segoe UI','Helvetica Neue',Arial,sans-serif"
@@ -40,12 +47,37 @@ PORTFOLIO_COLORS = {
     PORTFOLIO_LABELS["equal_weight"]: SAND,
     PORTFOLIO_LABELS["benchmark_60_40"]: SLATE,
 }
+ASSET_LABELS = {
+    "SPY": "US large-cap equities (SPY)",
+    "EFA": "Developed ex-US equities (EFA)",
+    "EEM": "Emerging-market equities (EEM)",
+    "AGG": "US investment-grade bonds (AGG)",
+    "GLD": "Gold (GLD)",
+    "XLE": "US energy equities (XLE)",
+    "XLK": "US technology equities (XLK)",
+}
+ASSET_SHORT = {
+    "SPY": "US equities",
+    "EFA": "Developed ex-US",
+    "EEM": "Emerging markets",
+    "AGG": "US bonds",
+    "GLD": "Gold",
+    "XLE": "US energy",
+    "XLK": "US technology",
+}
 MODEL_LABELS = {
     "historical": "Historical simulation",
     "parametric_normal": "Normal (parametric)",
     "monte_carlo_normal": "Normal Monte Carlo",
     "evt_pot": "EVT: pure POT-GPD",
     "evt_body_tail_hybrid": "Empirical body / GPD tail hybrid",
+}
+MODEL_SHORT = {
+    "historical": "Historical",
+    "parametric_normal": "Normal",
+    "monte_carlo_normal": "Normal MC",
+    "evt_pot": "Pure POT",
+    "evt_body_tail_hybrid": "Hybrid",
 }
 ROLLING_LABELS = {"historical": "Historical", "parametric_normal": "Normal"}
 SCENARIO_LABELS = {
@@ -83,6 +115,26 @@ FRACTION_METRICS = {
     "jensen_alpha",
     "tracking_error",
 }
+KEY_KPIS = {
+    "geometric_annual_return": "Yearly growth after trading costs",
+    "annualized_volatility": "Typical size of yearly swings",
+    "max_drawdown": "Deepest fall from a previous high",
+    "sharpe_ratio": "Return above cash per unit of total risk",
+    "sortino_ratio": "Return above cash per unit of downside risk",
+    "capm_beta": "Sensitivity to moves in US equities",
+}
+GLOSSARY = {
+    "Value at Risk (VaR)": "A loss level that should be passed only rarely. A 99% one-day VaR should be passed on about 1 day in 100. It says nothing about how far past that level a loss goes.",
+    "Expected Shortfall (ES)": "The average loss on the days beyond VaR. It answers: when a bad day comes, how bad is it?",
+    "Extreme Value Theory (EVT)": "A statistical method fitted only to the largest losses, used to study the far tail of the distribution.",
+    "Drawdown": "The fall from a previous high in portfolio value. It differs from an endpoint return, which ignores the path taken.",
+    "CAGR": "Compound annual growth rate: the steady yearly rate that gives the same start and end value.",
+    "Sharpe ratio": "Return above the risk-free rate divided by volatility. Higher means more return for the risk taken, in that sample.",
+    "Backtest exception": "A day when the realised loss was larger than the VaR forecast made beforehand.",
+    "Basel traffic light": "A banking rule of thumb that scores exceptions over 250 days as green, yellow or red. It is shown here for teaching, not as regulatory approval.",
+    "Prospective target": "The weights the rule would aim for in the next session. They are not the holdings the strategy actually had in the past.",
+    "Risk contribution": "The part of total portfolio risk that comes from one position. A small position can contribute a large share.",
+}
 UNAVAILABLE = "Unavailable"
 
 
@@ -116,6 +168,12 @@ def pvalue(value: float | None) -> str:
     return f"{value:.1e}" if value < 0.001 else f"{value:.3f}"
 
 
+def short_date(value) -> str:
+    """Format a date as, for example, 4 Jan 2021."""
+    stamp = pd.Timestamp(value)
+    return f"{stamp.day} {stamp:%b %Y}"
+
+
 def kpi_value(metric: str, value: float | None) -> str:
     """Format a KPI by its unit."""
     return pct(value) if metric in FRACTION_METRICS else ratio(value)
@@ -146,7 +204,7 @@ def css() -> str:
     [data-testid="stExpander"] {{background:{SURFACE};border:1px solid {RULE};border-radius:2px;}}
     [data-testid="stDownloadButton"] button {{border-radius:2px;border:1px solid {INK};background:{SURFACE};color:{INK};}}
     .qe-kicker {{font-size:.74rem;letter-spacing:.11em;text-transform:uppercase;color:{MUTED};font-weight:600;}}
-    .qe-title {{font-family:{SERIF};color:{INK};font-size:2.3rem;line-height:1.14;font-weight:600;margin:.25rem 0 .4rem;}}
+    .qe-title {{font-family:{SERIF};color:{INK};font-size:clamp(1.7rem,3.2vw,2.3rem);line-height:1.14;font-weight:600;margin:.25rem 0 .4rem;}}
     .qe-title em {{color:{TEAL};font-style:normal;}}
     .qe-lede {{font-size:1.04rem;line-height:1.58;color:{BODY};max-width:58rem;margin-bottom:.8rem;}}
     .qe-status {{display:flex;flex-wrap:wrap;gap:.45rem 1.5rem;border-top:1px solid {RULE};border-bottom:1px solid {RULE};
@@ -167,6 +225,15 @@ def css() -> str:
     .qe-pill.review {{color:{AMBER};background:#f7ecd8;}}
     .qe-pill.breach {{color:{RED};background:#f6e4e1;}}
     .qe-pill.info {{color:{MUTED};background:#eeeae0;}}
+    [data-testid="stButton"] button {{border-radius:2px;border:1px solid {RULE};background:{SURFACE};color:{INK};}}
+    .qe-question {{color:{MUTED};font-size:.95rem;margin:-.35rem 0 .55rem;}}
+    .qe-takeaway {{background:{SURFACE};border:1px solid {RULE};border-left:3px solid {TEAL};padding:.62rem .85rem;
+        margin:.1rem 0 .95rem;font-size:.98rem;line-height:1.55;color:{BODY};}}
+    .qe-takeaway b {{color:{INK};font-weight:600;}}
+    .qe-takeaway.warn {{border-left-color:{AMBER};}}
+    .qe-facts {{margin:.15rem 0 .5rem;padding:0;list-style:none;}}
+    .qe-facts li {{padding:.42rem 0;border-bottom:1px solid {RULE};font-size:.93rem;}}
+    .qe-facts b {{color:{INK};font-weight:600;}}
     .qe-note {{border-left:2px solid {INK};padding:.1rem 0 .1rem .8rem;margin:.55rem 0 .85rem;font-size:.92rem;}}
     .qe-actions {{margin:.2rem 0 .3rem;padding-left:0;list-style:none;counter-reset:qe;}}
     .qe-actions li {{counter-increment:qe;padding:.46rem 0 .46rem 1.9rem;position:relative;border-bottom:1px solid {RULE};font-size:.93rem;}}
@@ -219,13 +286,29 @@ def html_table(
     return f'<div class="qe-scroll"><table class="qe-table">{cap}<thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>'
 
 
+def question(text: str) -> str:
+    """Return the plain question a page answers."""
+    return f'<div class="qe-question">{escape(text)}</div>'
+
+
+def takeaway(lead: str, text: str, *, warn: bool = False) -> str:
+    """Return a page's conclusion, shown before its detailed evidence."""
+    return f'<div class="qe-takeaway{" warn" if warn else ""}"><b>{escape(lead)}</b> {escape(text)}</div>'
+
+
+def fact_list(items: list[tuple[str, str]]) -> str:
+    """Return an unnumbered list of bold-led facts."""
+    body = "".join(f"<li><b>{escape(lead)}</b> {escape(text)}</li>" for lead, text in items)
+    return f'<ul class="qe-facts">{body}</ul>'
+
+
 def action_list(items: list[tuple[str, str]]) -> str:
     """Return a numbered list of bold-led actions."""
     body = "".join(f"<li><b>{escape(lead)}</b> {escape(text)}</li>" for lead, text in items)
     return f'<ol class="qe-actions">{body}</ol>'
 
 
-def style_figure(figure, *, height: int = 330, percent_y: bool = False, y_title: str | None = None):
+def style_figure(figure, *, height: int = 330, percent_y: bool = False, y_title: str | None = None, x_title: str | None = None):
     """Apply the shared chart style so every chart has the same type, grid and legend."""
     figure.update_layout(
         height=height,
@@ -237,7 +320,7 @@ def style_figure(figure, *, height: int = 330, percent_y: bool = False, y_title:
         hoverlabel={"font": {"family": SANS}},
         title=None,
     )
-    figure.update_xaxes(showgrid=False, linecolor=INK, ticks="outside", tickcolor=RULE, title=None, automargin=True)
+    figure.update_xaxes(showgrid=False, linecolor=INK, ticks="outside", tickcolor=RULE, title=x_title, automargin=True)
     figure.update_yaxes(gridcolor=RULE, zeroline=True, zerolinecolor=MUTED, zerolinewidth=1, title=y_title, automargin=True)
     if percent_y:
         figure.update_yaxes(tickformat=".1%")
