@@ -8,8 +8,8 @@ human validation, which remains PENDING.** Result bundle `1c7bd6007fe22b014b25`,
 
 | Check | Method | Result |
 |---|---|---|
-| Full test suite | `python -m pytest -q` | 147 passed; `pip check` clean |
-| Clean clone | New Python 3.11 environment from `requirements.txt`, no editable install, no TeX or Matplotlib | 146 passed, 1 skipped (that test needs optional `pypdf`) |
+| Full test suite | `python -m pytest -q` | 151 passed; `pip check` clean |
+| Clean clone | New Python 3.11 environment from `requirements.txt`, no editable install, no TeX or Matplotlib | 146 passed, 1 skipped at the earlier package commit (that test needs optional `pypdf`) |
 | Independent recomputation | 11 checks from frozen inputs in plain Python, not through the production helpers | 11 of 11 within tolerance; largest difference 3.1e-09 on a USD amount |
 | Report numbers | Each of 148 generated macros compared with its stored full-precision value | 0 failures; all regression checkpoints hold |
 | Report tables | Key cells of 5 generated tables compared with the reference | 0 missing |
@@ -44,7 +44,7 @@ target weights. That is arithmetic on frozen inputs. No model, parameter or resu
 ## Public app
 
 **Live at https://quant-edge-1-final.streamlit.app/** on Streamlit Community Cloud, from `main` with `streamlit_app.py`. App code revision
-`a87dc76` (`86ca30b` before the history rewrite); later commits change documents and tests only. Bundle `1c7bd6007fe22b014b25`. The build log shows
+`2a7bd0a`; later commits change documents only. Bundle `1c7bd6007fe22b014b25`. The build log shows
 Python 3.11.18 and all pinned packages installed with no errors, and the frozen results passed their hash
 check on Linux.
 
@@ -65,8 +65,10 @@ Tested in a browser that was not signed in to Streamlit, after the interface ren
 | PDF downloads | Memo, tear sheet and recommendation served byte-identical to the packaged files (SHA-256 and size) |
 | Widths | Desktop 1360 and phone 375, with no horizontal page scroll |
 
-The risk-method dropdown itself was last clicked on an earlier revision, before changes that did not touch
-calculations. The 287-run sweep covers every method on the final code.
+The interface was rebuilt at `2a7bd0a`, and the live app was rebooted and rechecked on that revision: all six views,
+their conclusions and charts, the recent and full samples, the review status, PDF hashes, and phone width. On this
+revision the confidence, portfolio, risk-method, rolling-model and date controls were covered by the 287-run
+sweep and automated tests, not clicked again on the live app. No calculation changed in that rebuild.
 
 The logs showed one real error. When an update arrived with a session open, Cloud logged an `ImportError` and
 `AttributeError` as `quantedge` was reloaded. The app kept working for new sessions. The file watcher was turned
